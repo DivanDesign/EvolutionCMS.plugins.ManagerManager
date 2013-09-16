@@ -80,7 +80,7 @@ function jsSafe($str) {
 
 /**
  * tplUseTvs
- * @version 1.1 (2013-03-20)
+ * @version 1.2 (2013-09-16)
  *
  * @desc Does the specified template use the specified TVs?
  *
@@ -88,39 +88,66 @@ function jsSafe($str) {
  * @param $tvs {comma separated string; array} - TV names. Default: ''.
  * @param $types {comma separated string; array} - TV types, e.g. image. Default: ''.
  * @param $dbFields {somma separated string} - DB fields which get from 'site_tmplvars' table. Default: 'id'.
+ * @param $resultKey {string; false} - DB field, which values are keys of result array. Keys of result array will be numbered if the parameter equals false. Default: false.
  */
-function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id') {
+function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey = false){
 	
 	// If it's a blank template, it can't have TVs
 	if($tpl_id == 0){return false;}
 	
 	global $modx;
 	
-	// Make the TVs and field types into an array
-	$fields = makeArray($tvs); 
-	$types = makeArray($types); 
+	//Make the TVs, field types and DB fields into an array
+	$fields = makeArray($tvs);
+	$types = makeArray($types);
+	$dbFields = makeArray($dbFields);
 	
-	// Get the DB table names
+	//Add the result key in DB fields if return of an associative array is required & result key is absent there
+	if ($resultKey !== false && !in_array($resultKey, $dbFields)){
+		$dbFields[] = $resultKey;
+	}
+	
+	//Get the DB table names
 	$tv_table = $modx->getFullTableName('site_tmplvars');	
 	$rel_table = $modx->getFullTableName('site_tmplvar_templates');
 	
-	// Are we looking at specific TVs, or all?
+	//Are we looking at specific TVs, or all?
 	$tvs_sql = !empty($fields) ? ' AND tvs.name IN ' . makeSqlList($fields) : '';
 	
-	// Are we looking at specific TV types, or all?
+	//Are we looking at specific TV types, or all?
 	$types_sql = !empty($types) ? ' AND type IN ' . makeSqlList($types) : '';
 	
-	// Make the SQL for this template
+	//Make the SQL for this template
 	$cur_tpl = !empty($tpl_id) ? ' AND rel.templateid = ' . $tpl_id : '';
 		
-	// Do the SQL query	
-	$result = $modx->db->query("SELECT $dbFields FROM $tv_table tvs LEFT JOIN $rel_table rel ON rel.tmplvarid = tvs.id WHERE 1=1  $cur_tpl $tvs_sql $types_sql");
-
+	//Execute the SQL query
+	$result = $modx->db->query("SELECT ".implode(',', $dbFields)." FROM $tv_table tvs LEFT JOIN $rel_table rel ON rel.tmplvarid = tvs.id WHERE 1=1  $cur_tpl $tvs_sql $types_sql");
+	
+	$recordCount = $modx->db->getRecordCount($result);
+	
 	// If we have results, return them, otherwise return false
-	if ( $modx->db->getRecordCount($result) == 0) {
-		return false;	
-	} else {
-		return $modx->db->makeArray($result);
+	if ($recordCount == 0){
+		return false;
+	}else{
+		//If return of an associative array is required
+		if ($resultKey !== false){
+			$rsArray = array();
+			
+			for ($i = 0; $i < $recordCount; $i++){
+				$row = $modx->db->getRow($result);
+				
+				//If result contains the result key
+				if (array_key_exists($resultKey, $row)){
+					$rsArray[$row[$resultKey]] = $row;
+				}else{
+					$rsArray[] = $row;
+				}
+			}
+			
+			return $rsArray;
+		}else{
+			return $modx->db->makeArray($result);
+		}
 	}
 }
 
