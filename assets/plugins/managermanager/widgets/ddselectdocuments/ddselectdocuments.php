@@ -1,31 +1,31 @@
 <?php
 /** 
  * mm_ddSelectDocuments
- * @version 1.0b (2013-05-30)
+ * @version 1.1b (2013-08-09)
  * 
- * @description Виджет для выбора id определённых документов в удобном виде.
+ * @desc A widget for ManagerManager that makes selection of documents ids easier.
  * 
- * @uses ManagerManager 0.5.
+ * @uses ManagerManager 0.5.1.
  *
- * @param $tvs {comma separated string} - Имена TV, для которых необходимо применить виджет. @required
- * @param $roles {comma separated string} - Роли, для которых необходимо применить виждет, пустое значение — все роли. По умолчанию: ''.
- * @param $templates {comma separated string} - Id шаблонов, для которых необходимо применить виджет, пустое значение — все шаблоны. По умолчанию: ''.
- * @param $parentId {integer} - Id родительского документа, дочерние документы которого необходимо выбирать. @required
- * @param $depth {integer} - Глубина поиска дочерних документов. По умолчанию: 1.
- * @param $filter {separated string} - Условия фильтрации документов (чем-то похож на фильтр Ditto), разделённые через '&' между парами и через '=' между ключом и значением. Например: 'template=15&published=1', — получим только опубликованные документы с id шаблона 15. В фильтрации могут участвовать только поля документа (без TV). По умолчанию: ''.
- * @param $max {integer} - Максимальное количество документов, которое пользователь может выбрать (при == 0 — без ограничений). По умолчанию: 0.
+ * @param $tvs {comma separated string} - TVs names that the widget is applied to. @required
+ * @param $roles {comma separated string} - Roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $templates {comma separated string} - Templates IDs for which the widget is applying (empty value means the widget is applying to all templates). Default: ''.
+ * @param $parentIds {comma separated string} - Parent documents IDs. @required
+ * @param $depth {integer} - Depth of search. Default: 1.
+ * @param $filter {separated string} - Filter clauses, separated by '&' between pairs and by '=' between keys and values. For example, 'template=15&published=1' means to choose the published documents with template id=15. Be advised that you can't filter by TVs values. Default: ''.
+ * @param $max {integer} - The largest number of elements that can be selected by user (“0” means selection without a limit). Default: 0.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.0b
+ * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.1b
  * 
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.ru
  */
 
-function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId, $depth = 1, $filter = '', $max = 0){
+function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentIds, $depth = 1, $filter = '', $max = 0){
 	global $modx, $mm_current_page;
 	$e = &$modx->Event;
 	
-	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates) && is_numeric($parentId)){
+	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates) && !empty($parentIds)){
 		$output = '';
 		
 		$tvs = tplUseTvs($mm_current_page['template'], $tvs);
@@ -34,14 +34,26 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 		$filter = ddTools::explodeAssoc($filter, '&', '=');
 		
 		//Рекурсивно получает все необходимые документы
-		if (!function_exists('ddGetDocs')){function ddGetDocs($parentId = 0, $filter = array(), $depth = 1){
+		if (!function_exists('ddGetDocs')){function ddGetDocs($parentIds = array(0), $filter = array(), $depth = 1){
 			//Получаем дочерние документы текущего уровня
-			$docs = ddTools::getDocumentChildren($parentId, false);
+			$docs = array();
+			
+			//Перебираем всех родителей
+			foreach ($parentIds as $parent){
+				//Получаем документы текущего родителя
+				$tekDocs = ddTools::getDocumentChildren($parent, false);
+				
+				//Если что-то получили
+				if (is_array($tekDocs)){
+					//Запомним
+					$docs = array_merge($docs, $tekDocs);
+				}
+			}
 			
 			$result = array();
 			
 			//Если что-то есть
-			if ($docs && count($docs) > 0){
+			if (count($docs) > 0){
 				//Перебираем полученные документы
 				foreach ($docs as $val){
 					//Если фильтр пустой, либо не пустой и документ удовлетворяет всем условиям
@@ -53,7 +65,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 					//Если ещё надо двигаться глубже
 					if ($depth > 1){
 						//Сливаем результат с дочерними документами
-						$result = array_merge($result, ddGetDocs($val['id'], $filter, $depth - 1));
+						$result = array_merge($result, ddGetDocs(array($val['id']), $filter, $depth - 1));
 					}
 				}
 			}
@@ -62,7 +74,7 @@ function mm_ddSelectDocuments($tvs = '', $roles = '', $templates = '', $parentId
 		}}
 		
 		//Получаем все дочерние документы
-		$docs = ddGetDocs($parentId, $filter, $depth);
+		$docs = ddGetDocs(explode(',', $parentIds), $filter, $depth);
 		
 		if (count($docs) == 0){return;}
 		
