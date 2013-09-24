@@ -175,7 +175,7 @@ function makeSqlList($arr){
 
 /**
  * includeJs
- * @version 1.1 (2013-05-19)
+ * @version 1.1.1 (2013-09-24)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -190,38 +190,31 @@ function includeJs($url, $output_type = 'js', $name = '', $version = ''){
 	global $mm_includedJs;
 	
 	if (empty($name) || empty($version)){
-		$fileinfo = pathinfo($url);
-		
-		//Try to get file version [0 — full name, 1 — script name, 2 — version, 3 — all chars after version]
-		preg_match('/(\D*?)-?(\d(?:\.\d+)*(?:-?[A-Za-z])*)(.*)/', $fileinfo['basename'], $match);
-		
-		//If fail
-		if (count($match) < 4){
-			//Full string
-			$name = strtolower($url);
-			$version = '0';
-		}else{
-			$name = strtolower($match[1]);
-			$version = $match[2];
-		}
+		$nameVersion = ddTools::parseFileNameVersion($url);
+	}else{
+		$nameVersion = array(
+			'name' => $name,
+			'version' => $version
+		);
 	}
 	
 	$useThisVer = true;
 	$result = '';
 	
 	//If this script is already included
-	if (isset($mm_includedJs[$name])){
+	if (isset($mm_includedJs[$nameVersion['name']])){
 		//If old < new, use new, else — old
-		$useThisVer = version_compare($mm_includedJs[$name]['version'], $version, '<');
+		$useThisVer = version_compare($mm_includedJs[$nameVersion['name']]['version'], $nameVersion['version'], '<');
 	}else{
 		//Add
-		$mm_includedJs[$name] = array(
-			'version' => $version
-		);
+		$mm_includedJs[$nameVersion['name']] = array();
 	}
 		
-	//If use the new version
+	//If the new version is used
 	if ($useThisVer){
+		//Save the new version
+		$mm_includedJs[$nameVersion['name']]['version'] = $nameVersion['version'];
+		
 		if ($output_type == 'js'){
 			$result = '$j("head").append(\' <script src="'.$url.'" type="text/javascript"></scr\'+\'ipt> \'); ' . "\n";
 		}else if ($output_type == 'html'){
