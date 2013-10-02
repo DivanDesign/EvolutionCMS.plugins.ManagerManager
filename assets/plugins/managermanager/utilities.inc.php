@@ -89,6 +89,8 @@ function jsSafe($str) {
  * @param $types {comma separated string; array} - TV types, e.g. image. Default: ''.
  * @param $dbFields {somma separated string} - DB fields which get from 'site_tmplvars' table. Default: 'id'.
  * @param $resultKey {string; false} - DB field, which values are keys of result array. Keys of result array will be numbered if the parameter equals false. Default: false.
+ * 
+ * @return {array; false}
  */
 function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey = false){
 	
@@ -149,6 +151,54 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 			return $modx->db->makeArray($result);
 		}
 	}
+}
+
+/**
+ * getTplMatchedFields
+ * @version 1.0 (2013-10-02)
+ * 
+ * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
+ * 
+ * @param $fields {comma separated string; array} - Document fields or TVs names. @required
+ * @param $tvTypes {comma separated string; array} - TVs types, e.g. image, text. Default: ''.
+ * @param $tempaleId {integer} - Template ID. Default: $mm_current_page['template'].
+ * 
+ * @return {array; false}
+ */
+function getTplMatchedFields($fields, $tvTypes = '', $tempaleId){
+	$fields = makeArray($fields);
+	
+	//$fields is required
+	if (empty($fields)){return false;}
+	
+	//Template of current document by default
+	if (empty($tempaleId)){
+		global $mm_current_page;
+		
+		$tempaleId = $mm_current_page['template'];
+	}
+	
+	//Only document fields
+	$docFields = array_intersect($fields, ddTools::$documentFields);
+	
+	//If $fields contains no TVs
+	if (count($docFields) == count($fields)){
+		$fields = $docFields;
+	}else{
+		//Get specified TVs for this template
+		$fields = tplUseTvs($tempaleId, $fields, $tvTypes, 'name', 'name');
+		
+		//If there are no appropriate TVs
+		if ($fields == false){
+			if (!empty($docFields)){
+				$fields = $docFields;
+			}
+		}else{
+			$fields = array_merge(array_keys($fields), $docFields);
+		}
+	}
+	
+	return $fields;
 }
 
 /**
