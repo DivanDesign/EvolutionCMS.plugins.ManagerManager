@@ -38,10 +38,10 @@ $jsUrls = array(
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
 
 // Set variables
-global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJs;
+global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJsCss;
 
-if (!is_array($mm_includedJs)){
-	$mm_includedJs = array();
+if (!is_array($mm_includedJsCss)){
+	$mm_includedJsCss = array();
 }
 
 //Include ddTools (needed for some widgets)

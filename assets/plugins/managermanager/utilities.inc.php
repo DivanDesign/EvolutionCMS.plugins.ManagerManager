@@ -237,7 +237,7 @@ function makeSqlList($arr){
  * @return {string} - Code.
  */
 function includeJs($url, $output_type = 'js', $name = '', $version = ''){
-	global $mm_includedJs;
+	global $mm_includedJsCss;
 	
 	if (empty($name) || empty($version)){
 		$nameVersion = ddTools::parseFileNameVersion($url);
@@ -252,18 +252,18 @@ function includeJs($url, $output_type = 'js', $name = '', $version = ''){
 	$result = '';
 	
 	//If this script is already included
-	if (isset($mm_includedJs[$nameVersion['name']])){
+	if (isset($mm_includedJsCss[$nameVersion['name']])){
 		//If old < new, use new, else — old
-		$useThisVer = version_compare($mm_includedJs[$nameVersion['name']]['version'], $nameVersion['version'], '<');
+		$useThisVer = version_compare($mm_includedJsCss[$nameVersion['name']]['version'], $nameVersion['version'], '<');
 	}else{
 		//Add
-		$mm_includedJs[$nameVersion['name']] = array();
+		$mm_includedJsCss[$nameVersion['name']] = array();
 	}
 		
 	//If the new version is used
 	if ($useThisVer){
 		//Save the new version
-		$mm_includedJs[$nameVersion['name']]['version'] = $nameVersion['version'];
+		$mm_includedJsCss[$nameVersion['name']]['version'] = $nameVersion['version'];
 		
 		if ($output_type == 'js'){
 			$result = '$j("head").append(\' <script src="'.$url.'" type="text/javascript"></scr\'+\'ipt> \'); ' . "\n";
