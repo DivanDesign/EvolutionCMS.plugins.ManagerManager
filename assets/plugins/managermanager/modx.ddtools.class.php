@@ -1,13 +1,13 @@
 <?php
 /**
  * modx ddTools class
- * @version: 0.9.1 (2013-10-10)
+ * @version: 0.10 (2013-10-17)
  *
  * @uses modx 1.0.10 (Evo)
  *
- * @link http://code.divandesign.biz/modx/ddtools/0.9.1
+ * @link http://code.divandesign.biz/modx/ddtools/0.10
  *
- * @copyright Copyright 2013, DivanDesign
+ * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
  */
 
@@ -55,7 +55,13 @@ class ddTools {
 	);
 
 	//Contains full names of some db tables
-	public static $tables;
+	public static $tables = array(
+		'site_content' => '',
+		'site_tmplvars' => '',
+		'site_tmplvar_templates' => '',
+		'site_tmplvar_contentvalues' => '',
+		'document_groups' => ''
+	);
 
 	/**
 	 * screening
@@ -110,7 +116,54 @@ class ddTools {
 
 		return $result;
 	}
-
+	
+	/**
+	 * unfoldArray
+	 * @version 1.0 (2013-04-23)
+	 * 
+	 * @desc Converts a multidimensional array into an one-dimensional one joining the keys with '.'. It can be helpful while using placeholders like [+size.width+].
+	 * For example, array(
+	 * 	'a': '',
+	 * 	'b': array(
+	 * 		'b1': '',
+	 * 		'b2': array(
+	 * 			'b21': '',
+	 * 			'b22': ''
+	 * 		)
+	 * 	),
+	 * 	'c': ''
+	 * ) turns into array(
+	 * 	'a': '',
+	 * 	'b.b1': '',
+	 * 	'b.b2.b21': '',
+	 * 	'b.b2.b22': '',
+	 * 	'c': ''
+	 * ).
+	 * 
+	 * @param $arr {array} - An array to convert. @required
+	 * @param $keyPrefix {string} - Prefix of the keys of an array (it's an internal varible, can be used if required). Default: ''.
+	 * 
+	 * @return {array} - Unfolded array.
+	 */
+	function unfoldArray($arr, $keyPrefix = ''){
+		$output = array();
+		
+		//Перебираем массив
+		foreach ($arr as $key => $val){
+			//Если значение является массивом
+			if (is_array($val)){
+				//Запускаем рекурсию дальше
+				$output = array_merge($output, self::unfoldArray($val, $keyPrefix.$key.'.'));
+			//Если значение — не массив
+			}else{
+				//Запоминаем (в соответствии с ключом родителя)
+				$output[$keyPrefix.$key] = $val;
+			}
+		}
+		
+		return $output;
+	}
+	
 	/**
 	 * parseText
 	 * @version 1.1 (2012-03-21)
@@ -934,12 +987,13 @@ class ddTools {
 }
 
 //Решение спорное, но делать Синглтон очень не хотелось
-ddTools::$tables = array(
-	'site_content' => $modx->getFullTableName('site_content'),
-	'site_tmplvars' => $modx->getFullTableName('site_tmplvars'),
-	'site_tmplvar_templates' => $modx->getFullTableName('site_tmplvar_templates'),
-	'site_tmplvar_contentvalues' => $modx->getFullTableName('site_tmplvar_contentvalues'),
-	'document_groups' => $modx->getFullTableName('document_groups')
-);
+foreach (ddTools::$tables as $key => $val){
+	ddTools::$tables[$key] = $modx->getFullTableName($key);
+}
+
+//If version of MODX > 1.0.11
+if (method_exists($modx, 'getVersionData') && version_compare($modx->getVersionData('version'), '1.0.11', '>')){
+	ddTools::$documentFields[]  = 'alias_visible';
+}
 }
 ?>
