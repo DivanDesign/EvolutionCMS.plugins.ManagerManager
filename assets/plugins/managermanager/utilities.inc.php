@@ -225,7 +225,7 @@ function makeSqlList($arr){
 
 /**
  * includeJs
- * @version 1.1.1 (2013-09-24)
+ * @version 1.2 (2013-10-23)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -236,15 +236,18 @@ function makeSqlList($arr){
  * 
  * @return {string} - Code.
  */
-function includeJs($url, $output_type = 'js', $name = '', $version = ''){
+function includeJsCss($url, $output_type = 'js', $name = '', $version = ''){
 	global $mm_includedJsCss;
 	
 	if (empty($name) || empty($version)){
 		$nameVersion = ddTools::parseFileNameVersion($url);
 	}else{
+		$temp = pathinfo($url);
+		
 		$nameVersion = array(
 			'name' => $name,
-			'version' => $version
+			'version' => $version,
+			'extension' => $temp['extension'] ? $temp['extension'] : 'js'
 		);
 	}
 	
@@ -265,27 +268,36 @@ function includeJs($url, $output_type = 'js', $name = '', $version = ''){
 		//Save the new version
 		$mm_includedJsCss[$nameVersion['name']]['version'] = $nameVersion['version'];
 		
-		if ($output_type == 'js'){
-			$result = '$j("head").append(\' <script src="'.$url.'" type="text/javascript"></scr\'+\'ipt> \'); ' . "\n";
-		}else if ($output_type == 'html'){
-			$result = '<script src="'.$url.'" type="text/javascript"></script>' . "\n";
+		if ($nameVersion['extension'] == 'css'){
+			if ($output_type == 'js'){
+				$result = '$j("head").append(\' <link href="'.$url.'" rel="stylesheet" type="text/css" /> \'); ' . "\n";
+			}else if ($output_type == 'html'){
+				$result = '<link href="'.$url.'" rel="stylesheet" type="text/css" />' . "\n";
+			}
+		}else{
+			if ($output_type == 'js'){
+				$result = '$j("head").append(\' <script src="'.$url.'" type="text/javascript"></scr\'+\'ipt> \'); ' . "\n";
+			}else if ($output_type == 'html'){
+				$result = '<script src="'.$url.'" type="text/javascript"></script>' . "\n";
+			}
 		}
 	}
 	
 	return $result;
 }
 
-// Generates the code needed to include an external CSS file. 
-// $url is any URL
-// $output_type is either js or html - depending on where the output is appearing
+/**
+ * @deprecated, use the includeJsCss()
+ */
+function includeJs($url, $output_type = 'js', $name = '', $version = ''){
+	return includeJsCss($url, $output_type, $name, $version);
+}
+
+/**
+ * @deprecated, use the includeJsCss()
+ */
 function includeCss($url, $output_type = 'js'){
-	if ($output_type == 'js'){
-		return  '$j("head").append(\' <link href="'.$url.'" rel="stylesheet" type="text/css" /> \'); ' . "\n";	
-	}else if ($output_type == 'html'){
-		return  '<link href="'.$url.'" rel="stylesheet" type="text/css" />' . "\n";	
-	}else{
-		return;	
-	}
+	return includeJsCss($url, $output_type);
 }
 
 /**
