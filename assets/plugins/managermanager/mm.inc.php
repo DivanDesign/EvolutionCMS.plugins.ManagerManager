@@ -185,9 +185,15 @@ if (!function_exists('make_changes')){
 
 if (!function_exists('initJQddManagerManager')){
 	function initJQddManagerManager(){
-		global $mm_fields;
+		global $modx, $mm_fields;
 		
-		$output = '$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');';
+		$output = '
+$j.ddManagerManager.config.site_url = "'.$modx->config['site_url'].'";
+$j.ddManagerManager.config.datetime_format = "'.$modx->config['datetime_format'].'";
+$j.ddManagerManager.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+		
+$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
+		';
 		
 		return $output;
 	}
