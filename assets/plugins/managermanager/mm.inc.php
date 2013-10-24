@@ -183,6 +183,16 @@ if (!function_exists('make_changes')){
 	}
 }
 
+if (!function_exists('initJQddManagerManager')){
+	function initJQddManagerManager(){
+		global $mm_fields;
+		
+		$output = '$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');';
+		
+		return $output;
+	}
+}
+
 // The start of adding or editing a document (before the main form)
 switch ($e->name){
 	// if it's the plugin config form, give us a copy of all the relevant values
@@ -254,7 +264,7 @@ switch ($e->name){
 			$output .= '<script type="text/javascript">' . "\n";
 			$output .= "var \$j = jQuery.noConflict(); \n"; //produces var  $j = jQuery.noConflict();
 			
-			$output .= '$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');';
+			$output .= initJQddManagerManager();
 			
 			$output .= "mm_lastTab = 'tabEvents'; \n";
 			$e->output($output);
@@ -298,7 +308,7 @@ switch ($e->name){
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
 	
-	$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
+	'.initJQddManagerManager().'
 	
 	$j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "absolute", zIndex: "1000", backgroundColor: "#ffffff"} );
 </script>	
