@@ -188,11 +188,11 @@ if (!function_exists('initJQddManagerManager')){
 		global $modx, $mm_fields;
 		
 		$output = '
-$j.ddManagerManager.config.site_url = "'.$modx->config['site_url'].'";
-$j.ddManagerManager.config.datetime_format = "'.$modx->config['datetime_format'].'";
-$j.ddManagerManager.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+$j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
+$j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
+$j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
 		
-$j.ddManagerManager.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
+$j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 		';
 		
 		return $output;

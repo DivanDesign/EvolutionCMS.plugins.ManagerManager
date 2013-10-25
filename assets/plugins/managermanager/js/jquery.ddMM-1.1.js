@@ -1,5 +1,5 @@
 /**
- * jQuery ddManagerManager Plugin
+ * jQuery ddMM Plugin
  * @version: 1.1 (2013-10-24)
  * 
  * @uses jQuery 1.9.1
@@ -9,7 +9,7 @@
  */
 
 (function($){
-$.ddManagerManager = {
+$.ddMM = {
 	config: {
 		site_url: '',
 		datetime_format: '',
