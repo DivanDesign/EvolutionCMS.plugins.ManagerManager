@@ -1,16 +1,16 @@
 /**
- * jQuery ddManagerManager.mm_ddYMap Plugin
- * @version: 1.0 (2013-09-16)
+ * jQuery ddMM.mm_ddYMap Plugin
+ * @version: 1.0.1 (2013-10-25)
  * 
  * @uses jQuery 1.9.1
- * @uses $.ddManagerManager 1.0
+ * @uses $.ddMM 1.0
  *
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
  */
 
 (function($){
-$.ddManagerManager.mm_ddYMap = {
+$.ddMM.mm_ddYMap = {
 	//Параметры по умолчанию
 	defaults: {
 		//Нужно ли скрывать оригинальное поле
@@ -94,7 +94,7 @@ $.ddManagerManager.mm_ddYMap = {
  * 
  * @description Делает карту.
  * 
- * @uses $.ddManagerManager.mm_ddYMap 1.0
+ * @uses $.ddMM.mm_ddYMap 1.0
  * 
  * Параметры передаются в виде plain object.
  * @param hideField {boolean} - Нужно ли скрывать оригинальное поле. Default: true.
@@ -106,7 +106,7 @@ $.ddManagerManager.mm_ddYMap = {
  */
 $.fn.mm_ddYMap = function(params){
 	//Обрабатываем параметры
-	params = $.extend({}, $.ddManagerManager.mm_ddYMap.defaults, params || {});
+	params = $.extend({}, $.ddMM.mm_ddYMap.defaults, params || {});
 	
 	//Если ширина является числом
 	if ($.isNumeric(params.width)){
@@ -152,13 +152,13 @@ $.fn.mm_ddYMap = function(params){
 		elem.LngLat = elem.LngLat.split(',');
 		
 		//Если карта ещё не загруженна
-		if (!$.ddManagerManager.mm_ddYMap.loaded){
+		if (!$.ddMM.mm_ddYMap.loaded){
 			//Просто запоминаем (инициализируется само при загрузке)
-			$.ddManagerManager.mm_ddYMap.tvs.push(elem);
+			$.ddMM.mm_ddYMap.tvs.push(elem);
 		//Если же карта уже загружена
 		}else{
 			//Просто инициализируем
-			$.ddManagerManager.mm_ddYMap.init(elem);
+			$.ddMM.mm_ddYMap.init(elem);
 		}
 	});
 };
@@ -168,9 +168,9 @@ $(function(){
 	//Самбмит главной формы
 	$('#mutate').on('submit', function(){
 		//Если до этого был сабмит поиска
-		if ($.ddManagerManager.mm_ddYMap.submitSerach){
+		if ($.ddMM.mm_ddYMap.submitSerach){
 			//Сбросим защёлку
-			$.ddManagerManager.mm_ddYMap.submitSerach = false;
+			$.ddMM.mm_ddYMap.submitSerach = false;
 			//Выкидываем осечку
 			return false;
 		}
@@ -179,13 +179,13 @@ $(function(){
 	//Глобальная инициализация карт (для солбэка от Яндекс.Карт)
 	window.mm_ddYMap_init = function(){
 		//Перебираем все
-		for (var i = $.ddManagerManager.mm_ddYMap.tvs.length - 1; i >= 0; i--){
+		for (var i = $.ddMM.mm_ddYMap.tvs.length - 1; i >= 0; i--){
 			//Инициализируем карту для нужной TV
-			$.ddManagerManager.mm_ddYMap.init($.ddManagerManager.mm_ddYMap.tvs[i]);
+			$.ddMM.mm_ddYMap.init($.ddMM.mm_ddYMap.tvs[i]);
 		}
 		
 		//Запоминаем, что первый раз карта уже инициализированна
-		$.ddManagerManager.mm_ddYMap.loaded = true;
+		$.ddMM.mm_ddYMap.loaded = true;
 	};
 });
 })(jQuery);

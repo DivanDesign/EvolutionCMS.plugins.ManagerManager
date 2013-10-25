@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddYMap
- * @version 1.4 (2013-10-04)
+ * @version 1.4.1 (2013-10-25)
  * 
  * @desc A widget for ManagerManager plugin allowing Yandex Maps integration.
  * 
@@ -14,7 +14,7 @@
  * @param $h {integer} - Height of the map container. Default: 400.
  * @param $hideField {boolean} - Original coordinates field hiding status (true — hide, false — show). Default: true.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddymap/1.4
+ * @link http://code.divandesign.biz/modx/mm_ddymap/1.4.1
  * 
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
@@ -37,7 +37,7 @@ function mm_ddYMap($tvs, $roles = '', $templates = '', $w = 'auto', $h = '400', 
 		$output .= "//  -------------- mm_ddYMap :: Begin ------------- \n";
 		
 		//The main js file including
-		$output .= includeJs($modx->config['site_url'].'assets/plugins/managermanager/widgets/ddymap/jquery.ddManagerManager.mm_ddYMap-1.0.js', 'js', 'jquery.ddManagerManager.mm_ddYMap', '1.0');
+		$output .= includeJs($modx->config['site_url'].'assets/plugins/managermanager/widgets/ddymap/jquery.ddMM.mm_ddYMap-1.0.1.js', 'js', 'jquery.ddMM.mm_ddYMap', '1.0.1');
 		//The Yandex.Maps library including
 		$output .= includeJs('http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU&onload=mm_ddYMap_init', 'js', 'api-maps.yandex.ru', '2.0');
 		
