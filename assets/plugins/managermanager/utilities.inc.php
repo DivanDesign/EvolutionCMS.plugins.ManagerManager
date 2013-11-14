@@ -155,7 +155,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 
 /**
  * getTplMatchedFields
- * @version 1.0 (2013-10-02)
+ * @version 1.0.1 (2013-11-11)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
@@ -165,7 +165,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
  * 
  * @return {array; false}
  */
-function getTplMatchedFields($fields, $tvTypes = '', $tempaleId){
+function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 	$fields = makeArray($fields);
 	
 	//$fields is required
