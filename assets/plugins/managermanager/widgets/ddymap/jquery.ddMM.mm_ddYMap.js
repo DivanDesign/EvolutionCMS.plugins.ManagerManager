@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM.mm_ddYMap Plugin
- * @version: 1.0.1 (2013-10-25)
+ * @version: 1.0.2 (2013-11-15)
  * 
  * @uses jQuery 1.9.1
  * @uses $.ddMM 1.0
@@ -21,16 +21,15 @@ $.ddMM.mm_ddYMap = {
 		height: 400
 	},
 	//Флаг сабмита поиска
-	submitSerach: false,
+//	submitSerach: false,
 	//Массив id всех TV
 	tvs: new Array(),
 	//Загруженна ли карта
 	loaded: false,
 	//Инициализация карты
 	init: function(elem){
-		var _this = this,
-			//Создаём карту
-			map = new ymaps.Map('ddYMap' + elem.id, {
+		//Создаём карту
+		var map = new ymaps.Map('ddYMap' + elem.id, {
 	 			center: [elem.LngLat[0], elem.LngLat[1]],
 				zoom: 15,
 			}),
@@ -43,11 +42,11 @@ $.ddMM.mm_ddYMap = {
 				{draggable: true}
 			);
 	
-		//При сабмите поиска
+/*		//При сабмите поиска
 		serachControl.events.add('submit', function(){
 			//Укажем это
 			_this.submitSerach = true;
-		});
+		});*/
 		
 		//При выборе результата поиска
 		serachControl.events.add('resultselect', function(event){
@@ -165,7 +164,7 @@ $.fn.mm_ddYMap = function(params){
 
 //On document.ready
 $(function(){
-	//Самбмит главной формы
+/*	//Самбмит главной формы
 	$('#mutate').on('submit', function(){
 		//Если до этого был сабмит поиска
 		if ($.ddMM.mm_ddYMap.submitSerach){
@@ -174,7 +173,7 @@ $(function(){
 			//Выкидываем осечку
 			return false;
 		}
-	});
+	});*/
 	
 	//Глобальная инициализация карт (для солбэка от Яндекс.Карт)
 	window.mm_ddYMap_init = function(){

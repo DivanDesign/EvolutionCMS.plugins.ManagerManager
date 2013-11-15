@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddYMap
- * @version 1.4.1 (2013-10-25)
+ * @version 1.4.2 (2013-11-15)
  * 
  * @desc A widget for ManagerManager plugin allowing Yandex Maps integration.
  * 
@@ -14,7 +14,10 @@
  * @param $h {integer} - Height of the map container. Default: 400.
  * @param $hideField {boolean} - Original coordinates field hiding status (true — hide, false — show). Default: true.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddymap/1.4.1
+ * @event OnDocFormPrerender
+ * @event OnDocFormRender
+ * 
+ * @link http://code.divandesign.biz/modx/mm_ddymap/1.4.2
  * 
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
@@ -24,7 +27,16 @@ function mm_ddYMap($tvs, $roles = '', $templates = '', $w = 'auto', $h = '400', 
 	global $modx, $mm_current_page;
 	$e = &$modx->Event;
 	
-	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
+	if (!useThisRule($roles, $templates)){return;}
+	
+	if ($e->name == 'OnDocFormPrerender'){
+		//The main js file including
+		$output = includeJsCss($modx->config['site_url'].'assets/plugins/managermanager/widgets/ddymap/jquery.ddMM.mm_ddYMap.js', 'html', 'jquery.ddMM.mm_ddYMap', '1.0.2');
+		//The Yandex.Maps library including
+		$output .= includeJsCss('http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU&onload=mm_ddYMap_init', 'html', 'api-maps.yandex.ru', '2.0');
+		
+		$e->output($output);
+	}else if ($e->name == 'OnDocFormRender'){
 		$output = '';
 		
 		//if we've been supplied with a string, convert it into an array
@@ -35,11 +47,6 @@ function mm_ddYMap($tvs, $roles = '', $templates = '', $w = 'auto', $h = '400', 
 		
 		//We always put a JS comment, which makes debugging much easier
 		$output .= "//  -------------- mm_ddYMap :: Begin ------------- \n";
-		
-		//The main js file including
-		$output .= includeJs($modx->config['site_url'].'assets/plugins/managermanager/widgets/ddymap/jquery.ddMM.mm_ddYMap-1.0.1.js', 'js', 'jquery.ddMM.mm_ddYMap', '1.0.1');
-		//The Yandex.Maps library including
-		$output .= includeJs('http://api-maps.yandex.ru/2.0/?load=package.full&lang=ru-RU&onload=mm_ddYMap_init', 'js', 'api-maps.yandex.ru', '2.0');
 		
 		//Iterate over supplied TVs instead of doing so to the result of tplUseTvs() to maintain rendering order.
 		foreach ($tvs as $tv){
