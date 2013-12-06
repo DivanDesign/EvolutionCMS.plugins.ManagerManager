@@ -32,7 +32,7 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
 	'jq' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
-	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM-1.1.js'
+	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js'
 );
 
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
