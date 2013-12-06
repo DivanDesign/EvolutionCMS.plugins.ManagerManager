@@ -265,7 +265,7 @@ switch ($e->name){
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->' . "\n";
 			$output .= includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-			$output .= includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1');
+			$output .= includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1.1');
 			
 			$output .= '<script type="text/javascript">' . "\n";
 			$output .= "var \$j = jQuery.noConflict(); \n"; //produces var  $j = jQuery.noConflict();
@@ -306,7 +306,7 @@ switch ($e->name){
 		echo '<!-- Begin ManagerManager output -->';
 		// Load the jquery library
 		echo includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-		echo includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1');
+		echo includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1.1');
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		echo '

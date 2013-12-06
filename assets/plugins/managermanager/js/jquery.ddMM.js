@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM Plugin
- * @version: 1.1 (2013-10-24)
+ * @version: 1.1.1 (2013-12-06)
  * 
  * @uses jQuery 1.9.1
  *
@@ -16,6 +16,7 @@ $.ddMM = {
 		datepicker_offset: 0
 	},
 	fields: {},
+	$mutate: $(),
 	
 	/**
 	 * makeArray
@@ -117,4 +118,9 @@ $.ddMM = {
 		}
 	}
 };
+
+//On document.ready
+$(function(){
+	$.ddMM.$mutate = $('#mutate');
+});
 })(jQuery);
