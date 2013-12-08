@@ -312,7 +312,7 @@ switch ($e->name){
 		echo '
 <div id="loadingmask">&nbsp;</div>
 <script type="text/javascript">
-	var $j = jQuery.noConflict();
+	window.$j = jQuery.noConflict();
 	
 	'.initJQddManagerManager().'
 	
@@ -334,8 +334,6 @@ switch ($e->name){
 <!-- You are logged into the following role: '. $mm_current_page['role'] .' -->
 
 <script type="text/javascript" charset="'.$modx->config['modx_charset'].'">
-	var $j = jQuery.noConflict();
-	
 	var mm_lastTab = "tabGeneral";
 	var mm_sync_field_count = 0;
 	var synch_field = new Array();
