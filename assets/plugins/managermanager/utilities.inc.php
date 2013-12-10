@@ -224,35 +224,49 @@ function makeSqlList($arr){
 }
 
 /**
- * includeJs
- * @version 1.2 (2013-10-23)
+ * includeJsCss
+ * @version 1.3 (2013-12-10)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
- * @param $url {string} - The URL of the external script. @required
+ * @param $source {string} - The URL of the external script or code (if $plaintext == true). @required
  * @param $output_type {'js'; 'html'} - Either js or html - depending on where the output is appearing. Default: 'js'.
- * @param $name {string} - Script name.
- * @param $version {string} - Script version.
+ * @param $name {string} - Script name. Default: ''.
+ * @param $version {string} - Script version. Default: ''.
+ * @param $plaintext {boolean} - Is this plaintext? Default: false.
+ * @param $type {''; 'js'; 'css'} - Type of source (required if $plaintext == true). Default: ''.
  * 
  * @return {string} - Code.
  */
-function includeJsCss($url, $output_type = 'js', $name = '', $version = ''){
-	global $mm_includedJsCss;
+function includeJsCss($source, $output_type = 'js', $name = '', $version = '', $plaintext = false, $type = ''){
+	global $modx, $mm_includedJsCss;
 	
-	if (empty($name) || empty($version)){
-		$nameVersion = ddTools::parseFileNameVersion($url);
-	}else{
-		$temp = pathinfo($url);
+	$useThisVer = true;
+	$result = '';
+	
+	if ($plaintext){
+		if (empty($name) || empty($version) || empty($type)){
+			return $result;
+		}
 		
 		$nameVersion = array(
 			'name' => $name,
 			'version' => $version,
-			'extension' => $temp['extension'] ? $temp['extension'] : 'js'
+			'extension' => $type
 		);
+	}else{
+		if (empty($name) || empty($version)){
+			$nameVersion = ddTools::parseFileNameVersion($source);
+		}else{
+			$temp = pathinfo($source);
+			
+			$nameVersion = array(
+				'name' => $name,
+				'version' => $version,
+				'extension' => !empty($type) ? $type : ($temp['extension'] ? $temp['extension'] : 'js')
+			);
+		}
 	}
-	
-	$useThisVer = true;
-	$result = '';
 	
 	//If this script is already included
 	if (isset($mm_includedJsCss[$nameVersion['name']])){
@@ -268,18 +282,30 @@ function includeJsCss($url, $output_type = 'js', $name = '', $version = ''){
 		//Save the new version
 		$mm_includedJsCss[$nameVersion['name']]['version'] = $nameVersion['version'];
 		
+		$result = $source;
+		
 		if ($nameVersion['extension'] == 'css'){
-			if ($output_type == 'js'){
-				$result = '$j("head").append(\' <link href="'.$url.'" rel="stylesheet" type="text/css" /> \'); ' . "\n";
-			}else if ($output_type == 'html'){
-				$result = '<link href="'.$url.'" rel="stylesheet" type="text/css" />' . "\n";
+			if ($plaintext){
+				$result = '<style type="text/css">'.$result.'</sty\'+\'le>';
+			}else{
+				$result = '<link href="'.$result.'" rel="stylesheet" type="text/css" />';
 			}
 		}else{
-			if ($output_type == 'js'){
-				$result = '$j("head").append(\' <script src="'.$url.'" type="text/javascript"></scr\'+\'ipt> \'); ' . "\n";
-			}else if ($output_type == 'html'){
-				$result = '<script src="'.$url.'" type="text/javascript"></script>' . "\n";
+			if ($plaintext){
+				$result = '<script type="text/javascript" charset="'.$modx->config['modx_charset'].'">'.$result.'</script>';
+			}else{
+				$result = '<script src="'.$result.'" type="text/javascript"></script>';
 			}
+			
+			if ($output_type == 'js'){
+				$result = str_replace('</script>', '</scr\'+\'ipt>', $result);
+			}
+		}
+		
+		$result = $result."\n";
+		
+		if ($output_type == 'js'){
+			$result = '$j("head").append(\''.$result.'\');';
 		}
 	}
 	
