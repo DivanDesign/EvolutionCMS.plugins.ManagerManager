@@ -1,11 +1,11 @@
 <?php
 /**
  * mm_ddHTMLCleaner
- * @version 1.0 (2013-11-18)
+ * @version 1.0.1 (2013-12-10)
  * 
  * A widget for the plugin ManagerManager. It removes forbidden HTML attributes and styles from document fields and TVs when required.
  * 
- * @uses ManagerManager plugin 0.5.2.
+ * @uses ManagerManager plugin 0.6.
  * 
  * @param $fields {comma separated string} - The name(s) of the document fields (or TVs) which the widget is applied to. @required
  * @param $roles {comma separated string} - Roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
@@ -17,7 +17,7 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0
+ * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.1
  * 
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
@@ -33,7 +33,7 @@ function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForA
 		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/mm_ddhtmlcleaner/';
 		
 		$output = includeJsCss($widgetDir.'jquery.ddHTMLCleaner-0.1.min.js', 'html', 'jquery.ddHTMLCleaner', '0.1');
-		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddHTMLCleaner.js', 'html', 'jquery.ddMM.mm_ddHTMLCleaner', '1.0');
+		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddHTMLCleaner.js', 'html', 'jquery.ddMM.mm_ddHTMLCleaner', '1.0.1');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
@@ -46,17 +46,18 @@ function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForA
 			$selectors[] = $mm_fields[$field]['fieldtype'].'[name=\"'.$mm_fields[$field]['fieldname'].'\"]';
 		}
 		
-		$output = "// ---------------- mm_ddHTMLCleaner :: Begin -------------\n";
+		$output = "//---------- mm_ddHTMLCleaner :: Begin -----\n";
 		
-		$output .= '
+		$output .=
+'
 $j.ddMM.mm_ddHTMLCleaner.addInstance("'.implode(',', $selectors).'", {
 	validAttrsForAllTags: "'.$validAttrsForAllTags.'",
 	validAttrs: '.$validAttrs.',
 	validStyles: "'.$validStyles.'"
 });
-		'."\n";
+';
 		
-		$output .= "// ---------------- mm_ddHTMLCleaner :: End -------------\n";
+		$output .= "//---------- mm_ddHTMLCleaner :: End -----\n";
 		
 		$e->output($output);
 	}

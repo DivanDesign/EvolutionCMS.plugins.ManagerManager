@@ -1,9 +1,9 @@
 /**
  * jQuery ddMM.mm_ddHTMLCleaner Plugin
- * @version: 1.0 (2013-11-18)
+ * @version: 1.0.1 (2013-12-10)
  * 
  * @uses jQuery 1.10.2
- * @uses $.ddMM 1.1
+ * @uses $.ddMM 1.1.2
  *
  * @copyright 2013, DivanDesign
  * http://www.DivanDesign.biz
@@ -58,7 +58,7 @@ $.ddMM.mm_ddHTMLCleaner = {
 //On document.ready
 $(function(){
 	//Самбмит главной формы
-	$('#mutate').on('submit', function(){
+	$.ddMM.$mutate.on('submit', function(){
 		$.each($.ddMM.mm_ddHTMLCleaner.instances, function(){
 			var instance = this;
 			
