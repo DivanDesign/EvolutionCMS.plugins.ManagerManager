@@ -32,7 +32,8 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
 	'jq' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
-	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js'
+	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
+	'ddTools' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js'
 );
 
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
@@ -307,6 +308,7 @@ switch ($e->name){
 		// Load the jquery library
 		echo includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
 		echo includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1.1');
+		echo includeJs($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1');
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		echo '
