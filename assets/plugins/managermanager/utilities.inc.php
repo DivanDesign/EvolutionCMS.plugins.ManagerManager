@@ -225,7 +225,7 @@ function makeSqlList($arr){
 
 /**
  * includeJsCss
- * @version 1.3 (2013-12-10)
+ * @version 1.3.1 (2013-12-10)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -302,11 +302,11 @@ function includeJsCss($source, $output_type = 'js', $name = '', $version = '', $
 			}
 		}
 		
-		$result = $result."\n";
-		
 		if ($output_type == 'js'){
 			$result = '$j("head").append(\''.$result.'\');';
 		}
+		
+		$result = $result."\n";
 	}
 	
 	return $result;
