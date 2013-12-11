@@ -1,26 +1,26 @@
 <?php
 /**
  * ManagerManager plugin
- * @version 0.5.1 (2013-07-14)
+ * @version 0.6 (2013-12-11)
  * 
  * @for MODx Evolution 1.0.x
  * 
- * @author Nick Crossland - www.rckt.co.uk, DivanDesign studio - www.DivanDesign.biz
+ * @desc Used to manipulate the display of document fields in the manager.
  * 
- * @description Used to manipulate the display of document fields in the manager.
+ * @installation See http://code.divandesign.biz/modx/managermanager/0.6
  * 
- * @installation See http://code.divandesign.biz/modx/managermanager/0.5.1
+ * @link http://code.divandesign.biz/modx/managermanager/0.6
+ * 
+ * @author DivanDesign studio (www.DivanDesign.biz), Nick Crossland (www.rckt.co.uk)
  * 
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
  * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.5.1
- * 
  * @copyright 2013
  */
 
-$mm_version = '0.5.1'; 
+$mm_version = '0.6';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 
@@ -155,7 +155,7 @@ foreach ($all_tvs as $thisTv){
 		$mm_fields[$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 	}
 	
-	//For backward compatibility
+	//For backward compatibility =(
 	$mm_fields['tv'.$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 	$mm_fields['tv'.$thisTv['id']] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 }
