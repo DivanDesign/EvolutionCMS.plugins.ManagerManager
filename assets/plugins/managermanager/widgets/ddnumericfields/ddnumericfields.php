@@ -1,22 +1,22 @@
 <?php
-/** 
+/**
  * mm_ddNumericFields
- * @version 1.1 (2013-05-20)
+ * @version 1.1.1 (2013-12-11)
  * 
- * Позволяет сделать возможным ввод в tv только цифр.
+ * A widget for ManagerManager plugin denying using any chars in TV fields but numeric.
  * 
- * @uses ManagerManager plugin 0.5.
- *
- * @param $tvs {comma separated string} - Имена TV, для которых необходимо применить виджет.
- * @param $roles {comma separated string} - Роли, для которых необходимо применить виждет, пустое значение — все роли. По умолчанию: ''.
- * @param $templates {comma separated string} - Id шаблонов, для которых необходимо применить виджет, пустое значение — все шаблоны. По умолчанию: ''.
- * @param $allowFloat {0; 1} - Можно ли вводить числа с плавающей запятой? По умолчанию: 1.
- * @param $decimals {integer} - Количество цифр после запятой (0 — любое). По умолчанию: 0.
+ * @uses ManagerManager plugin 0.6.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddnumericfields/1.1
+ * @param $tvs {comma separated string} - TV names to which the widget is applied. @required
+ * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $templates {comma separated string} - Id of the templates to which this widget is applied. Default: ''.
+ * @param $allowFloat {0; 1} - Float number availability status (1 — float numbers may be used, 0 — float numbers using is not available). Default: 1.
+ * @param $decimals {integer} - Number of chars standing after comma (0 — any). Default: 0.
+ * 
+ * @link http://code.divandesign.biz/modx/mm_ddnumericfields/1.1.1
  * 
  * @copyright 2013, DivanDesign
- * http://www.DivanDesign.ru
+ * http://www.DivanDesign.biz
  */
 
 function mm_ddNumericFields($tvs = '', $roles = '', $templates = '', $allowFloat = 1, $decimals = 0){
@@ -24,30 +24,26 @@ function mm_ddNumericFields($tvs = '', $roles = '', $templates = '', $allowFloat
 	$e = &$modx->Event;
 	
 	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
+		$tvs = tplUseTvs($mm_current_page['template'], $tvs);
+		if ($tvs == false){return;}
+		
 		$output = '';
 		
-		$tvs = tplUseTvs($mm_current_page['template'], $tvs);
-		if ($tvs == false){
-			return;
-		}
+		$output .= "//---------- mm_ddNumericFields :: Begin -----\n";
 		
-		$output .= "\n// ---------------- mm_ddNumericFields :: Begin ------------- \n";
-		
-		//Include jquery.ddTools
-		$output .= includeJs($modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js', 'js', 'jquery.ddTools', '1.8.1');
-
 		foreach ($tvs as $tv){
-			$output .= '
+			$output .=
+'
 $j("#tv'.$tv['id'].'").ddNumeric({
 	allowFloat: '.intval($allowFloat).',
 	decimals: '.intval($decimals).'
 });
-			';
+';
 		}
-
-		$output .= "\n// ---------------- mm_ddNumericFields :: End -------------";
-
-		$e->output($output . "\n");
+		
+		$output .= "//---------- mm_ddNumericFields :: End -----\n";
+		
+		$e->output($output);
 	}
 }
 ?>

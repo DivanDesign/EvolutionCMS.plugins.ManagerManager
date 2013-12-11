@@ -4,6 +4,12 @@
 	position: relative;
 }
 
+.ddMultipleField a.false {
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	text-decoration: none;
+}
+
 .ddMultipleField input, .ddMultipleField textarea {
 	border: 1px solid #C8C8C8 !important;
 	padding: 0.2em 0.533em 0.333em !important;
@@ -29,8 +35,11 @@
 
 .ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol {
 	min-height: 23px;
-	padding: 5px 0 5px 7px;
+	padding: 5px 7px;
 	vertical-align: top;
+}
+
+.ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol:last-child {
 	white-space: nowrap;
 }
 
@@ -75,6 +84,11 @@
 .ddMultipleField tr.ddFieldBlock:hover td.ddFieldCol, .ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle {background: #B2E3FF;}
 
 .ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle div {opacity: 1;}
+
+.ddFieldCol_edit {
+	text-align: right;
+	font-style: italic;
+}
 
 .ddMultipleField .ui-state-highlight td {padding: 0;}
 

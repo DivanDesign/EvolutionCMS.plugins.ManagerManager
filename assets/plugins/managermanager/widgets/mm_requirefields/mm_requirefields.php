@@ -1,20 +1,21 @@
 <?php
 /**
  * mm_requireFields
- * @version 1.2.3 (2013-07-14)
+ * @version 1.2.4 (2013-10-18)
  * 
- * Make fields required. Currently works with text fields only.
- * In the future perhaps this could deal with other elements.
+ * @desc A widget for ManagerManager plugin that allows document fields (or TVs) to become required. The widget appends a red asterisk to a field to indicate it is required, and alerts users if they save the document without completing all required fields.
+ * 
+ * Currently works with text fields only. In the future perhaps this could deal with other elements.
  * Originally version by Jelle Jager AKA TobyL - Make fields required
  * Updated by ncrossland to utilise simpler field handline of MM 0.3.5+; bring jQuery code into line; add indication to required fields
  * 
  * @uses ManagerManager plugin 0.5.
  * 
- * @param fields {comma separated string} - The name(s) of the document fields (or TVs) that are required. @required
- * @param roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles).
- * @param templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates).
+ * @param $fields {comma separated string} - The name(s) of the document fields (or TVs) that are required. @required
+ * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles).
+ * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates).
  * 
- * @link http://code.divandesign.biz/modx/mm_requirefields/1.2.3
+ * @link http://code.divandesign.biz/modx/mm_requirefields/1.2.4
  * 
  * @copyright 2013
  */
@@ -90,7 +91,7 @@ function mm_requireFields($fields, $roles = '', $templates = ''){
 						break;
 						
 						case 'input': // If it's an input, we only want to do something if it's a text field
-							$selector = "input[type=text][name=$fieldname]";
+							$selector = "input[type=text][name=$fieldname],input[type=email][name=$fieldname]";
 						break;
 						
 						default:  // all other input types, do nothing
