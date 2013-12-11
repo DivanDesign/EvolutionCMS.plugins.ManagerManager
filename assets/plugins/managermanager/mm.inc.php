@@ -265,8 +265,8 @@ switch ($e->name){
 			
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->' . "\n";
-			$output .= includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-			$output .= includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
+			$output .= includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
+			$output .= includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
 			
 			$output .= '<script type="text/javascript">' . "\n";
 			$output .= "var \$j = jQuery.noConflict(); \n"; //produces var  $j = jQuery.noConflict();
@@ -306,9 +306,9 @@ switch ($e->name){
 		
 		echo '<!-- Begin ManagerManager output -->';
 		// Load the jquery library
-		echo includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-		echo includeJs($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
-		echo includeJs($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1');
+		echo includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
+		echo includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
+		echo includeJsCss($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1');
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		echo '
@@ -411,7 +411,7 @@ switch ($e->name){
 			
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
-			echo includeJs($jsUrls['jq'], 'html', 'jquery', '1.9.1');
+			echo includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
 			
 			// Create a mask to cover the page while the fields are being rearranged
 			echo '
