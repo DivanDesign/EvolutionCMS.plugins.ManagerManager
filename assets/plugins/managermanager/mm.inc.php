@@ -188,13 +188,14 @@ if (!function_exists('initJQddManagerManager')){
 	function initJQddManagerManager(){
 		global $modx, $mm_fields;
 		
-		$output = '
+		$output =
+'
 $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
 		
 $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
-		';
+';
 		
 		return $output;
 	}
@@ -284,47 +285,27 @@ switch ($e->name){
 	break;
 	
 	case 'OnDocFormPrerender':
-		// Are we clashing with the ShowImageTVs (or any other) plugins?
-		//$conflicted_plugins = array('ShowImageTVs');
-		//$conflicts = array();
-		//foreach ($conflicted_plugins as $plg){
-			
-		//	$sql= "SELECT * FROM " . $this->getFullTableName("site_plugins") . " WHERE name='" . $plg . "' OR name='" . strtolower($plg) . "'AND disabled=0;";
-	       // $result= $modx->db->query($sql);
-	       //	if ($modx->db->getRecordCount($result) > 0){
-	       //	$conflicts[] = $plg;
-		//	}
-		//}
-		//if (count($conflicts) > 0){
-		//	echo '		
-		//	<script type="text/javascript">
-		//		alert("You appear to be running '.(count($conflicts)>1?'some plugins which are':'a plugin which is').' incompatible with ManagerManager: \n\n  '.implode('  \n  ', $conflicts).'\n\nYou may experience errors or unpredictable behaviour. \n\nPlease see the ManagerManager documentation for details of how to fix this.");
-		//	<script>	
-		//	';	
-		//}
-		
-		
-		echo '<!-- Begin ManagerManager output -->';
-		// Load the jquery library
-		echo includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-		echo includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
-		echo includeJsCss($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1');
+		$e->output("<!-- Begin ManagerManager output -->\n");
+		// Load the js libraries
+		$e->output(includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1'));
+		$e->output(includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2'));
+		$e->output(includeJsCss($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1'));
 		
 		// Create a mask to cover the page while the fields are being rearranged
-		echo '
+		$e->output(
+'
 <div id="loadingmask">&nbsp;</div>
 <script type="text/javascript">
-	window.$j = jQuery.noConflict();
-	
-	'.initJQddManagerManager().'
-	
-	$j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "absolute", zIndex: "1000", backgroundColor: "#ffffff"} );
+window.$j = jQuery.noConflict();
+'.initJQddManagerManager().'
+$j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "absolute", zIndex: "1000", backgroundColor: "#ffffff"} );
 </script>	
-		';
-		echo '<!-- End ManagerManager output -->';
+');
 		
 		//Just run widgets
 		make_changes($e->params['config_chunk']);
+		
+		$e->output("<!-- End ManagerManager output -->\n");
 	break;
 	
 	// The main document editing form
