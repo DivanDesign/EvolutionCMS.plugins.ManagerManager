@@ -26,3 +26,13 @@
 }
 
 .ui-helper-hidden-accessible {display: none;}
+
+.ddMultipleInput > span {
+	overflow: hidden;
+	vertical-align: middle;
+}
+.ddMultipleInput_dropPlaceholder {
+	display: inline-block !important;
+	overflow: hidden;
+	vertical-align: middle;
+}
