@@ -58,8 +58,8 @@ function makeArray($csv) {
 	}
 	
 	// Otherwise, turn it into an array
-	$return = explode(',',$csv);
-	array_walk( $return, create_function('$v, $k', 'return trim($v);'));	// Remove any whitespace
+	$return = array_filter(array_map('trim', explode(',', $csv)));	// Remove any whitespace
+	
 	return $return;
 }
 
