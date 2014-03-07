@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddHTMLCleaner
- * @version 1.0.2 (2014-02-14)
+ * @version 1.0.3 (2014-03-06)
  * 
  * @desc A widget for the plugin ManagerManager. It removes forbidden HTML attributes and styles from document fields and TVs when required.
  * 
@@ -17,7 +17,7 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.2
+ * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.3
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -34,7 +34,7 @@ function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForA
 	if ($e->name == 'OnDocFormPrerender'){
 		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/mm_ddhtmlcleaner/';
 		
-		$output = includeJsCss($widgetDir.'jquery.ddHTMLCleaner-0.1.min.js', 'html', 'jquery.ddHTMLCleaner', '0.1');
+		$output = includeJsCss($widgetDir.'jquery.ddHTMLCleaner-0.2.min.js', 'html', 'jquery.ddHTMLCleaner', '0.2');
 		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddHTMLCleaner.js', 'html', 'jquery.ddMM.mm_ddHTMLCleaner', '1.0.1');
 		
 		$e->output($output);
