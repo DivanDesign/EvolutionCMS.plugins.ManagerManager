@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddHTMLCleaner
- * @version 1.0.3 (2014-03-06)
+ * @version 1.0.4 (2014-03-14)
  * 
  * @desc A widget for the plugin ManagerManager. It removes forbidden HTML attributes and styles from document fields and TVs when required.
  * 
@@ -17,19 +17,17 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.3
+ * @link http://code.divandesign.biz/modx/mm_ddhtmlcleaner/1.0.4
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
  */
 
 function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForAllTags = 'title,class', $validStyles = 'word-spacing', $validAttrs = '{"img":"src,alt,width,height","a":"href,target"}'){
-	global $modx, $mm_fields, $content;
-	$e = &$modx->Event;
-	
-	if ($content['contentType'] != 'text/html'){return;}
-	
 	if (!useThisRule($roles, $templates)){return;}
+	
+	global $modx;
+	$e = &$modx->Event;
 	
 	if ($e->name == 'OnDocFormPrerender'){
 		$widgetDir = $modx->config['site_url'].'assets/plugins/managermanager/widgets/mm_ddhtmlcleaner/';
@@ -39,6 +37,10 @@ function mm_ddHTMLCleaner($fields, $roles = '', $templates = '', $validAttrsForA
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
+		global $mm_fields, $content;
+		
+		if ($content['contentType'] != 'text/html'){return;}
+		
 		$fields = getTplMatchedFields($fields);
 		if ($fields == false){return;}
 		
