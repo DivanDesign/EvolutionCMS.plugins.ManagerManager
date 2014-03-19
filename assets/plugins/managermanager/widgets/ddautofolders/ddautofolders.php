@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddAutoFolders
- * @version 1.1 (2014-03-10)
+ * @version 1.1.1 (2014-03-19)
  * 
  * @desc Automatically move documents (OnBeforeDocFormSave event) based on their date (publication date; any date in tv) into folders of year and month (like 2012/02/). If folders (documents) of year and month doesn`t exist they are created automatically OnBeforeDocFormSave event.
  * 
@@ -17,7 +17,7 @@
  * @param $monthPublished {0; 1} - Would the documents of month published? Default: 0.
  * @param $numericMonth {boolean} - Numeric aliases for month documents. Default: false.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddautofolders/1.1
+ * @link http://code.divandesign.biz/modx/mm_ddautofolders/1.1.1
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -29,8 +29,25 @@ function mm_ddAutoFolders($roles = '', $templates = '', $yearsParents = '', $dat
 	
 	//$yearsParents is required
 	if ($yearsParents != '' && $e->name == 'OnBeforeDocFormSave' && useThisRule($roles, $templates)){
+		//Функция аналогична методу «$modx->getParentIds» за исключением того, что родитель = 0 тоже выставляется
+		function getParentIds($id){
+			global $modx;
+			
+			$parents = $modx->getParentIds($id);
+			
+			//Если текущего id нет в массиве, значит его родитель = 0
+			if (!isset($parents[$id])){
+				$parents[$id] = 0;
+			//Если текущий документ есть, а его родителя нет, значит родитель родителя = 0
+			}else if(!isset($parents[$parents[$id]])){
+				$parents[$parents[$id]] = 0;
+			}
+			
+			return $parents;
+		}
+		
 		//Получаем всех родителей текущего документа (или его родителя, если это новый документ)
-		$allParents = $modx->getParentIds(is_numeric($e->params['id']) ? $e->params['id'] : $parent);
+		$allParents = getParentIds(is_numeric($e->params['id']) ? $e->params['id'] : $parent);
 		
 		$yearsParents = makeArray($yearsParents);
 		
