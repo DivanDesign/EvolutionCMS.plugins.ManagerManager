@@ -1,10 +1,10 @@
 //<?php
 /**
  * ManagerManager plugin
- * @version 0.6 (2013-12-11)
+ * @version 0.6.1 (2014-02-17)
  * 
  * Customize the MODx Manager to offer bespoke admin functions for end users.
- *
+ * 
  * @category plugin
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * 
@@ -12,9 +12,9 @@
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.6
+ * @link http://code.divandesign.biz/modx/managermanager/0.6.1
  * 
- * @copyright 2013
+ * @copyright 2014
  */
 
 // You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best
