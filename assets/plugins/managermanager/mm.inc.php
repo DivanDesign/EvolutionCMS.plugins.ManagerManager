@@ -115,7 +115,7 @@ $mm_fields = array(
 );
 
 // Add in TVs to the list of available fields
-$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->db->config['table_prefix'].'site_tmplvars', '', 'name ASC'));
+$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id,elements', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
 foreach ($all_tvs as $thisTv){
 	// What is the field name?
 	$n = $thisTv['name'];
@@ -129,7 +129,6 @@ foreach ($all_tvs as $thisTv){
 		case 'rawtextarea':
 		case 'textareamini':
 		case 'richtext':
-		case 'custom_tv':
 			$t = 'textarea';
 		break;
 		
@@ -146,6 +145,31 @@ foreach ($all_tvs as $thisTv){
 		case 'checkbox':
 			$t = 'input';
 			$fieldname_suffix = '[]';
+		break;
+		
+		case 'custom_tv':
+			if(strpos($thisTv['elements'],'tvtype="text"')!==false)
+				$t = 'input';
+			elseif(strpos($thisTv['elements'],'tvtype="textarea"')!==false)
+				$t = 'textarea';
+			elseif(strpos($thisTv['elements'],'tvtype="select"')!==false)
+				$t = 'select';
+			elseif(strpos($thisTv['elements'],'tvtype="checkbox"')!==false)
+			{
+				$t = 'input';
+				$fieldname_suffix = '[]';
+			}
+			elseif(strpos($thisTv['elements'],'<textarea')!==false)
+				$t = 'textarea';
+			elseif(strpos($thisTv['elements'],'<select')!==false)
+				$t = 'select';
+			elseif(strpos($thisTv['elements'],'"checkbox"')!==false)
+			{
+				$t = 'input';
+				$fieldname_suffix = '[]';
+			}
+			else
+				$t = 'input';
 		break;
 		
 		default:
