@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_widget_template
- * @version 1.0 (2013-01-01)
+ * @version 1.0.1 (2014-03-29)
  * 
  * A template for creating new widgets
  * 
@@ -26,8 +26,8 @@ function mm_widget_template($fields, $other_param = 'defaultValue', $roles = '',
 	if ($e->name == 'OnDocFormPrerender'){
 		// We have functions to include JS or CSS external files you might need
 		// The standard ModX API methods don't work here
-		$output .= includeJsCss('/assets/plugins/managermanager/widgets/template/javascript.js', 'html');
-		$output .= includeJsCss('/assets/plugins/managermanager/widgets/template/styles.css', 'html');
+		$output .= includeJsCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/template/javascript.js', 'html');
+		$output .= includeJsCss($modx->config['base_url'] . 'assets/plugins/managermanager/widgets/template/styles.css', 'html');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
