@@ -211,19 +211,20 @@ function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 
 /**
  * makeSqlList
- * @version 1.0.1 (2013-03-19)
+ * @version 1.0.2 (2014-03-29)
  * 
  * @desc Create a MySQL-safe list from an array.
  * 
  * @param $arr {array; comma separated string} - Values.
  */
 function makeSqlList($arr){
+	global $modx;
 	$arr = makeArray($arr);
 	
 	foreach($arr as $k => $tv){
         //if (substr($tv, 0, 2) == 'tv') {$tv=substr($tv,2);}
 		// Escape them for MySQL
-		$arr[$k] = "'".mysql_real_escape_string($tv)."'";
+		$arr[$k] = "'".$modx->db->escape($tv)."'";
 	}
 	
 	$sql = " (".implode(',', $arr).") ";
