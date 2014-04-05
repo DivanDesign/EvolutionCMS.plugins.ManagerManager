@@ -36,11 +36,11 @@ function mm_changeFieldHelp($field, $helptext = '', $roles = '', $templates = ''
 			
 			//Is this TV?
 			if ($mm_fields[$field]['tv']){
-				$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").parents("td:first").prev("td").children("span.comment").html("'.jsSafe($helptext).'");';
+				$output .= '$j("'.$fieldtype.'[name=\''.$fieldname.'\']").parents("td:first").prev("td").children("span.comment").html("'.jsSafe($helptext).'");';
 				//Or document field
 			}else{
 				// Give the help button an ID, and modify the alt/title text
-				$output .= '$j("'.$fieldtype.'[name='.$fieldname.']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'"); ';
+				$output .= '$j("'.$fieldtype.'[name=\''.$fieldname.'\']").siblings("img[style*=\'cursor:help\']").attr("id", "'.$fieldname.'-help").attr("alt", "'.jsSafe($helptext).'").attr("title", "'.jsSafe($helptext).'"); ';
 			}
 		}
 		
