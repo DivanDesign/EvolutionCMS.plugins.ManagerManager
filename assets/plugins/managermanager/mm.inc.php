@@ -303,7 +303,17 @@ switch ($e->name){
 <script type="text/javascript">
 window.$j = jQuery.noConflict();
 '.initJQddManagerManager().'
-$j("#loadingmask").css( {width: "100%", height: $j("body").height(), position: "absolute", zIndex: "1000", backgroundColor: "#ffffff"} );
+$j("#loadingmask").css({
+	width: "100%",
+	minHeight: "100%",
+	position: "absolute",
+	zIndex: "1000",
+	backgroundColor: "#ffffff"
+});
+				
+$j(function(){
+	$j("#loadingmask").css({height: $j("body").height()});
+});
 </script>
 ');
 		
