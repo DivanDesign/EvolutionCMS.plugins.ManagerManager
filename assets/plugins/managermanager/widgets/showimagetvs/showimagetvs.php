@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_widget_showimagetvs
- * @version 1.2b (2014-03-01)
+ * @version 1.2.1 (2014-05-07)
  * 
  * @desc A widget for ManagerManager plugin that allows the preview of images chosen in image TVs to be shown on the document editing page.
  * Emulates showimagestv plugin, which is not compatible with ManagerManager.
@@ -14,7 +14,7 @@
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * @param $templates {comma separated string} - Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates). Default: ''.
  * 
- * @link http://code.divandesign.biz/modx/mm_widget_showimagetvs/1.2b
+ * @link http://code.divandesign.biz/modx/mm_widget_showimagetvs/1.2.1
  * 
  * @copyright 2014
  */
@@ -27,7 +27,7 @@ function mm_widget_showimagetvs($tvs = '', $maxWidth = 300, $maxHeight = 100, $t
 	
 	if ($e->name == 'OnDocFormPrerender'){
 		//The main js file including
-		$output = includeJsCss($modx->config['site_url'].'assets/plugins/managermanager/widgets/showimagetvs/jquery.ddMM.mm_widget_showimagetvs.js', 'html', 'jquery.ddMM.mm_widget_showimagetvs', '1.0');
+		$output = includeJsCss($modx->config['site_url'].'assets/plugins/managermanager/widgets/showimagetvs/jquery.ddMM.mm_widget_showimagetvs.js', 'html', 'jquery.ddMM.mm_widget_showimagetvs', '1.0.1');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){

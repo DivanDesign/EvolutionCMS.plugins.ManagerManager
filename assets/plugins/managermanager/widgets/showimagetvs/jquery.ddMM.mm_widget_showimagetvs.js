@@ -1,9 +1,10 @@
 /**
  * jQuery ddMM.mm_widget_showimagetvs Plugin
- * @version 1.0 (2014-03-01)
+ * @version 1.0.1 (2014-05-07)
  * 
  * @uses jQuery 1.9.1
  * @uses $.ddMM 1.1.2
+ * @uses $.ddTools 1.8.1
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -27,7 +28,7 @@ $.ddMM.mm_widget_showimagetvs = {
 
 /**
  * jQuery.fn.mm_widget_showimagetvs Plugin
- * @version 1.0 (2014-03-01)
+ * @version 1.0.2 (2014-05-07)
  * 
  * @description Делает превьюшку для tv.
  * 
@@ -66,11 +67,12 @@ $.fn.mm_widget_showimagetvs = function(params){
 		
 		$this.data('lastvalue', url);
 		
-		// If we have a PHPThumb URL
-		if (params.thumbnailerUrl.length > 0){
-			url = params.thumbnailerUrl + '?src=' + escape(url) + '&w=' + params.width + '&h=' + params.height;
-		}else if (url.length > 0 && url.search(/http:\/\//i) == -1){
+		if (url.length > 0 && url.search(/http:\/\//i) == -1 && url.search(/\//) != 0){
 			url = $.ddMM.config.site_url + url;
+		}
+		// If we have a PHPThumb URL
+		if (url.length > 0 && params.thumbnailerUrl.length > 0){
+			url = params.thumbnailerUrl + '?src=' + escape(url) + '&w=' + params.width + '&h=' + params.height;
 		}
 		
 		$img.attr('src', url);
@@ -80,7 +82,7 @@ $.fn.mm_widget_showimagetvs = function(params){
 		}else{
 			$img.hide();
 		}
-	}).trigger('change');
+	}).trigger('load');
 };
 
 //On document.ready
