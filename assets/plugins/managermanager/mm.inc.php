@@ -210,7 +210,7 @@ switch ($e->name){
 	case 'OnPluginFormRender':
 		// The ID of the plugin we're editing
 		$plugin_id_editing = $e->params['id'];
-		$result = $modx->db->select('name, id', $modx->getFullTableName('site_plugins'), 'id='.$plugin_id_editing);
+		$result = $modx->db->select('name', $modx->getFullTableName('site_plugins'), 'id='.$plugin_id_editing);
 		$plugin_editing_name = $modx->db->getValue($result);
 		
 		// if it's the right plugin
