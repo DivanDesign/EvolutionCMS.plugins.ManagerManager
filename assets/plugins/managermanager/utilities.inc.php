@@ -369,7 +369,7 @@ function prepareTabId($id){
 
 /**
  * prepareSectionId
- * @version 1.0 (2013-05-21)
+ * @version 1.1 (2014-05-25)
  * 
  * @desc Prepare id of a section.
  * 
@@ -378,7 +378,21 @@ function prepareTabId($id){
  * @return {string} - Section id.
  */
 function prepareSectionId($id){
-	return 'ddSection'.$id;
+	switch ($id){
+		case 'content':
+			$id = 'content';
+		break;
+		
+		case 'tvs':
+			$id = 'tv';
+		break;
+		
+		default:
+			$id = 'ddSection'.$id;
+		break;
+	}
+	
+	return $id;
 }
 
 //function tvIdFromName($tv_id) {
