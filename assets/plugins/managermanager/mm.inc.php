@@ -40,9 +40,9 @@ $jsUrls = array(
 		'version' => '1.2'
 	),
 	'ddTools' => array(
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js',
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
 		'name' => 'jquery.ddTools',
-		'version' => '1.8.1'
+		'version' => '1.8.6'
 	)
 );
 
