@@ -29,9 +29,21 @@ $e = &$modx->Event;
 if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = array(
-	'jq' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
-	'mm' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
-	'ddTools' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js'
+	'jq' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
+		'name' => 'jquery',
+		'version' => '1.9.1'
+	),
+	'mm' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'name' => 'ddMM',
+		'version' => '1.2'
+	),
+	'ddTools' => array(
+		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.1.min.js',
+		'name' => 'jquery.ddTools',
+		'version' => '1.8.1'
+	)
 );
 
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
@@ -266,8 +278,8 @@ switch ($e->name){
 			
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->'."\n";
-			$output .= includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
-			$output .= includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2');
+			$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
 			
 			$output .= '<script type="text/javascript">'."\n";
 			//produces var  $j = jQuery.noConflict();
@@ -288,9 +300,9 @@ switch ($e->name){
 	case 'OnDocFormPrerender':
 		$e->output("<!-- Begin ManagerManager output -->\n");
 		// Load the js libraries
-		$e->output(includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1'));
-		$e->output(includeJsCss($jsUrls['mm'], 'html', 'ddMM', '1.1.2'));
-		$e->output(includeJsCss($jsUrls['ddTools'], 'html', 'jquery.ddTools', '1.8.1'));
+		$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
+		$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
+		$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		$e->output(
@@ -402,7 +414,7 @@ $j(function(){
 		if ($remove_deprecated_tv_types){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
-			echo includeJsCss($jsUrls['jq'], 'html', 'jquery', '1.9.1');
+			echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
 			
 			// Create a mask to cover the page while the fields are being rearranged
 			echo '
