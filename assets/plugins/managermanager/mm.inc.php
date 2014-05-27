@@ -157,10 +157,6 @@ foreach ($all_tvs as $thisTv){
 	if (!isset($mm_fields[$n])){
 		$mm_fields[$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 	}
-	
-	//For backward compatibility =(
-	$mm_fields['tv'.$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
-	$mm_fields['tv'.$thisTv['id']] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
 }
 
 // Get the contents of the config chunk, and put it in the "make changes" function, to be run at the appropriate moment later on
