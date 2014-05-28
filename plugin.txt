@@ -1,7 +1,7 @@
 //<?php
 /**
  * ManagerManager plugin
- * @version 0.6.1 (2014-02-17)
+ * @version 0.6.2 (2014-05-28)
  * 
  * Customize the MODx Manager to offer bespoke admin functions for end users.
  * 
@@ -12,7 +12,7 @@
  * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnPluginFormRender,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.6.1
+ * @link http://code.divandesign.biz/modx/managermanager/0.6.2
  * 
  * @copyright 2014
  */
@@ -20,7 +20,6 @@
 // You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best
 
 // To use an external file, put your rules in /assets/plugins/managermanager/mm_rules.inc.php 
-// (you can rename default.mm_rules.inc.php and use it as an example)
 // The chunk SHOULD have php opening tags at the beginning and end
 
 // If you want to put your rules in a chunk (so you can edit them through the Manager),
