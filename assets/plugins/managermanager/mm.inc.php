@@ -37,7 +37,7 @@ $jsUrls = array(
 	'mm' => array(
 		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
 		'name' => 'ddMM',
-		'version' => '1.2'
+		'version' => '1.2.1'
 	),
 	'ddTools' => array(
 		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',

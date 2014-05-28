@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM Plugin
- * @version 1.2 (2014-05-27)
+ * @version 1.2.1 (2014-05-28)
  * 
  * @uses jQuery 1.9.1
  * 
@@ -63,7 +63,7 @@ $.ddMM = {
 	
 	/**
 	 * moveFields
-	 * @version 1.0.1 (2014-05-27)
+	 * @version 1.1 (2014-05-28)
 	 * 
 	 * @desctiption Move a fields to some target (e.g. tab or section).
 	 * 
@@ -85,8 +85,19 @@ $.ddMM = {
 			
 			$.each(fields, function(){
 				if (this == 'content'){
-					$('#content_body').appendTo($target);
-					$('#content_header').hide();
+					//Если перемещаем в секцию
+					if ($target.hasClass('sectionBody')){
+						var $row = $('<tr><td valign="top"></td><td></td></tr>');
+						
+						$('#content_header').removeClass('sectionHeader').wrapInner('<span class="warning"></span>').appendTo($row.find('td:first'));
+						
+						$('#content_body').removeClass('sectionBody').appendTo($row.find('td:last'));
+						
+						$row.appendTo($target.find('> table:first')).after(ruleHtml);
+					}else{
+						$('#content_body').appendTo($target);
+						$('#content_header').hide();
+					}
 				//We can't move these fields because they belong in a particular place
 				}else if (
 					this == 'keywords' ||
