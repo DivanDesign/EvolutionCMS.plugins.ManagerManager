@@ -81,7 +81,9 @@ if ($handle = opendir($widget_dir)){
 $mm_current_page = array();
 
 //Get page template
-if (isset($_POST['template'])){
+if (isset($e->params['template'])){
+	$mm_current_page['template'] = $e->params['template'];
+}else if (isset($_POST['template'])){
 	$mm_current_page['template'] = $_POST['template'];
 }else if (isset($content['template'])){
 	$mm_current_page['template'] = $content['template'];
