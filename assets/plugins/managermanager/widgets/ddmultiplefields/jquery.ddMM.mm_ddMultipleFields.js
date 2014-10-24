@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM.mm_ddMultipleFields Plugin
- * @version 1.1.1 (2014-05-15)
+ * @version 1.2 (2014-10-23)
  * 
  * @uses jQuery 1.9.1
  * @uses $.ddTools 1.8.1
@@ -30,11 +30,7 @@ $.ddMM.mm_ddMultipleFields = {
 		//Минимальное количество строк
 		minRow: 0,
 		//Максимальное количество строк
-		maxRow: 0,
-		//Конструктор поля (в случае если тип колонки == 'field')
-		makeFieldFunction: 'makeNull',
-		//Функция получения файлов
-		browseFuntion: false
+		maxRow: 0
 	},
 //	Все экземпляры (TV). Структура: {
 //		'id': {
@@ -118,8 +114,7 @@ $.ddMM.mm_ddMultipleFields = {
 		});
 		
 		//Записываем значение в оригинальное поле
-//		$('#' + id).attr('value', _this.maskQuoutes(masRows.join(_this.instances[id].splY)));
-		$('#' + id).val(_this.maskQuoutes(masRows.join(_this.instances[id].splY)));
+		$('#' + id).val(masRows.join(_this.instances[id].splY));
 	},
 	//Инициализация
 	//Принимает id оригинального поля, его значения и родителя поля
@@ -180,23 +175,15 @@ $.ddMM.mm_ddMultipleFields = {
 			handle: '.ddSortHandle',
 			cursor: 'n-resize',
 			axis: 'y',
-/*			tolerance: 'pointer',*/
-/*			containment: 'parent',*/
 			placeholder: 'ui-state-highlight',
 			start: function(event, ui){
 				ui.placeholder.html('<td colspan="' + (_this.instances[id].coloumns.length + 2) + '"><div></div></td>').find('div').css('height', ui.item.height());
 			},
 			stop: function(event, ui){
 				//Находим родителя таблицы, вызываем функцию обновления поля
-//				ui.item.parents('.ddMultipleField:first').trigger('change.ddEvents');
 				_this.moveAddButton(id);
 			}
 		});
-		
-		//Запускаем обновление, если были ограничения
-//		if (_this.instances[id].maxRow || _this.instances[id].minRow){
-//			$ddMultipleField.trigger('change.ddEvents');
-//		}
 	},
 	//Функция создания строки
 	//Принимает id и данные строки
@@ -220,7 +207,7 @@ $.ddMM.mm_ddMultipleFields = {
 		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
 		
 		//Разбиваем переданное значение на колонки
-		val = _this.maskQuoutes(val).split(_this.instances[id].splX);
+		val = val.split(_this.instances[id].splX);
 		
 		var $field;
 		
@@ -232,20 +219,26 @@ $.ddMM.mm_ddMultipleFields = {
 			
 			var $col = _this.makeFieldCol($fieldBlock);
 			
-			//Если текущая колонка является полем
-			if(_this.instances[id].coloumns[key] == 'field'){
+			//Если текущая колонка является изображением
+			if(_this.instances[id].coloumns[key] == 'image'){
 				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 				
-				_this[_this.instances[id].makeFieldFunction](id, $col);
+				_this.makeImage(id, $col);
 				
-				//If is file or image
-				if (_this.instances[id].browseFuntion){
-					//Create Attach browse button
-					$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
-						_this.instances[id].currentField = $(this).siblings('.ddField');
-						_this.instances[id].browseFuntion(id);
-					});
-				}
+				//Create Attach browse button
+				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
+					_this.instances[id].currentField = $(this).siblings('.ddField');
+					BrowseServer(id);
+				});
+			//Если текущая колонка является файлом
+			}else if(_this.instances[id].coloumns[key] == 'file'){
+				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				
+				//Create Attach browse button
+				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
+					_this.instances[id].currentField = $(this).siblings('.ddField');
+					BrowseFileServer(id);
+				});	
 			//Если id
 			}else if (_this.instances[id].coloumns[key] == 'id'){
 				$field = _this.makeText(val[key], '', 0, $col);
@@ -257,7 +250,6 @@ $.ddMM.mm_ddMultipleFields = {
 				$col.hide();
 			//Если селект
 			}else if(_this.instances[id].coloumns[key] == 'select'){
-//				$field.remove();
 				_this.makeSelect(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].coloumnsData[key], _this.instances[id].colWidth[key], $col);
 			//Если дата
 			}else if(_this.instances[id].coloumns[key] == 'date'){
@@ -276,11 +268,6 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		//Create DeleteButton
 		_this.makeDeleteButton(id, _this.makeFieldCol($fieldBlock));
-		
-		//При изменении и загрузке
-//		$('.ddField', $fieldBlock).on('load.ddEvents change.ddEvents',function(){
-//			$(this).parents('.ddMultipleField:first').trigger('change.ddEvents');
-//		});
 		
 		//Специально для полей, содержащих изображения необходимо инициализировать
 		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');
@@ -322,14 +309,9 @@ $.ddMM.mm_ddMultipleFields = {
 					//При любом удалении показываем кнопку добавления
 					_this.instances[id].$addButton.removeAttr('disabled');
 					
-					//Инициализируем событие изменения
-//					$table.trigger('change.ddEvents');
-					
 					return;
 				});
 			}
-			//Инициализируем событие изменения
-//			$table.trigger('change.ddEvents');
 		});
 	},
 	//Функция создания кнопки +, вызывается при инициализации
@@ -355,13 +337,15 @@ $.ddMM.mm_ddMultipleFields = {
 	},
 	//Make text field
 	makeText: function(value, title, width, $fieldCol){
-		return $('<input type="text" value="' + value + '" title="' + title + '" style="width:' + width + 'px;" class="ddField" />').appendTo($fieldCol);
+		var $field = $('<input type="text" title="' + title + '" style="width:' + width + 'px;" class="ddField" />');
+		
+		return $field.val(value).appendTo($fieldCol);
 	},
 	//Make date field
 	makeDate: function(value, title, $fieldCol){
 		//name нужен для DatePicker`а
-		var $field = $('<input type="text" value="' + value + '" title="' + title + '" class="ddField DatePicker" name="ddMultipleDate" />').appendTo($fieldCol);
-		
+		var $field = $('<input type="text" title="' + title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(value).appendTo($fieldCol);
+
 		new DatePicker($field.get(0), {
 			'yearOffset': $.ddMM.config.datepicker_offset,
 			'format': $.ddMM.config.datetime_format + ' hh:mm:00'
@@ -449,19 +433,12 @@ $.ddMM.mm_ddMultipleFields = {
 		return $select.appendTo($fieldCol);
 	},
 	//Функция ничего не делает
-	makeNull: function(id, $fieldCol){return false;},
-	//Маскирует кавычки
-	maskQuoutes: function(text){
-		text = text.replace(/"/g, "&#34;");
-		text = text.replace(/\'/g, "&#39;");
-		
-		return text;
-	}
+	makeNull: function(id, $fieldCol){return false;}
 };
 
 /**
  * jQuery.fn.mm_ddMultipleFields Plugin
- * @version 1.0.1 (2014-03-01)
+ * @version 1.0.2 (2014-10-23)
  * 
  * @description Делает мультиполя.
  * 
@@ -475,8 +452,6 @@ $.ddMM.mm_ddMultipleFields = {
  * @param imageStyle {string} - Стиль превьюшек. Default: ''.
  * @param minRow {integer} - Минимальное количество строк. Default: 0.
  * @param maxRow {integer} - Максимальное количество строк. Default: 0.
- * @param makeFieldFunction {string} - Имя метода конструктора поля (в случае если тип колонки == 'field'). Default: 'makeNull'.
- * @param browseFuntion {function; false} - Функция получения файлов. Default: false.
  * 
  * @copyright 2014, DivanDesign
  * http://www.DivanDesign.biz
@@ -517,7 +492,7 @@ $.fn.mm_ddMultipleFields = function(params){
 				});
 				
 				//Если это файл или изображение, cкрываем оригинальную кнопку
-				if (_this.instances[id].browseFuntion){$this.next('input[type=button]').hide();}
+				$this.next('input[type=button]').hide();
 				
 				//Создаём мульти-поле
 				_this.init(id, $this.val(), $this.parent());
@@ -528,28 +503,100 @@ $.fn.mm_ddMultipleFields = function(params){
 
 //On document.ready
 $(function(){
-	//If we have imageTVs on this page, modify the SetUrl function so it triggers a "change" event on the URL field
-	if (typeof(SetUrl) != 'undefined'){
-		//Copy the existing Image browser SetUrl function
-		var oldSetUrl = SetUrl;
+	if (typeof(SetUrl) == 'undefined'){
+		lastImageCtrl = '';
+		lastFileCtrl = '';
 		
-		//Redefine it to also tell the preview to update
-		SetUrl = function(url, width, height, alt){
-			var c;
+		OpenServerBrowser = function(url, width, height){
+			var iLeft = (screen.width  - width) / 2;
+			var iTop  = (screen.height - height) / 2;
 			
-			if(lastFileCtrl){
-				c = $(document.mutate[lastFileCtrl]);
-			}else if(lastImageCtrl){
-				c = $(document.mutate[lastImageCtrl]);
-			}
+			var sOptions = 'toolbar=no,status=no,resizable=yes,dependent=yes';
 			
-			oldSetUrl(url, width, height, alt);
+			sOptions += ',width=' + width;
+			sOptions += ',height=' + height;
+			sOptions += ',left=' + iLeft;
+			sOptions += ',top=' + iTop;
 			
-			if (c){c.trigger('change');}
+			window.open(url, 'FCKBrowseWindow', sOptions);
 		};
+		
+		BrowseServer = function(ctrl){
+			lastImageCtrl = ctrl;
+			
+			var w = screen.width * 0.5;
+			var h = screen.height * 0.5;
+			
+			OpenServerBrowser($.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=images', w, h);
+		};
+		
+		BrowseFileServer = function(ctrl){
+			lastFileCtrl = ctrl;
+			
+			var w = screen.width * 0.5;
+			var h = screen.height * 0.5;
+			
+			OpenServerBrowser($.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=files', w, h);
+		};
+		
+		SetUrlChange = function(el){
+			if ('createEvent' in document){
+				var evt = document.createEvent('HTMLEvents');
+				
+				evt.initEvent('change', false, true);
+				el.dispatchEvent(evt);
+			}else{
+				el.fireEvent('onchange');
+			}
+		};
+		
+		SetUrl = function(url, width, height, alt){
+			if(lastFileCtrl){
+				var c = document.getElementById(lastFileCtrl);
+				
+				if(c && c.value != url){
+				    c.value = url;
+					SetUrlChange(c);
+				}
+				
+				lastFileCtrl = '';
+			}else if(lastImageCtrl){
+				var c = document.getElementById(lastImageCtrl);
+				
+				if(c && c.value != url){
+				    c.value = url;
+					SetUrlChange(c);
+				}
+				
+				lastImageCtrl = '';
+			}else{
+				return;
+			}
+		};
+	}else{
+		//For old MODX versions
+		if (typeof(SetUrlChange) == 'undefined'){
+			//Copy the existing Image browser SetUrl function
+			var oldSetUrl = SetUrl;
+			
+			//Redefine it to also tell the preview to update
+			SetUrl = function(url, width, height, alt){
+				var $field = $();
+				
+				if(lastFileCtrl){
+					$field = $(document.mutate[lastFileCtrl]);
+				}else if(lastImageCtrl){
+					$field = $(document.mutate[lastImageCtrl]);
+				}
+				
+				oldSetUrl(url, width, height, alt);
+				
+				$field.trigger('change');
+			};
+		}
 	}
 	
-	//Самбмит главной формы
+	//Сабмит главной формы
 	$.ddMM.$mutate.on('submit', function(){
 		$.each($.ddMM.mm_ddMultipleFields.instances, function(key){
 			$.ddMM.mm_ddMultipleFields.updateTv(key);
