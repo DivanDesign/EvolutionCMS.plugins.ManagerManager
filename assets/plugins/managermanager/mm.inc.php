@@ -209,6 +209,8 @@ $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
 
+$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
+
 $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 ';
 		

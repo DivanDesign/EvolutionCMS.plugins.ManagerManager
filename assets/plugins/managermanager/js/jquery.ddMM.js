@@ -16,6 +16,7 @@ $.ddMM = {
 		datepicker_offset: 0
 	},
 	urls: {
+		manager: 'manager/',
 		mm: 'assets/plugins/managermanager/'
 	},
 	/**
