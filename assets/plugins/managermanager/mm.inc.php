@@ -54,8 +54,8 @@ global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm
 if (isset($_REQUEST['newtemplate'])) {
 	$content['template'] = $_REQUEST['newtemplate'];
 } else {
-	if (empty($content['template'])) {
-    	$content['template'] = getDefaultTemplate();
+	if (!isset($content['template'])) {
+		$content['template'] = getDefaultTemplate();
     }
 }
 
