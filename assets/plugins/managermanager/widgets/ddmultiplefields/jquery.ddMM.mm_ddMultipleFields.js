@@ -227,11 +227,18 @@ $.ddMM.mm_ddMultipleFields = {
 		//Перебираем колонки
 		$.each(_this.instances[id].coloumns, function(key){
 			if (typeof val[key]=='undefined'){
-				//Значение по умолчанию. если JSON array - то первое
+				//Значение по умолчанию. для  JSON, искать флаг в 3-м элементе, или первое значение
 				if (val[key] = _this.instances[id].coloumnsData[key] || '' )
 					try {
-						val[key] = $.parseJSON(val[key]);
-						while($.isArray(val[key])) val[key]=val[key].shift();
+						var valDef = val[key] = $.parseJSON(val[key]);
+						while($.isArray(valDef)) valDef=valDef.shift();
+						$.each(val[key], function(k,v){
+							if (v[2]) {
+								valDef = v[0];	
+								return false;
+							}
+						});
+						val[key] = valDef;
 					} catch (e) {}
 			}
 			if (!_this.instances[id].coloumnsTitle[key]){_this.instances[id].coloumnsTitle[key] = '';}
