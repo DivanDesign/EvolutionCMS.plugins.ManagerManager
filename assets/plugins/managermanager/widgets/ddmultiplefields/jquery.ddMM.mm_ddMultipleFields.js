@@ -167,12 +167,12 @@ $.ddMM.mm_ddMultipleFields = {
 		_this.instances[id].$addButton = _this.makeAddButton(id);
 		
 		for (var i = 0, len = arr.length; i < len; i++){
-			//В случае, если размер массива был увеличен по minRow, значением будет undefined, посему зафигачим пустую строку
-			_this.makeFieldRow(id, arr[i] || '');
+			//В случае, если размер массива был увеличен по minRow, значением будет undefined, вот и замечательно - то что нужно
+			_this.makeFieldRow(id, arr[i]);
 		}
 		
 		//Втыкаем кнопку + куда надо
-		_this.instances[id].$addButton.appendTo($('#' + id + 'ddMultipleField .ddFieldBlock:last .ddFieldCol:last'));
+		_this.moveAddButton(id);
 		
 		//Добавляем возможность перетаскивания
 		$ddMultipleField.sortable({
@@ -220,13 +220,20 @@ $.ddMM.mm_ddMultipleFields = {
 		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
 		
 		//Разбиваем переданное значение на колонки
-		val = _this.maskQuoutes(val).split(_this.instances[id].splX);
+		val = val ? _this.maskQuoutes(val).split(_this.instances[id].splX):[];
 		
 		var $field;
 		
 		//Перебираем колонки
 		$.each(_this.instances[id].coloumns, function(key){
-			if (!val[key]){val[key] = '';}
+			if (typeof val[key]=='undefined'){
+				//Значение по умолчанию. если JSON array - то первое
+				if (val[key] = _this.instances[id].coloumnsData[key] || '' )
+					try {
+						val[key] = $.parseJSON(val[key]);
+						while($.isArray(val[key])) val[key]=val[key].shift();
+					} catch (e) {}
+			}
 			if (!_this.instances[id].coloumnsTitle[key]){_this.instances[id].coloumnsTitle[key] = '';}
 			if (!_this.instances[id].colWidth[key] || _this.instances[id].colWidth[key] == ''){_this.instances[id].colWidth[key] = _this.instances[id].colWidth[key - 1];}
 			
@@ -307,12 +314,8 @@ $.ddMM.mm_ddMultipleFields = {
 				$par = $this.parents('.ddFieldBlock:first')/*,
 				$table = $this.parents('.ddMultipleField:first')*/;
 			
-			//Отчистим значения полей
-			$par.find('.ddField').val('');
-			
-			//Если больше одной строки, то можно удалить текущую строчку
-			if ($par.siblings('.ddFieldBlock').length > 0){
 				$par.fadeOut(300, function(){
+					var $siblingsL = $par.siblings('.ddFieldBlock').length;
 					//Если контейнер имеет кнопку добалвения, перенесём её
 					if ($par.find('.ddAddButton').length > 0){
 						_this.moveAddButton(id, $par.prev('.ddFieldBlock'));
@@ -327,9 +330,14 @@ $.ddMM.mm_ddMultipleFields = {
 					//Инициализируем событие изменения
 //					$table.trigger('change.ddEvents');
 					
+				//Если было меньше одной строки, созданем новую строчку
+				if (!$siblingsL){
+					_this.instances[id].$addButton = _this.makeAddButton(id);
+					_this.makeFieldRow(id);
+					_this.moveAddButton(id);
+				}
 					return;
 				});
-			}
 			//Инициализируем событие изменения
 //			$table.trigger('change.ddEvents');
 		});
@@ -340,7 +348,7 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		return $('<input class=\"ddAddButton\" type=\"button\" value=\"+\" />').on('click', function(){
 			//Вешаем на кнопку создание новой строки
-			$(this).appendTo(_this.makeFieldRow(id, '').find('.ddFieldCol:last'));
+			$(this).appendTo(_this.makeFieldRow(id).find('.ddFieldCol:last'));
 		});
 	},
 	//Перемещение кнопки +
