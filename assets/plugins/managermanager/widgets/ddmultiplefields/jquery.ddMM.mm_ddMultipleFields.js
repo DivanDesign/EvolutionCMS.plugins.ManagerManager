@@ -162,12 +162,12 @@ $.ddMM.mm_ddMultipleFields = {
 		_this.instances[id].$addButton = _this.makeAddButton(id);
 		
 		for (var i = 0, len = arr.length; i < len; i++){
-			//В случае, если размер массива был увеличен по minRow, значением будет undefined, посему зафигачим пустую строку
-			_this.makeFieldRow(id, arr[i] || '');
+			//В случае, если размер массива был увеличен по minRow, значением будет undefined, вот и замечательно - то что нужно
+			_this.makeFieldRow(id, arr[i]);
 		}
 		
 		//Втыкаем кнопку + куда надо
-		_this.instances[id].$addButton.appendTo($('#' + id + 'ddMultipleField .ddFieldBlock:last .ddFieldCol:last'));
+		_this.moveAddButton(id);
 		
 		//Добавляем возможность перетаскивания
 		$ddMultipleField.sortable({
@@ -207,13 +207,27 @@ $.ddMM.mm_ddMultipleFields = {
 		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
 		
 		//Разбиваем переданное значение на колонки
-		val = val.split(_this.instances[id].splX);
+		val = val ? _this.maskQuoutes(val).split(_this.instances[id].splX):[];
 		
 		var $field;
 		
 		//Перебираем колонки
 		$.each(_this.instances[id].coloumns, function(key){
-			if (!val[key]){val[key] = '';}
+			if (typeof val[key]=='undefined'){
+				//Значение по умолчанию. для  JSON, искать флаг в 3-м элементе, или первое значение
+				if (val[key] = _this.instances[id].coloumnsData[key] || '' )
+					try {
+						var valDef = val[key] = $.parseJSON(val[key]);
+						while($.isArray(valDef)) valDef=valDef.shift();
+						$.each(val[key], function(k,v){
+							if (v[2]) {
+								valDef = v[0];	
+								return false;
+							}
+						});
+						val[key] = valDef;
+					} catch (e) {}
+			}
 			if (!_this.instances[id].coloumnsTitle[key]){_this.instances[id].coloumnsTitle[key] = '';}
 			if (!_this.instances[id].colWidth[key] || _this.instances[id].colWidth[key] == ''){_this.instances[id].colWidth[key] = _this.instances[id].colWidth[key - 1];}
 			
@@ -261,6 +275,8 @@ $.ddMM.mm_ddMultipleFields = {
 			}else if(_this.instances[id].coloumns[key] == 'richtext'){
 				_this.makeRichtext(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			//По дефолту делаем текстовое поле
+			}else if(_this.instances[id].coloumns[key] == 'number'){
+				_this.makeNumber(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}else{
 				_this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}
@@ -292,12 +308,8 @@ $.ddMM.mm_ddMultipleFields = {
 				$par = $this.parents('.ddFieldBlock:first')/*,
 				$table = $this.parents('.ddMultipleField:first')*/;
 			
-			//Отчистим значения полей
-			$par.find('.ddField').val('');
-			
-			//Если больше одной строки, то можно удалить текущую строчку
-			if ($par.siblings('.ddFieldBlock').length > 0){
 				$par.fadeOut(300, function(){
+					var $siblingsL = $par.siblings('.ddFieldBlock').length;
 					//Если контейнер имеет кнопку добалвения, перенесём её
 					if ($par.find('.ddAddButton').length > 0){
 						_this.moveAddButton(id, $par.prev('.ddFieldBlock'));
@@ -309,9 +321,14 @@ $.ddMM.mm_ddMultipleFields = {
 					//При любом удалении показываем кнопку добавления
 					_this.instances[id].$addButton.removeAttr('disabled');
 					
+				//Если было меньше одной строки, созданем новую строчку
+				if (!$siblingsL){
+					_this.instances[id].$addButton = _this.makeAddButton(id);
+					_this.makeFieldRow(id);
+					_this.moveAddButton(id);
+				}
 					return;
 				});
-			}
 		});
 	},
 	//Функция создания кнопки +, вызывается при инициализации
@@ -320,7 +337,7 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		return $('<input class=\"ddAddButton\" type=\"button\" value=\"+\" />').on('click', function(){
 			//Вешаем на кнопку создание новой строки
-			$(this).appendTo(_this.makeFieldRow(id, '').find('.ddFieldCol:last'));
+			$(this).appendTo(_this.makeFieldRow(id).find('.ddFieldCol:last'));
 		});
 	},
 	//Перемещение кнопки +
@@ -340,6 +357,9 @@ $.ddMM.mm_ddMultipleFields = {
 		var $field = $('<input type="text" title="' + title + '" style="width:' + width + 'px;" class="ddField" />');
 		
 		return $field.val(value).appendTo($fieldCol);
+	},
+	makeNumber: function(value, title, width, $fieldCol){
+		return $('<input type="number" onkeyup="this.value=this.value.replace(/[^\\d-,.+]/,\'\')" value="' + value + '" title="' + title + '" style="width:' + width + 'px;" class="ddField" />').appendTo($fieldCol);
 	},
 	//Make date field
 	makeDate: function(value, title, $fieldCol){
