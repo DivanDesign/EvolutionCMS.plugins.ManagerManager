@@ -269,6 +269,8 @@ $.ddMM.mm_ddMultipleFields = {
 			}else if(_this.instances[id].coloumns[key] == 'richtext'){
 				_this.makeRichtext(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			//По дефолту делаем текстовое поле
+			}else if(_this.instances[id].coloumns[key] == 'number'){
+				_this.makeNumber(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}else{
 				_this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}
@@ -356,6 +358,9 @@ $.ddMM.mm_ddMultipleFields = {
 	//Make text field
 	makeText: function(value, title, width, $fieldCol){
 		return $('<input type="text" value="' + value + '" title="' + title + '" style="width:' + width + 'px;" class="ddField" />').appendTo($fieldCol);
+	},
+	makeNumber: function(value, title, width, $fieldCol){
+		return $('<input type="number" onkeyup="this.value=this.value.replace(/[^\\d-,.+]/,\'\')" value="' + value + '" title="' + title + '" style="width:' + width + 'px;" class="ddField" />').appendTo($fieldCol);
 	},
 	//Make date field
 	makeDate: function(value, title, $fieldCol){
