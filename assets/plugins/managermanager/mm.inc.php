@@ -21,22 +21,17 @@
 class MANAGERMANAGER
 {
 
-	function MANAGERMANAGER() { }
+	function MANAGERMANAGER() {
+		$this->setVariables();
+	}
 	
-	function run() {
+	function setVariables() {
 		global $modx;
 		
-		$mm_version = '0.6.2';
+		$this->mm_version = '0.6.2';
+		$this->pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
 		
-		// Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
-		
-		// Current event
-		global $e;
-		$e = &$modx->Event;
-		
-		if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
-		
-		$jsUrls = array(
+		$this->jsUrls = array(
 			'jq' => array(
 				'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery-1.9.1.min.js',
 				'name' => 'jquery',
@@ -54,7 +49,20 @@ class MANAGERMANAGER
 			)
 		);
 		
-		$pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
+	}
+	
+	function run() {
+		global $modx;
+		
+		
+		// Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
+		
+		// Current event
+		global $e;
+		$e = &$modx->Event;
+		
+		if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
+		
 		
 		// Set variables
 		global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJsCss;
@@ -64,9 +72,9 @@ class MANAGERMANAGER
 		}
 		
 		//Include ddTools (needed for some widgets)
-		include_once($pluginDir.'modx.ddtools.class.php');
+		include_once($this->pluginDir.'modx.ddtools.class.php');
 		//Include Utilites
-		include_once($pluginDir.'utilities.inc.php');
+		include_once($this->pluginDir.'utilities.inc.php');
 		
 		// When loading widgets, ignore folders / files beginning with these chars
 		$ignore_first_chars = array('.', '_', '!');
@@ -74,7 +82,7 @@ class MANAGERMANAGER
 		// Include widgets
 		// We look for a PHP file with the same name as the directory - e.g.
 		// /widgets/widgetname/widgetname.php
-		$widget_dir = $pluginDir.'widgets';
+		$widget_dir = $this->pluginDir.'widgets';
 		
 		if ($handle = opendir($widget_dir)){
 			while (false !== ($file = readdir($handle))){
@@ -249,8 +257,8 @@ class MANAGERMANAGER
 					
 					// Load the jquery library
 					$output = '<!-- Begin ManagerManager output -->'."\n";
-					$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
-					$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
+					$output .= includeJsCss($this->jsUrls['jq']['url'], 'html', $this->jsUrls['jq']['name'], $this->jsUrls['jq']['version']);
+					$output .= includeJsCss($this->jsUrls['mm']['url'], 'html', $this->jsUrls['mm']['name'], $this->jsUrls['mm']['version']);
 					
 					$output .= '<script type="text/javascript">'."\n";
 					//produces var $j = jQuery.noConflict();
@@ -271,9 +279,9 @@ class MANAGERMANAGER
 			case 'OnDocFormPrerender':
 				$e->output("<!-- Begin ManagerManager output -->\n");
 				// Load the js libraries
-				$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
-				$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
-				$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
+				$e->output(includeJsCss($this->jsUrls['jq']['url'], 'html', $this->jsUrls['jq']['name'], $this->jsUrls['jq']['version']));
+				$e->output(includeJsCss($this->jsUrls['mm']['url'], 'html', $this->jsUrls['mm']['name'], $this->jsUrls['mm']['version']));
+				$e->output(includeJsCss($this->jsUrls['ddTools']['url'], 'html', $this->jsUrls['ddTools']['name'], $this->jsUrls['ddTools']['version']));
 				
 				// Create a mask to cover the page while the fields are being rearranged
 				$e->output(
@@ -306,7 +314,7 @@ $j(function(){
 			case 'OnDocFormRender':
 				// Include the JQuery call
 				$e->output('
-<!-- ManagerManager Plugin :: '.$mm_version.' -->
+<!-- ManagerManager Plugin :: '.$this->mm_version.' -->
 <!-- This document is using template: '. $mm_current_page['template'] .' -->
 <!-- You are logged into the following role: '. $mm_current_page['role'] .' -->
 
@@ -390,7 +398,7 @@ $j(function(){
 				if ($remove_deprecated_tv_types){
 					// Load the jquery library
 					echo '<!-- Begin ManagerManager output -->';
-					echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+					echo includeJsCss($this->jsUrls['jq']['url'], 'html', $this->jsUrls['jq']['name'], $this->jsUrls['jq']['version']);
 					
 					// Create a mask to cover the page while the fields are being rearranged
 					echo '
