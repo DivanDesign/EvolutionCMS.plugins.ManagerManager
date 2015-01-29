@@ -1,6 +1,6 @@
 //<?php
 /**
- * ManagerManager plugin
+ * ManagerManager
  * @version 0.6.2 (2014-05-28)
  * 
  * Customize the MODx Manager to offer bespoke admin functions for end users.
