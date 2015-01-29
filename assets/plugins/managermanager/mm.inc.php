@@ -18,6 +18,18 @@
  * @copyright 2014
  */
 
+class MANAGERMANAGER
+{
+
+	function MANAGERMANAGER()
+	{
+		
+	}
+	
+	function run()
+	{
+		global $modx;
+
 $mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
@@ -175,49 +187,6 @@ foreach ($all_tvs as $thisTv){
 	}
 }
 
-// Get the contents of the config chunk, and put it in the “make_changes” function, to be run at the appropriate moment later on
-if (!function_exists('make_changes')){
-	function make_changes($chunk){
-		//Global modx object & $content for rules
-		global $modx, $content;
-		
-		$config_file = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
-		
-		//See if there is any chunk output (e.g. it exists, and is not empty)
-		$chunk_output = $modx->getChunk($chunk);
-		if (!empty($chunk_output)){
-			// If there is, run it.
-			eval($chunk_output);
-			return "// Getting rules from chunk: $chunk \n\n";
-		//If there's no chunk output, read in the file.
-		}else if (is_readable($config_file)){
-			include($config_file);
-			return "// Getting rules from file: $config_file \n\n";
-		}else{
-			return "// No rules found \n\n";
-		}
-	}
-}
-
-if (!function_exists('initJQddManagerManager')){
-	function initJQddManagerManager(){
-		global $modx, $mm_fields;
-		
-		$output =
-'
-$j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
-$j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
-$j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
-
-$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
-
-$j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
-';
-		
-		return $output;
-	}
-}
-
 // The start of adding or editing a document (before the main form)
 switch ($e->name){
 	// if it's the plugin config form, give us a copy of all the relevant values
@@ -291,7 +260,7 @@ switch ($e->name){
 			//produces var $j = jQuery.noConflict();
 			$output .= "var \$j = jQuery.noConflict(); \n";
 			
-			$output .= initJQddManagerManager();
+			$output .= $this->initJQddManagerManager();
 			
 			$output .= "mm_lastTab = 'tabEvents'; \n";
 			$e->output($output);
@@ -316,7 +285,7 @@ switch ($e->name){
 <div id="loadingmask">&nbsp;</div>
 <script type="text/javascript">
 window.$j = jQuery.noConflict();
-'.initJQddManagerManager().'
+'.$this->initJQddManagerManager().'
 $j("#loadingmask").css({
 	width: "100%",
 	minHeight: "100%",
@@ -332,7 +301,7 @@ $j(function(){
 ');
 		
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		$this->make_changes($e->params['config_chunk']);
 		
 		$e->output("<!-- End ManagerManager output -->\n");
 	break;
@@ -367,7 +336,7 @@ $j(function(){
 		');
 		
 		// Get the JS for the changes & display the status
-		$e->output(make_changes($e->params['config_chunk']));
+		$e->output($this->make_changes($e->params['config_chunk']));
 		
 		// Close it off
 		$e->output('
@@ -449,13 +418,53 @@ $j(function(){
 		$mm_current_page['template'] = $modx->db->getValue($modx->db->select('template', ddTools::$tables['site_content'], '`id` = '.$e->params['new_id']));
 		
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		$this->make_changes($e->params['config_chunk']);
 	break;
 	
 	case 'OnDocFormSave':
 	case 'OnBeforeDocFormSave':
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		$this->make_changes($e->params['config_chunk']);
 	break;
 }
-?>
+	}
+	
+// Get the contents of the config chunk, and put it in the “make_changes” function, to be run at the appropriate moment later on
+	function make_changes($chunk){
+		//Global modx object & $content for rules
+		global $modx, $content;
+		
+		$config_file = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
+		
+		//See if there is any chunk output (e.g. it exists, and is not empty)
+		$chunk_output = $modx->getChunk($chunk);
+		if (!empty($chunk_output)){
+			// If there is, run it.
+			eval($chunk_output);
+			return "// Getting rules from chunk: $chunk \n\n";
+		//If there's no chunk output, read in the file.
+		}else if (is_readable($config_file)){
+			include($config_file);
+			return "// Getting rules from file: $config_file \n\n";
+		}else{
+			return "// No rules found \n\n";
+		}
+	}
+
+	function initJQddManagerManager(){
+		global $modx, $mm_fields;
+		
+		$output =
+'
+$j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
+$j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
+$j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+
+$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
+
+$j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
+';
+		
+		return $output;
+	}
+}
