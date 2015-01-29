@@ -49,6 +49,8 @@ class MANAGERMANAGER
 			)
 		);
 		
+		global $mm_fields;
+		$mm_fields = $this->getFieldsInfo();
 	}
 	
 	function run() {
@@ -109,8 +111,6 @@ class MANAGERMANAGER
 		}
 		
 		$mm_current_page['role'] = $_SESSION['mgrRole'];
-		
-		$mm_fields = $this->getFieldsInfo();
 		
 		// Add in TVs to the list of available fields
 		$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
