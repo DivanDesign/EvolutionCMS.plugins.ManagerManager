@@ -54,7 +54,6 @@ class MANAGERMANAGER
 	function run() {
 		global $modx;
 		
-		
 		// Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 		
 		// Current event
@@ -111,40 +110,7 @@ class MANAGERMANAGER
 		
 		$mm_current_page['role'] = $_SESSION['mgrRole'];
 		
-		// What are the fields we can change, and what types are they?
-		$mm_fields = array(
-			'pagetitle' => array('fieldtype' => 'input', 'fieldname' => 'pagetitle', 'dbname' => 'pagetitle', 'tv' => false),
-			'longtitle' => array('fieldtype' => 'input', 'fieldname' => 'longtitle', 'dbname' => 'longtitle', 'tv' => false),
-			'description' => array('fieldtype' => 'input', 'fieldname' => 'description', 'dbname' => 'description', 'tv' => false),
-			'alias' => array('fieldtype' => 'input', 'fieldname' => 'alias', 'dbname' => 'alias', 'tv' => false),
-			'link_attributes' => array('fieldtype' => 'input', 'fieldname' => 'link_attributes', 'dbname' => 'link_attributes', 'tv' => false),
-			'introtext' => array('fieldtype' => 'textarea', 'fieldname' => 'introtext', 'dbname' => 'introtext', 'tv' => false),
-			'template' => array('fieldtype' => 'select', 'fieldname' => 'template', 'dbname' => 'template', 'tv' => false),
-			'menutitle' => array('fieldtype' => 'input', 'fieldname' => 'menutitle','dbname' => 'menutitle', 'tv' => false),
-			'menuindex' => array('fieldtype' => 'input', 'fieldname' => 'menuindex', 'dbname' => 'menuindex', 'tv' => false),
-			'show_in_menu' => array('fieldtype' => 'input', 'fieldname' => 'hidemenucheck','dbname' => 'hidemenu', 'tv' => false),
-			// synonym for show_in_menu
-			'hide_menu' => array('fieldtype' => 'input', 'fieldname' => 'hidemenucheck', 'dbname' => 'hidemenu', 'tv' => false),
-			'parent' => array('fieldtype' => 'input', 'fieldname' => 'parent', 'dbname' => 'parent', 'tv' => false),
-			'is_folder' => array('fieldtype' => 'input', 'fieldname' => 'isfoldercheck', 'dbname' => 'isfolder', 'tv' => false),
-			'alias_visible' => array('fieldtype' => 'input', 'fieldname' => 'alias_visible_check', 'dbname' => 'alias_visible', 'tv' => false),
-			'is_richtext' => array('fieldtype' => 'input', 'fieldname' => 'richtextcheck','dbname' => 'richtext', 'tv' => false),
-			'log' => array('fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false),
-			'published' => array('fieldtype' => 'input', 'fieldname' => 'publishedcheck','dbname' => 'published', 'tv' => false),
-			'pub_date' => array('fieldtype' => 'input', 'fieldname' => 'pub_date', 'dbname' => 'pub_date', 'tv' => false),
-			'unpub_date' => array('fieldtype' => 'input', 'fieldname' => 'unpub_date', 'dbname' => 'unpub_date', 'tv' => false),
-			'searchable' => array('fieldtype' => 'input', 'fieldname' => 'searchablecheck','dbname' => 'searchable', 'tv' => false),
-			'cacheable' => array('fieldtype' => 'input', 'fieldname' => 'cacheablecheck', 'dbname' => 'cacheable', 'tv' => false),
-			'clear_cache' => array('fieldtype' => 'input', 'fieldname' => 'syncsitecheck','dbname' => '', 'tv' => false),
-			'content_type' => array('fieldtype' => 'select', 'fieldname' => 'contentType', 'dbname' => 'contentType', 'tv' => false),
-			'content_dispo' => array('fieldtype' => 'select', 'fieldname' => 'content_dispo', 'dbname' => 'content_dispo', 'tv' => false),
-			'keywords' => array('fieldtype' => 'select', 'fieldname' => 'keywords[]', 'dbname' => '', 'tv' => false),
-			'metatags' => array('fieldtype' => 'select', 'fieldname' => 'metatags[]', 'dbname' => '', 'tv' => false),
-			'content' => array('fieldtype' => 'textarea', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false),
-			'which_editor' => array('fieldtype' => 'select', 'fieldname' => 'which_editor','dbname' => '', 'tv' => false),
-			'resource_type' => array('fieldtype' => 'select', 'fieldname' => 'type', 'dbname' => 'isfolder', 'tv' => false),
-			'weblink' => array('fieldtype' => 'input', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false)
-		);
+		$mm_fields = $this->getFieldsInfo();
 		
 		// Add in TVs to the list of available fields
 		$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
@@ -470,5 +436,51 @@ $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 ';
 		
 		return $output;
+	}
+	
+	function getFieldsInfo() {
+		// What are the fields we can change, and what types are they?
+		$_ = array();
+		$_['pagetitle']       = 'input,   pagetitle,          pagetitle';
+		$_['longtitle']       = 'input,   longtitle,          longtitle';
+		$_['description']     = 'input,   description,        description';
+		$_['alias']           = 'input,   alias,              alias';
+		$_['link_attributes'] = 'input,   link_attributes,    link_attributes';
+		$_['introtext']       = 'textarea,introtext,          introtext';
+		$_['template']        = 'select,  template,           template';
+		$_['menutitle']       = 'input,   menutitle,          menutitle';
+		$_['menuindex']       = 'input,   menuindex,          menuindex';
+		$_['show_in_menu']    = 'input,   hidemenucheck,      hidemenu';
+			// synonym for show_in_menu
+		$_['hide_menu']       = 'input,   hidemenucheck,      hidemenu';
+		$_['parent']          = 'input,   parent,             parent';
+		$_['is_folder']       = 'input,   isfoldercheck,      isfolder';
+		$_['alias_visible']   = 'input,   alias_visible_check,alias_visible';
+		$_['is_richtext']     = 'input,   richtextcheck,      richtext';
+		$_['log']             = 'input,   donthitcheck,       donthit';
+		$_['published']       = 'input,   publishedcheck,     published';
+		$_['pub_date']        = 'input,   pub_date,           pub_date';
+		$_['unpub_date']      = 'input,   unpub_date,         unpub_date';
+		$_['searchable']      = 'input,   searchablecheck,    searchable';
+		$_['cacheable']       = 'input,   cacheablecheck,     cacheable';
+		$_['clear_cache']     = 'input,   syncsitecheck,';
+		$_['content_type']    = 'select,  contentType,        contentType';
+		$_['content_dispo']   = 'select,  content_dispo,      content_dispo';
+		$_['keywords']        = 'select,  keywords[],';
+		$_['metatags']        = 'select,  metatags[],';
+		$_['content']         = 'textarea,ta,                 content';
+		$_['which_editor']    = 'select,  which_editor,';
+		$_['resource_type']   = 'select,  type,               isfolder';
+		$_['weblink']         = 'input,   ta,                 content';
+		$mm_fields = array();
+		foreach($_ as $k=>$v)
+		{
+			$a = explode(',', $v);
+			$mm_fields[$k]['fieldtype'] = trim($a[0]);
+			$mm_fields[$k]['fieldname'] = trim($a[1]);
+			$mm_fields[$k]['dbname']    = trim($a[2]);
+			$mm_fields[$k]['tv']        = false;
+		}
+		return $mm_fields;
 	}
 }
