@@ -125,9 +125,17 @@ $.ddMM.mm_ddMultipleFields = {
 	//Принимает id оригинального поля, его значения и родителя поля
 	init: function(id, val, target){
 		var _this = this,
+			//Блок для общих управляющих элементов
+			$ddMultipleFieldControl = $('<div class="ddMultipleField Control" id="' + id + 'ddMultipleFieldControl"></div>').appendTo(target),
 			//Делаем таблицу мульти-полей, вешаем на таблицу функцию обновления оригинального поля
 			$ddMultipleField = $('<table class="ddMultipleField" id="' + id + 'ddMultipleField"></table>').appendTo(target)/*.on('change.ddEvents', function(){_this.updateTv(id);})*/;
-		
+
+		//Кнопка очистки
+	 	$('<input type="button" value="×" title="'+$.ddMM.lang.confirm_delete_record+'"/>').appendTo($ddMultipleFieldControl).on("click",function(e){
+		 e.preventDefault();
+		 $(".ddDeleteButton",$ddMultipleField).click();
+		});
+
 		//Если есть хоть один заголовок
 		if (_this.instances[id].coloumnsTitle.length > 0){
 			var text = '';
