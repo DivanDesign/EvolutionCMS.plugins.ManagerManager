@@ -163,7 +163,7 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		//Делаем новые мульти-поля
 		var arr = val.split(_this.instances[id].splY);
-		
+
 		//Проверяем на максимальное и минимальное количество строк
 		if (_this.instances[id].maxRow && arr.length > _this.instances[id].maxRow){
 			arr.length = _this.instances[id].maxRow;
@@ -205,6 +205,39 @@ $.ddMM.mm_ddMultipleFields = {
 //		if (_this.instances[id].maxRow || _this.instances[id].minRow){
 //			$ddMultipleField.trigger('change.ddEvents');
 //		}
+	 	// Возможность пакетного заполнения
+	 	if (_this.instances[id].browseFuntion) {
+		 var BrowseServerMultiple = function (ctrl,type) {
+		  type = !type?"images":type;
+		  lastImageCtrl = ctrl;
+		  var w = screen.width * 0.5;
+		  var h = screen.height * 0.5;
+		  OpenServerBrowser('media/browser/mcpuk/browse.php?type='+type, w, h);
+		 };
+		 //var BrowseServerMultiple = _this.instances[id].browseFuntion;
+			$("<input type='button' title='' value='Пакетное заполнение' />").appendTo($ddMultipleFieldControl).click(function(e){
+				e.preventDefault();
+				var inst = _this.instances[id];
+				var ic = inst.coloumns;
+				var arrN = [];
+				for (var k=0;k < ic.length; k++) if (ic[k] == 'field') arrN.push(k);
+				window.KCFinder = {};
+				window.KCFinder.callBackMultiple = function(files) {
+					window.KCFinder = null;
+					for (var i=0; i < files.length; i++) {
+						var arr = [];
+						arr.length = ic.length;
+						for (var k in arrN)  arr[arrN[k]] = files[i];
+						_this.makeFieldRow(id, arr.join(inst.splX));
+					}
+					_this.moveAddButton(id);
+						var checkEmpty="";
+					$(".ddFieldBlock:first input.ddField", $ddMultipleField).each(function(){checkEmpty+=$(this).val()});
+					if (!checkEmpty) $(".ddFieldBlock:first .ddDeleteButton", $ddMultipleField).click();
+					};
+				BrowseServerMultiple(id,/file/i.test(inst.browseFuntion.name)?"files":"images");
+			});
+		}
 	},
 	//Функция создания строки
 	//Принимает id и данные строки
