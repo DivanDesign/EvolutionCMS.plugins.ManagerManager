@@ -193,9 +193,16 @@ $.ddMM.mm_ddMultipleFields = {
 			}
 		});
 	 	// Возможность пакетного заполнения
-	 	if (_this.instances[id].browseFuntion) {
+		var batchFields = ["image","file"];
+		for (var k=0;k < _this.instances[id].coloumns.length; k++) 
+			if ($.inArray(_this.instances[id].coloumns[k],batchFields)!=-1) {
+				_this.instances[id].batch={"type":this.instances[id].coloumns[k],"col":k};
+				//Пока только для первого найденного
+				break;
+			}
+		if (_this.instances[id].batch) {
 		 var BrowseServerMultiple = function (ctrl,type) {
-		  type = !type?"images":type;
+		  type = (type!=('image'||'file')?"image":type)+"s";
 		  lastImageCtrl = ctrl;
 		  var w = screen.width * 0.5;
 		  var h = screen.height * 0.5;
@@ -203,18 +210,14 @@ $.ddMM.mm_ddMultipleFields = {
 		 };
 			$("<input type='button' title='' value='Пакетное заполнение' />").appendTo($ddMultipleFieldControl).click(function(e){
 				e.preventDefault();
-				var inst = _this.instances[id];
-				var ic = inst.coloumns;
-				var arrN = [];
-				for (var k=0;k < ic.length; k++) if (ic[k] == 'field') arrN.push(k);
 				window.KCFinder = {
 					callBackMultiple: function (files) {
 						window.KCFinder = null;
 						for (var i = 0; i < files.length; i++) {
 							var arr = [];
-							arr.length = ic.length;
-							for (var k in arrN)  arr[arrN[k]] = files[i];
-							_this.makeFieldRow(id, arr.join(inst.splX));
+							arr.length = _this.instances[id].coloumns.length;
+							arr[_this.instances[id].batch.col] = files[i];
+							_this.makeFieldRow(id, arr.join(_this.instances[id].splX));
 						}
 						_this.moveAddButton(id);
 						var checkEmpty = "";
@@ -227,7 +230,7 @@ $.ddMM.mm_ddMultipleFields = {
 						window.KCFinder.callBackMultiple([url])
 					}
 				};
-				BrowseServerMultiple(id,/file/i.test(inst.browseFuntion.name)?"files":"images");
+				BrowseServerMultiple(id,_this.instances[id].batch.type);
 			});
 		}
 	},
@@ -253,7 +256,7 @@ $.ddMM.mm_ddMultipleFields = {
 		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
 		
 		//Разбиваем переданное значение на колонки
-		val = val ? _this.maskQuoutes(val).split(_this.instances[id].splX):[];
+		val = val ? val.split(_this.instances[id].splX):[];
 		
 		var $field;
 		
