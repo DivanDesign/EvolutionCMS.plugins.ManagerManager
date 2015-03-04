@@ -48,8 +48,8 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 		$output .= includeJsCss($widgetDir.'ddmultiplefields.css', 'html');
 		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMultipleFields.js', 'html', 'jquery.ddMM.mm_ddMultipleFields', '1.1.1');
 		
-		$output .= includeJsCss('$j.ddMM.lang.edit = "'.$_lang['edit'].'";', 'html', 'mm_ddMultipleFields_plain', '1', true, 'js');
-		
+		$output .= includeJsCss('$j.ddMM.lang.edit = "'.$_lang['edit'].'";$j.ddMM.lang.confirm_delete_record = "'.$_lang["confirm_delete_record"].'";', 'html', 'mm_ddMultipleFields_plain', '1', true, 'js');
+
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
 		global $mm_current_page;
