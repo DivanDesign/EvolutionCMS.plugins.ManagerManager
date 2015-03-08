@@ -283,7 +283,8 @@ $.ddMM.mm_ddMultipleFields = {
 			var $col = _this.makeFieldCol($fieldBlock);
 			
 			//Если текущая колонка является изображением
-			if(_this.instances[id].coloumns[key] == 'image'){
+			switch(_this.instances[id].coloumns[key]) {
+				case 'image' : 
 				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 				
 				_this.makeImage(id, $col);
@@ -293,8 +294,9 @@ $.ddMM.mm_ddMultipleFields = {
 					_this.instances[id].currentField = $(this).siblings('.ddField');
 					BrowseServer(id);
 				});
+				break;
 			//Если текущая колонка является файлом
-			}else if(_this.instances[id].coloumns[key] == 'file'){
+				case 'file':
 				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 				
 				//Create Attach browse button
@@ -302,8 +304,9 @@ $.ddMM.mm_ddMultipleFields = {
 					_this.instances[id].currentField = $(this).siblings('.ddField');
 					BrowseFileServer(id);
 				});	
+				break;
 			//Если id
-			}else if (_this.instances[id].coloumns[key] == 'id'){
+				case 'id':
 				$field = _this.makeText(val[key], '', 0, $col);
 				
 				if (!($field.val())){
@@ -311,22 +314,28 @@ $.ddMM.mm_ddMultipleFields = {
 				}
 				
 				$col.hide();
+				break;
 			//Если селект
-			}else if(_this.instances[id].coloumns[key] == 'select'){
+				case 'select':
 				_this.makeSelect(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].coloumnsData[key], _this.instances[id].colWidth[key], $col);
+				break;
 			//Если дата
-			}else if(_this.instances[id].coloumns[key] == 'date'){
+				case 'date':
 				_this.makeDate(val[key], _this.instances[id].coloumnsTitle[key], $col);
+				break;
 			//Если textarea
-			}else if(_this.instances[id].coloumns[key] == 'textarea'){
+				case 'textarea':
 				_this.makeTextarea(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			//Если richtext
-			}else if(_this.instances[id].coloumns[key] == 'richtext'){
+				break;
+				case 'richtext':
 				_this.makeRichtext(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
-			//По дефолту делаем текстовое поле
-			}else if(_this.instances[id].coloumns[key] == 'number'){
+				break;
+				case 'number':
 				_this.makeNumber(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
-			}else{
+				break;
+			//По дефолту делаем текстовое поле
+				default:
 				_this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
 			}
 		});
