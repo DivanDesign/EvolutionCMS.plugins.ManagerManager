@@ -43,19 +43,18 @@ $.ddMM.mm_ddMultipleFields = {
 	richtextWindow: null,
 	//Обновляет мульти-поле, берёт значение из оригинального поля
 	updateField: function(id){
-		var _this = this;
-		
+		var _inst = this.instances[id];
 		//Если есть текущее поле
-		if (_this.instances[id].currentField){
+		if (_inst.currentField){
 			//Задаём значение текущему полю (берём у оригинального поля), запускаем событие изменения
-			_this.instances[id].currentField.val($.trim($('#' + id).val())).trigger('change.ddEvents');
+			_inst.currentField.val($.trim($('#' + id).val())).trigger('change.ddEvents');
 			//Забываем текущее поле (ибо уже обработали)
-			_this.instances[id].currentField = false;
+			_inst.currentField = false;
 		}
 	},
 	//Обновляет оригинальное поле TV, собирая данные по мульти-полям
 	updateTv: function(id){
-		var _this = this,
+		var _inst = this.instances[id],
 			masRows = new Array();
 		
 		//Перебираем все строки
@@ -71,7 +70,7 @@ $.ddMM.mm_ddMultipleFields = {
 			//Перебираем все колонки, закидываем значения в массив
 			$this.find('.ddField').each(function(index){
 				//Если поле с типом id TODO: Какой смысл по всех этих манипуляциях?
-				if (_this.instances[id].coloumns[index] == 'id'){
+				if (_inst.coloumns[index] == 'id'){
 					id_field.index = index;
 					id_field.$field = $(this);
 					
@@ -85,7 +84,7 @@ $.ddMM.mm_ddMultipleFields = {
 				}
 				
 				//Если колонка типа richtext
-				if (_this.instances[id].coloumns[index] == 'richtext'){
+				if (_inst.coloumns[index] == 'richtext'){
 					//Собираем значения строки в массив
 					masCol.push($.trim($(this).html()));
 				}else{
@@ -95,10 +94,10 @@ $.ddMM.mm_ddMultipleFields = {
 			});
 			
 			//Склеиваем значения колонок через разделитель
-			var col = masCol.join(_this.instances[id].splX);
+			var col = masCol.join(_inst.splX);
 			
 			//Если значение было хоть в одной колонке из всех в этой строке
-			if (col.length != ((masCol.length - 1) * _this.instances[id].splX.length)){
+			if (col.length != ((masCol.length - 1) * _inst.splX.length)){
 				//Проверяем было ли поле с id
 				if (id_field.index !== false){
 					//Записываем значение в поле
@@ -106,7 +105,7 @@ $.ddMM.mm_ddMultipleFields = {
 					//Обновляем значение в массиве
 					masCol[id_field.index] = id_field.val;
 					//Пересобираем строку
-					col = masCol.join(_this.instances[id].splX);
+					col = masCol.join(_inst.splX);
 				}
 				
 				masRows.push(col);
@@ -114,12 +113,13 @@ $.ddMM.mm_ddMultipleFields = {
 		});
 		
 		//Записываем значение в оригинальное поле
-		$('#' + id).val(masRows.join(_this.instances[id].splY));
+		$('#' + id).val(masRows.join(_inst.splY));
 	},
 	//Инициализация
 	//Принимает id оригинального поля, его значения и родителя поля
 	init: function(id, val, target){
 		var _this = this,
+			_inst = _this.instances[id],
 			//Блок для общих управляющих элементов
 			$ddMultipleFieldControl = $('<div class="ddMultipleField Control" id="' + id + 'ddMultipleFieldControl"></div>').appendTo(target),
 			//Делаем таблицу мульти-полей, вешаем на таблицу функцию обновления оригинального поля
@@ -132,24 +132,24 @@ $.ddMM.mm_ddMultipleFields = {
 		});
 
 		//Если есть хоть один заголовок
-		if (_this.instances[id].coloumnsTitle.length > 0){
+		if (_inst.coloumnsTitle.length > 0){
 			var text = '';
 			
 			//Создадим шапку (перебираем именно колонки!)
-			$.each(_this.instances[id].coloumns, function(key, val){
+			$.each(_inst.coloumns, function(key, val){
 				//Если это колонка с id
 				if (val == 'id'){
 					//Вставим пустое значение в массив с заголовками
-					_this.instances[id].coloumnsTitle.splice(key, 0, '');
+					_inst.coloumnsTitle.splice(key, 0, '');
 					
 					text += '<th style="display: none;"></th>';
 				}else{
 					//Если такого значения нет — сделаем
-					if (!_this.instances[id].coloumnsTitle[key]){
-						_this.instances[id].coloumnsTitle[key] = '';
+					if (!_inst.coloumnsTitle[key]){
+						_inst.coloumnsTitle[key] = '';
 					}
 					
-					text += '<th>' + (_this.instances[id].coloumnsTitle[key]) + '</th>';
+					text += '<th>' + (_inst.coloumnsTitle[key]) + '</th>';
 				}
 			});
 			
@@ -157,17 +157,17 @@ $.ddMM.mm_ddMultipleFields = {
 		}
 		
 		//Делаем новые мульти-поля
-		var arr = val.split(_this.instances[id].splY);
+		var arr = val.split(_inst.splY);
 
 		//Проверяем на максимальное и минимальное количество строк
-		if (_this.instances[id].maxRow && arr.length > _this.instances[id].maxRow){
-			arr.length = _this.instances[id].maxRow;
-		}else if (_this.instances[id].minRow && arr.length < _this.instances[id].minRow){
-			arr.length = _this.instances[id].minRow;
+		if (_inst.maxRow && arr.length > _inst.maxRow){
+			arr.length = _inst.maxRow;
+		}else if (_inst.minRow && arr.length < _inst.minRow){
+			arr.length = _inst.minRow;
 		}
 		
 		//Создаём кнопку +
-		_this.instances[id].$addButton = _this.makeAddButton(id);
+		_inst.$addButton = _this.makeAddButton(id);
 		
 		for (var i = 0, len = arr.length; i < len; i++){
 			//В случае, если размер массива был увеличен по minRow, значением будет undefined, вот и замечательно - то что нужно
@@ -185,7 +185,7 @@ $.ddMM.mm_ddMultipleFields = {
 			axis: 'y',
 			placeholder: 'ui-state-highlight',
 			start: function(event, ui){
-				ui.placeholder.html('<td colspan="' + (_this.instances[id].coloumns.length + 2) + '"><div></div></td>').find('div').css('height', ui.item.height());
+				ui.placeholder.html('<td colspan="' + (_inst.coloumns.length + 2) + '"><div></div></td>').find('div').css('height', ui.item.height());
 			},
 			stop: function(event, ui){
 				//Находим родителя таблицы, вызываем функцию обновления поля
@@ -194,13 +194,13 @@ $.ddMM.mm_ddMultipleFields = {
 		});
 	 	// Возможность пакетного заполнения
 		var batchFields = ["image","file"];
-		for (var k=0;k < _this.instances[id].coloumns.length; k++) 
-			if ($.inArray(_this.instances[id].coloumns[k],batchFields)!=-1) {
-				_this.instances[id].batch={"type":this.instances[id].coloumns[k],"col":k};
+		for (var k=0;k < _inst.coloumns.length; k++) 
+			if ($.inArray(_inst.coloumns[k],batchFields)!=-1) {
+				_inst.batch={"type":this.instances[id].coloumns[k],"col":k};
 				//Пока только для первого найденного
 				break;
 			}
-		if (_this.instances[id].batch) {
+		if (_inst.batch) {
 		 var BrowseServerMultiple = function (ctrl,type) {
 		  type = (type!=('image'||'file')?"image":type)+"s";
 		  lastImageCtrl = ctrl;
@@ -215,9 +215,9 @@ $.ddMM.mm_ddMultipleFields = {
 						window.KCFinder = null;
 						for (var i = 0; i < files.length; i++) {
 							var arr = [];
-							arr.length = _this.instances[id].coloumns.length;
-							arr[_this.instances[id].batch.col] = files[i];
-							_this.makeFieldRow(id, arr.join(_this.instances[id].splX));
+							arr.length = _inst.coloumns.length;
+							arr[_inst.batch.col] = files[i];
+							_this.makeFieldRow(id, arr.join(_inst.splX));
 						}
 						_this.moveAddButton(id);
 						var checkEmpty = "";
@@ -230,7 +230,7 @@ $.ddMM.mm_ddMultipleFields = {
 						window.KCFinder.callBackMultiple([url])
 					}
 				};
-				BrowseServerMultiple(id,_this.instances[id].batch.type);
+				BrowseServerMultiple(id,_inst.batch.type);
 			});
 		}
 	},
@@ -238,33 +238,34 @@ $.ddMM.mm_ddMultipleFields = {
 	//Принимает id и данные строки
 	makeFieldRow: function(id, val){
 		var _this = this;
+		var _inst = _this.instances[id];
 		
 		//Если задано максимальное количество строк
-		if (_this.instances[id].maxRow){
+		if (_inst.maxRow){
 			//Общее количество строк на данный момент
 			var fieldBlocksLen = $('#' + id + 'ddMultipleField .ddFieldBlock').length;
 			
 			//Проверяем превышает ли уже количество строк максимальное
-			if (_this.instances[id].maxRow && fieldBlocksLen >= _this.instances[id].maxRow){
+			if (_inst.maxRow && fieldBlocksLen >= _inst.maxRow){
 				return;
 			//Если будет равно максимуму при создании этого поля
-			}else if (_this.instances[id].maxRow && fieldBlocksLen + 1 == _this.instances[id].maxRow){
-				_this.instances[id].$addButton.attr('disabled', true);
+			}else if (_inst.maxRow && fieldBlocksLen + 1 == _inst.maxRow){
+				_inst.$addButton.attr('disabled', true);
 			}
 		}
 		
 		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
 		
 		//Разбиваем переданное значение на колонки
-		val = val ? val.split(_this.instances[id].splX):[];
+		val = val ? val.split(_inst.splX):[];
 		
 		var $field;
 		
 		//Перебираем колонки
-		$.each(_this.instances[id].coloumns, function(key){
+		$.each(_inst.coloumns, function(key){
 			if (typeof val[key]=='undefined'){
 				//Значение по умолчанию. для  JSON, искать флаг в 3-м элементе, или первое значение
-				if (val[key] = _this.instances[id].coloumnsData[key] || '' )
+				if (val[key] = _inst.coloumnsData[key] || '' )
 					try {
 						var valDef = val[key] = $.parseJSON(val[key]);
 						while($.isArray(valDef)) valDef=valDef.shift();
@@ -277,31 +278,31 @@ $.ddMM.mm_ddMultipleFields = {
 						val[key] = valDef;
 					} catch (e) {}
 			}
-			if (!_this.instances[id].coloumnsTitle[key]){_this.instances[id].coloumnsTitle[key] = '';}
-			if (!_this.instances[id].colWidth[key] || _this.instances[id].colWidth[key] == ''){_this.instances[id].colWidth[key] = _this.instances[id].colWidth[key - 1];}
+			if (!_inst.coloumnsTitle[key]){_inst.coloumnsTitle[key] = '';}
+			if (!_inst.colWidth[key] || _inst.colWidth[key] == ''){_inst.colWidth[key] = _inst.colWidth[key - 1];}
 			
 			var $col = _this.makeFieldCol($fieldBlock);
 			
 			//Если текущая колонка является изображением
-			switch(_this.instances[id].coloumns[key]) {
+			switch(_inst.coloumns[key]) {
 				case 'image' : 
-				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				$field = _this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 				
 				_this.makeImage(id, $col);
 				
 				//Create Attach browse button
 				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
-					_this.instances[id].currentField = $(this).siblings('.ddField');
+					_inst.currentField = $(this).siblings('.ddField');
 					BrowseServer(id);
 				});
 				break;
 			//Если текущая колонка является файлом
 				case 'file':
-				$field = _this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				$field = _this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 				
 				//Create Attach browse button
 				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
-					_this.instances[id].currentField = $(this).siblings('.ddField');
+					_inst.currentField = $(this).siblings('.ddField');
 					BrowseFileServer(id);
 				});	
 				break;
@@ -317,26 +318,26 @@ $.ddMM.mm_ddMultipleFields = {
 				break;
 			//Если селект
 				case 'select':
-				_this.makeSelect(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].coloumnsData[key], _this.instances[id].colWidth[key], $col);
+				_this.makeSelect(val[key], _inst.coloumnsTitle[key], _inst.coloumnsData[key], _inst.colWidth[key], $col);
 				break;
 			//Если дата
 				case 'date':
-				_this.makeDate(val[key], _this.instances[id].coloumnsTitle[key], $col);
+				_this.makeDate(val[key], _inst.coloumnsTitle[key], $col);
 				break;
 			//Если textarea
 				case 'textarea':
-				_this.makeTextarea(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				_this.makeTextarea(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 			//Если richtext
 				break;
 				case 'richtext':
-				_this.makeRichtext(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				_this.makeRichtext(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 				break;
 				case 'number':
-				_this.makeNumber(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				_this.makeNumber(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 				break;
 			//По дефолту делаем текстовое поле
 				default:
-				_this.makeText(val[key], _this.instances[id].coloumnsTitle[key], _this.instances[id].colWidth[key], $col);
+				_this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
 			}
 		});
 		
@@ -355,10 +356,11 @@ $.ddMM.mm_ddMultipleFields = {
 	//Make delete button
 	makeDeleteButton: function(id, $fieldCol){
 		var _this = this;
+		var _inst = _this.instances[id];
 		
 		$('<input class="ddDeleteButton" type="button" value="×" />').appendTo($fieldCol).on('click', function(){
 			//Проверяем на минимальное количество строк
-			if (_this.instances[id].minRow && $('#' + id + 'ddMultipleField .ddFieldBlock').length <= _this.instances[id].minRow){
+			if (_inst.minRow && $('#' + id + 'ddMultipleField .ddFieldBlock').length <= _inst.minRow){
 				return;
 			}
 			
@@ -377,11 +379,11 @@ $.ddMM.mm_ddMultipleFields = {
 					$par.remove();
 					
 					//При любом удалении показываем кнопку добавления
-					_this.instances[id].$addButton.removeAttr('disabled');
+					_inst.$addButton.removeAttr('disabled');
 					
 				//Если было меньше одной строки, созданем новую строчку
 				if (!$siblingsL){
-					_this.instances[id].$addButton = _this.makeAddButton(id);
+					_inst.$addButton = _this.makeAddButton(id);
 					_this.makeFieldRow(id);
 					_this.moveAddButton(id);
 				}
@@ -400,7 +402,7 @@ $.ddMM.mm_ddMultipleFields = {
 	},
 	//Перемещение кнопки +
 	moveAddButton: function(id, $target){
-		var _this = this;
+		var _inst = this.instances[id];
 		
 		//Если не передали, куда вставлять, вставляем в самый конец
 		if (!$target){
@@ -408,7 +410,7 @@ $.ddMM.mm_ddMultipleFields = {
 		}
 		
 		//Находим кнопку добавления и переносим куда надо
-		_this.instances[id].$addButton.appendTo($target.find('.ddFieldCol:last'));
+		_inst.$addButton.appendTo($target.find('.ddFieldCol:last'));
 	},
 	//Make text field
 	makeText: function(value, title, width, $fieldCol){
@@ -466,9 +468,9 @@ $.ddMM.mm_ddMultipleFields = {
 	//Make image field
 	makeImage: function(id, $fieldCol){
 		var _this = this;
-		
+		var _inst = _this.instances[id];
 		// Create a new preview and Attach a browse event to the picture, so it can trigger too
-		$('<div class="ddField_image"><img src="" style="' + _this.instances[id].imageStyle + '" /></div>').appendTo($fieldCol).hide().find('img').on('click', function(){
+		$('<div class="ddField_image"><img src="" style="' + _inst.imageStyle + '" /></div>').appendTo($fieldCol).hide().find('img').on('click', function(){
 			$fieldCol.find('.ddAttachButton').trigger('click');
 		}).on('load.ddEvents', function(){
 			//Удаление дерьма, блеать (превьюшка, оставленная от виджета showimagetvs)
