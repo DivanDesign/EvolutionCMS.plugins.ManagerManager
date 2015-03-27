@@ -412,14 +412,20 @@ $.ddMM.mm_ddMultipleFields = {
 		//Находим кнопку добавления и переносим куда надо
 		_inst.$addButton.appendTo($target.find('.ddFieldCol:last'));
 	},
+	//Checking size values. Make it universal 
+	_united:function(v,out){
+		if (!v) return v; 
+		v = v+($.isNumeric(v)?"px":"");
+		return (/\%s/.test(out)?out.replace("%s",v):v);
+	},
 	//Make text field
 	makeText: function(value, title, width, $fieldCol){
-		var $field = $('<input type="text" title="' + title + '" style="width:' + width + 'px;" class="ddField" />');
+		var $field = $('<input type="text" title="' + title + '" style="' + this._united(width,"width: %s") + '" class="ddField" />');
 		
 		return $field.val(value).appendTo($fieldCol);
 	},
 	makeNumber: function(value, title, width, $fieldCol){
-		return $('<input type="number" onkeyup="this.value=this.value.replace(/[^\\d-,.+]/,\'\')" value="' + value + '" title="' + title + '" style="width:' + width + 'px;" class="ddField" />').appendTo($fieldCol);
+		return $('<input type="number" onkeyup="this.value=this.value.replace(/[^\\d-,.+]/,\'\')" value="' + value + '" title="' + title + '" style="' + this._united(width,"width: %s") + '" class="ddField" />').appendTo($fieldCol);
 	},
 	//Make date field
 	makeDate: function(value, title, $fieldCol){
@@ -435,12 +441,12 @@ $.ddMM.mm_ddMultipleFields = {
 	},
 	//Make textarea field
 	makeTextarea: function(value, title, width, $fieldCol){
-		return $('<textarea title="' + title + '" style="width:' + width + 'px;" class="ddField">' + value + '</textarea>').appendTo($fieldCol);
+		return $('<textarea title="' + title + '" style="' + this._united(width,"width: %s") + '" class="ddField">' + value + '</textarea>').appendTo($fieldCol);
 	},
 	//Make richtext field
 	makeRichtext: function(value, title, width, $fieldCol){
 		var _this = this,
-			$field = $('<div title="' + title + '" style="width:' + width + 'px;" class="ddField">' + value + '</div>').appendTo($fieldCol);
+			$field = $('<div title="' + title + '" style="' + this._united(width,"width: %s") + '" class="ddField">' + value + '</div>').appendTo($fieldCol);
 		
 		$('<div class="ddFieldCol_edit"><a class="false" href="#">' + $.ddMM.lang.edit + '</a></div>').appendTo($fieldCol).find('a').on('click', function(event){
 			_this.richtextWindow = window.open($.ddMM.config.site_url + $.ddMM.urls.mm + 'widgets/ddmultiplefields/richtext/index.php', 'mm_ddMultipleFields_richtext', new Array(
