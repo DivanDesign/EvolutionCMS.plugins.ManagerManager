@@ -343,7 +343,10 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		//Create DeleteButton
 		_this.makeDeleteButton(id, _this.makeFieldCol($fieldBlock));
-		
+
+		//Создаём кнопку copy
+		_this.makeCopyButton(id).appendTo($('#' + id + 'ddMultipleField .ddFieldCol:last'));
+
 		//Специально для полей, содержащих изображения необходимо инициализировать
 		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');
 		
@@ -398,6 +401,15 @@ $.ddMM.mm_ddMultipleFields = {
 		return $('<input class=\"ddAddButton\" type=\"button\" value=\"+\" />').on('click', function(){
 			//Вешаем на кнопку создание новой строки
 			$(this).appendTo(_this.makeFieldRow(id).find('.ddFieldCol:last'));
+		});
+	},
+	//Функция создания кнопки +, вызывается при инициализации
+	makeCopyButton: function(id){
+		return $('<input/>').attr({"class":"ddCloneButton","type":"button","value":"©","title":"Copy row"}).on('click', function () {
+			//Вешаем на кнопку создание дубликата текущей строки
+			var p = $(this).closest("tr");
+			var n=p.clone(true,true).insertAfter(p);
+			$('#' + id + 'ddMultipleField .ddFieldBlock:last').siblings().find(".ddAddButton").remove();
 		});
 	},
 	//Перемещение кнопки +
