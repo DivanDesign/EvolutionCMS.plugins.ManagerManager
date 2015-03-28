@@ -68,7 +68,9 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 		}
 		
 		//Стиль превью изображения
-		$stylePrewiew = "max-width:{$imgW}px; max-height:{$imgH}px; margin: 4px 0; cursor: pointer;";
+		$imgW = $imgW.(is_numeric($imgW)?"px":"");
+		$imgH = $imgH.(is_numeric($imgH)?"px":"");
+		$stylePrewiew = "max-width:{$imgW}; max-height:{$imgH}; margin: 4px 0; cursor: pointer;";
 		
 		$tvsMas = tplUseTvs($mm_current_page['template'], $tvs, 'image,file,text,email,textarea', 'id,type');
 		if ($tvsMas == false){return;}
