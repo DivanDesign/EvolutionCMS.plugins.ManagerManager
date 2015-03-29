@@ -115,6 +115,15 @@ $.ddMM.mm_ddMultipleFields = {
 		//Записываем значение в оригинальное поле
 		$('#' + id).val(masRows.join(_inst.splY));
 	},
+	_reset: function(id) {
+		var _this = this;
+		var _parent;
+		$.each("ddMultipleFieldControl,ddMultipleField".split(","),function(i,v){
+			if (!_parent) _parent=$('#'+id+v).parent(); 
+			$('#'+id+v).remove();
+		});
+		if (_parent) return _this.init(id,$('#'+id,_parent).val(),_parent);
+	},
 	//Инициализация
 	//Принимает id оригинального поля, его значения и родителя поля
 	init: function(id, val, target){
@@ -126,9 +135,14 @@ $.ddMM.mm_ddMultipleFields = {
 			$ddMultipleField = $('<table class="ddMultipleField" id="' + id + 'ddMultipleField"></table>').appendTo(target)/*.on('change.ddEvents', function(){_this.updateTv(id);})*/;
 
 		//Кнопка очистки
-	 	$('<input type="button" value="×" title="'+$.ddMM.lang.confirm_delete_record+'"/>').appendTo($ddMultipleFieldControl).on("click",function(e){
-		 e.preventDefault();
-		 $(".ddDeleteButton",$ddMultipleField).click();
+		$('<input type="button" value="×" title="' + $.ddMM.lang.confirm_delete_record + '"/>').appendTo($ddMultipleFieldControl).on("click", function (e) {
+			e.preventDefault();
+			$(".ddDeleteButton", $ddMultipleField).click();
+		});
+		//Кнопка Reset
+		$('<input type="button" value="&#9100;" title="Reset"/>').appendTo($ddMultipleFieldControl).on("click", function (e) {
+			e.preventDefault();
+			_this._reset(id);
 		});
 
 		//Если есть хоть один заголовок
