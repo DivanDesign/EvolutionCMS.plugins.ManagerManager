@@ -39,11 +39,15 @@
 	vertical-align: top;
 }
 
-.ddMultipleField tr th, .ddMultipleField tr td.ddFieldCol:last-child {
+.ddMultipleField tr td.ddFieldCol:last-child {
 	white-space: nowrap;
 }
 
-.ddMultipleField tr th {text-align: left;}
+.ddMultipleField tr th {
+	line-height: 1;
+	text-align: left;
+	vertical-align: bottom;
+}
 
 .ddMultipleField tr td.ddFieldCol, .ddMultipleField tr td.ddSortHandle {
 	border: 2px solid #FFFFFF;
