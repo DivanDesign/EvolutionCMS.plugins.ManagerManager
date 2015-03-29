@@ -251,6 +251,7 @@ $.ddMM.mm_ddMultipleFields = {
 			//Если будет равно максимуму при создании этого поля
 			}else if (_inst.maxRow && fieldBlocksLen + 1 == _inst.maxRow){
 				_inst.$addButton.attr('disabled', true);
+				$(".ddCloneButton",'#' + id + 'ddMultipleField').attr("disabled",true);
 			}
 		}
 		
@@ -383,6 +384,7 @@ $.ddMM.mm_ddMultipleFields = {
 					
 					//При любом удалении показываем кнопку добавления
 					_inst.$addButton.removeAttr('disabled');
+					$(".ddCloneButton",'#' + id + 'ddMultipleField').removeAttr("disabled");
 					
 				//Если было меньше одной строки, созданем новую строчку
 				if (!$siblingsL){
@@ -404,12 +406,26 @@ $.ddMM.mm_ddMultipleFields = {
 		});
 	},
 	//Функция создания кнопки +, вызывается при инициализации
-	makeCopyButton: function(id){
-		return $('<input/>').attr({"class":"ddCloneButton","type":"button","value":"©","title":"Copy row"}).on('click', function () {
+	makeCopyButton: function (id) {
 			//Вешаем на кнопку создание дубликата текущей строки
-			var p = $(this).closest("tr");
-			var n=p.clone(true,true).insertAfter(p);
-			$('#' + id + 'ddMultipleField .ddFieldBlock:last').siblings().find(".ddAddButton").remove();
+		var _this = this;
+		var fieldBlocks = $('#' + id + 'ddMultipleField .ddFieldBlock');
+		var fieldBlocksLen = fieldBlocks.size();
+		var _inst = _this.instances[id];
+		return $('<input/>').attr({
+			"class": "ddCloneButton",
+			"type": "button",
+			"value": "©",
+			"title": "Copy row",
+			"disabled": (_inst.maxRow && fieldBlocksLen == _inst.maxRow) ? "disabled" : false
+		}).on('click', function () {
+			var _parent = $(this).closest("tr");
+			if ($(this).attr("disabled")) return false;
+			_parent.clone(true, true).find(".ddAddButton").remove().end().insertAfter(_parent);
+			_this.moveAddButton(id);
+			if (_inst.maxRow && fieldBlocksLen + 1 == _inst.maxRow) {
+				$(".ddCloneButton,.ddAddButton", '#' + id + 'ddMultipleField').attr("disabled", true)
+			}
 		});
 	},
 	//Перемещение кнопки +
