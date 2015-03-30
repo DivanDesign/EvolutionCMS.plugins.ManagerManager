@@ -30,7 +30,12 @@ $.ddMM.mm_ddMultipleFields = {
 		//Минимальное количество строк
 		minRow: 0,
 		//Максимальное количество строк
-		maxRow: 0
+		maxRow: 0,
+		//Различные опции
+		options: {
+			sortable:true,
+			showIndex:true
+		}
 	},
 //	Все экземпляры (TV). Структура: {
 //		'id': {
@@ -192,6 +197,7 @@ $.ddMM.mm_ddMultipleFields = {
 		_this.moveAddButton(id);
 		
 		//Добавляем возможность перетаскивания
+		if (!_inst.options || _inst.options.sortable!==false) 
 		$ddMultipleField.sortable({
 			items: 'tr:has(td)',
 			handle: '.ddSortHandle',
@@ -253,11 +259,11 @@ $.ddMM.mm_ddMultipleFields = {
 	makeFieldRow: function(id, val){
 		var _this = this;
 		var _inst = _this.instances[id];
-		
+		var _ddField = $('#' + id + 'ddMultipleField');
 		//Если задано максимальное количество строк
 		if (_inst.maxRow){
 			//Общее количество строк на данный момент
-			var fieldBlocksLen = $('#' + id + 'ddMultipleField .ddFieldBlock').length;
+			var fieldBlocksLen = $('.ddFieldBlock',_ddField).length;
 			
 			//Проверяем превышает ли уже количество строк максимальное
 			if (_inst.maxRow && fieldBlocksLen >= _inst.maxRow){
@@ -265,12 +271,14 @@ $.ddMM.mm_ddMultipleFields = {
 			//Если будет равно максимуму при создании этого поля
 			}else if (_inst.maxRow && fieldBlocksLen + 1 == _inst.maxRow){
 				_inst.$addButton.attr('disabled', true);
-				$(".ddCloneButton",'#' + id + 'ddMultipleField').attr("disabled",true);
+				$(".ddCloneButton",_ddField).attr("disabled",true);
 			}
 		}
 		
-		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo($('#' + id + 'ddMultipleField'));
-		
+		var $fieldBlock = $('<tr class="ddFieldBlock ' + id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>').appendTo(_ddField);
+		if (!_inst.options || _inst.options.showIndex!==false) $fieldBlock.find("td:first *:not(:has(*))").html($fieldBlock.index());
+		if (_inst.options && _inst.options.sortable===false) _ddField.addClass("nosort");
+
 		//Разбиваем переданное значение на колонки
 		val = val ? val.split(_inst.splX):[];
 		
@@ -360,7 +368,7 @@ $.ddMM.mm_ddMultipleFields = {
 		_this.makeDeleteButton(id, _this.makeFieldCol($fieldBlock));
 
 		//Создаём кнопку copy
-		_this.makeCopyButton(id).appendTo($('#' + id + 'ddMultipleField .ddFieldCol:last'));
+		_this.makeCopyButton(id).appendTo($('.ddFieldCol:last',_ddField));
 
 		//Специально для полей, содержащих изображения необходимо инициализировать
 		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');

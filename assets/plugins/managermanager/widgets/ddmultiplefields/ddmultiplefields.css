@@ -74,8 +74,8 @@
 .ddMultipleField tr td.ddSortHandle div {
 /* 	border-radius: 0 12px 12px 0; */
 	background: #007CC3;
-	width: 10px;
-	height: 23px;
+	min-width: 1em;
+	min-height: 2em;
 	-webkit-transition: opacity 0.3s ease-out;
 	-moz-transition: opacity 0.3s ease-out;
 	-ms-transition: opacity 0.3s ease-out;
@@ -83,6 +83,13 @@
 	transition: opacity 0.3s ease-out;
 	opacity: .3;
 	cursor: n-resize;
+	color: white;
+	display: inline-block;
+	padding: 0.2em 0.3em 0.2em 0.25em;
+	box-sizing: border-box;
+}
+.ddMultipleField.nosort tr td.ddSortHandle div {
+	cursor: default;
 }
 
 .ddMultipleField tr.ddFieldBlock:hover td.ddFieldCol, .ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle {background: #B2E3FF;}

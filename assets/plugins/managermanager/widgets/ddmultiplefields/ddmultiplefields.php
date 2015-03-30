@@ -30,7 +30,7 @@
  * http://www.DivanDesign.biz
  */
 
-function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns = 'field', $columnsTitle = '', $colWidth = '180', $splY = '||', $splX = '::', $imgW = 300, $imgH = 100, $minRow = 0, $maxRow = 0, $columnsData = ''){
+function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns = 'field', $columnsTitle = '', $colWidth = '180', $splY = '||', $splX = '::', $imgW = 300, $imgH = 100, $minRow = 0, $maxRow = 0, $columnsData = '',$options = array()){
 	if (!useThisRule($roles, $templates)){return;}
 	
 	global $modx;
@@ -102,7 +102,8 @@ $j("#tv'.$tv['id'].'").mm_ddMultipleFields({
 	colWidth: "'.$colWidth.'",
 	imageStyle: "'.$stylePrewiew.'",
 	minRow: "'.$minRow.'",
-	maxRow: "'.$maxRow.'"
+	maxRow: "'.$maxRow.'",
+	options: '.json_encode($options).'
 });
 ';
 		}
