@@ -187,7 +187,7 @@ if (!function_exists('make_changes')){
 		$chunk_output = $modx->getChunk($chunk);
 		if (!empty($chunk_output)){
 			// If there is, run it.
-			eval($chunk_output);
+			eval(preg_replace("/\<\?(php)?|\?>/im",'',$chunk_output));
 			return "// Getting rules from chunk: $chunk \n\n";
 		//If there's no chunk output, read in the file.
 		}else if (is_readable($config_file)){
