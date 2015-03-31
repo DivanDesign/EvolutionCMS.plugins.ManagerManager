@@ -22,7 +22,7 @@
  * @copyright 2014
  */
 
-function mm_createTab($name, $id, $roles = '', $templates = '', $intro = '', $width = '680'){
+function mm_createTab($name, $id, $roles = '', $templates = '', $intro = '', $width = ''){
 	global $modx;
 	$e = &$modx->Event;
 	
