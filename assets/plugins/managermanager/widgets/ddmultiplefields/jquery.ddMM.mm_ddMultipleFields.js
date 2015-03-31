@@ -120,6 +120,7 @@ $.ddMM.mm_ddMultipleFields = {
 		//Записываем значение в оригинальное поле
 		$('#' + id).val(masRows.join(_inst.splY));
 	},
+ // Сброс на сохраненные значения (аналог reset form)
 	_reset: function(id) {
 		var _this = this;
 		var _parent;
@@ -427,7 +428,7 @@ $.ddMM.mm_ddMultipleFields = {
 			$(this).appendTo(_this.makeFieldRow(id).find('.ddFieldCol:last'));
 		});
 	},
-	//Функция создания кнопки +, вызывается при инициализации
+	//Кнопка копирования строки
 	makeCopyButton: function (id) {
 			//Вешаем на кнопку создание дубликата текущей строки
 		var _this = this;
