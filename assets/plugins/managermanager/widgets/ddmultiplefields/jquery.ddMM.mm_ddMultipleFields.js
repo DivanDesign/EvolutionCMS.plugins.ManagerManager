@@ -153,7 +153,7 @@ $.ddMM.mm_ddMultipleFields = {
 
 		//Если есть хоть один заголовок
 		if (_inst.coloumnsTitle.length > 0){
-			var text = '';
+			var _thead = [$("<th/>")];
 			
 			//Создадим шапку (перебираем именно колонки!)
 			$.each(_inst.coloumns, function(key, val){
@@ -161,19 +161,24 @@ $.ddMM.mm_ddMultipleFields = {
 				if (val == 'id'){
 					//Вставим пустое значение в массив с заголовками
 					_inst.coloumnsTitle.splice(key, 0, '');
-					
-					text += '<th style="display: none;"></th>';
+					_thead.push('<th style="display: none;"></th>');
 				}else{
+					var _cTitle;
 					//Если такого значения нет — сделаем
-					if (!_inst.coloumnsTitle[key]){
-						_inst.coloumnsTitle[key] = '';
-					}
-					
-					text += '<th>' + (_inst.coloumnsTitle[key]) + '</th>';
+					if (!(_cTitle=_inst.coloumnsTitle[key])){
+						_cTitle = _inst.coloumnsTitle[key] = '';
+					} 
+					// Подсказка для заголовка - расширенный текст после разделителя
+					var _titles = _cTitle.split(_inst.splX);
+					if (_titles.length>1) {
+						_cTitle = _inst.coloumnsTitle[key] = _titles[0];
+						_thead.push('<th title="'+_titles[1]+'" class="tip">' + (_cTitle) + '</th>');
+					} else
+					_thead.push('<th>' + (_cTitle) + '</th>');
 				}
 			});
-			
-			$('<tr><th></th>' + text + '<th></th></tr>').appendTo($ddMultipleField);
+			_thead.push('<th/>');
+			$("<tr/>").append(_thead).appendTo($ddMultipleField);
 		}
 		
 		//Делаем новые мульти-поля
@@ -287,6 +292,7 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		//Перебираем колонки
 		$.each(_inst.coloumns, function(key){
+			var _cTitle = _inst.coloumnsTitle[key];
 			if (typeof val[key]=='undefined'){
 				//Значение по умолчанию. для  JSON, искать флаг в 3-м элементе, или первое значение
 				if (val[key] = _inst.coloumnsData[key] || '' )
@@ -302,7 +308,7 @@ $.ddMM.mm_ddMultipleFields = {
 						val[key] = valDef;
 					} catch (e) {}
 			}
-			if (!_inst.coloumnsTitle[key]){_inst.coloumnsTitle[key] = '';}
+			if (!_cTitle){_cTitle = '';}
 			if (!_inst.colWidth[key] || _inst.colWidth[key] == ''){_inst.colWidth[key] = _inst.colWidth[key - 1];}
 			
 			var $col = _this.makeFieldCol($fieldBlock);
@@ -310,7 +316,7 @@ $.ddMM.mm_ddMultipleFields = {
 			//Если текущая колонка является изображением
 			switch(_inst.coloumns[key]) {
 				case 'image' : 
-				$field = _this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				$field = _this.makeText(val[key], _cTitle, _inst.colWidth[key], $col);
 				
 				_this.makeImage(id, $col);
 				
@@ -322,7 +328,7 @@ $.ddMM.mm_ddMultipleFields = {
 				break;
 			//Если текущая колонка является файлом
 				case 'file':
-				$field = _this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				$field = _this.makeText(val[key], _cTitle, _inst.colWidth[key], $col);
 				
 				//Create Attach browse button
 				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
@@ -342,26 +348,26 @@ $.ddMM.mm_ddMultipleFields = {
 				break;
 			//Если селект
 				case 'select':
-				_this.makeSelect(val[key], _inst.coloumnsTitle[key], _inst.coloumnsData[key], _inst.colWidth[key], $col);
+				_this.makeSelect(val[key], _cTitle, _inst.coloumnsData[key], _inst.colWidth[key], $col);
 				break;
 			//Если дата
 				case 'date':
-				_this.makeDate(val[key], _inst.coloumnsTitle[key], $col);
+				_this.makeDate(val[key], _cTitle, $col);
 				break;
 			//Если textarea
 				case 'textarea':
-				_this.makeTextarea(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				_this.makeTextarea(val[key], _cTitle, _inst.colWidth[key], $col);
 			//Если richtext
 				break;
 				case 'richtext':
-				_this.makeRichtext(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				_this.makeRichtext(val[key], _cTitle, _inst.colWidth[key], $col);
 				break;
 				case 'number':
-				_this.makeNumber(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				_this.makeNumber(val[key], _cTitle, _inst.colWidth[key], $col);
 				break;
 			//По дефолту делаем текстовое поле
 				default:
-				_this.makeText(val[key], _inst.coloumnsTitle[key], _inst.colWidth[key], $col);
+				_this.makeText(val[key], _cTitle, _inst.colWidth[key], $col);
 			}
 		});
 		

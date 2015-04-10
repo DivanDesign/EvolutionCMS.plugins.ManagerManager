@@ -110,3 +110,15 @@
 	width: 100%;
 	height: 100%;
 }
+.tip {
+	cursor: default;
+}
+.tip:after {
+	color: #999;
+	content: "?";
+	display: inline-block;
+	font-size: 80%;
+	padding: 0.05em 0.15em;
+	text-align: center;
+	vertical-align: super;
+}
