@@ -1,31 +1,30 @@
 <?php
 /**
  * mm_ddReadonly
- * @version 1.0.1 (2013-07-13)
- *
- * @desc Makes fields only readable.
- *
- * @uses ManagerManager plugin 0.5.1.
+ * @version 1.0.2 (2016-05-16)
+ * 
+ * @desc A widget for ManagerManager allowing read-only mode for fields and TVs (their values are still visible but can not be changed).
+ * 
+ * @uses ManagerManager plugin 0.6.2.
  * 
  * @param $fields {comma separated string} - The name(s) of the document fields (or TVs) for which the widget is applying. @required
  * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
  * @param $templates {comma separated string} - Templates IDs for which the widget is applying (empty value means the widget is applying to all templates). Default: ''.
- *
- * @link http://code.divandesign.biz/modx/mm_ddreadonly/1.0.1
- *
- * @copyright 2013, DivanDesign
- * http://www.DivanDesign.biz
+ * 
+ * @link http://code.divandesign.biz/modx/mm_ddreadonly/1.0.2
+ * 
+ * @copyright 2013–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 function mm_ddReadonly($fields = '', $roles = '', $templates = ''){
 	global $modx, $mm_fields, $mm_current_page;
 	$e = &$modx->Event;
-
+	
 	if (!useThisRule($roles, $templates)){return;}
 	
 	//Перед сохранением документа
 	if ($e->name == 'OnBeforeDocFormSave'){
-		//Если создаётся новый документ, у него нет никакого id ещё, да и нам пофиг, т.к. никто ничего с ним всё равно не мог сделать до сохранения
+		//Если создаётся новый документ, у него нет никакого id ещё (да и нам без разницы, т.к. никто ничего с ним всё равно не мог сделать до первого сохранения)
 		if ($e->params['mode'] == 'new'){return;}
 		
 		//ID документа
@@ -114,7 +113,6 @@ function mm_ddReadonly($fields = '', $roles = '', $templates = ''){
 		//Получаем id TV
 		$tvs = tplUseTvs($mm_current_page['template'], $fields);
 		
-		
 		//Если что-то оплучили
 		if (is_array($tvs) && count($tvs) > 0){
 			$tvIds = array();
@@ -125,46 +123,25 @@ function mm_ddReadonly($fields = '', $roles = '', $templates = ''){
 		}
 	//При рендере документа
 	}else if ($e->name == 'OnDocFormRender'){
-		//Разбиваем переданные поля в массивчик
-		$fields = makeArray($fields);
+		//Получаем все используемые для данного шаблона поля
+		$fields = getTplMatchedFields($fields);
+		if ($fields == false){return;}
 		
-		//Если есть что-то
-		if (count($fields) > 0){
-			$output = "// ---------------- mm_ddReadonly :: Begin ------------- \n";
-			
-			$output .= 'var $mm_ddReadonly;';
-			
-			//Получаем id TV
-			$tvs = tplUseTvs($mm_current_page['template'], $fields);
-			//Если что-то есть
-			if (is_array($tvs) && count($tvs) > 0){
-				//Перебираем TV
-				foreach ($tvs as $val){
-					//Вставляем значение перед оригиналом и сносим оригинал нафиг
-					$output .= '
-$mm_ddReadonly = $j("#tv'.$val['id'].'");
+		$output = '//---------- mm_ddReadonly :: Begin -----'.PHP_EOL;
+		
+		$output .= 'var $mm_ddReadonly;';
+		
+		foreach ($fields as $field){
+			$output .=
+'
+$mm_ddReadonly = $j("'.$mm_fields[$field]['fieldtype'].'[name=\''.$mm_fields[$field]['fieldname'].'\']");
 $mm_ddReadonly.before($mm_ddReadonly.val()).hide();
-					';
-				}
-			}
-			
-			if (count($fields) != count($tvs)){
-				//Перебираем поля
-				foreach ($fields as $val){
-					//Если такое поле есть и это не TV
-					if (isset($mm_fields[$val]) && $mm_fields[$val]['tv'] != 1){
-						$output .= '
-$mm_ddReadonly = $j("'.$mm_fields[$val]['fieldtype'].'[name=\"'.$mm_fields[$val]['fieldname'].'\"]");
-$mm_ddReadonly.before($mm_ddReadonly.val()).hide();
-						';
-					}
-				}
-			}
-			
-			$output .= "\n// ---------------- mm_ddReadonly :: End -------------";
-			
-			$e->output($output . "\n");
+';
 		}
+		
+		$output .= '//---------- mm_ddReadonly :: End -----'.PHP_EOL;
+		
+		$e->output($output);
 	}
 }
 ?>
