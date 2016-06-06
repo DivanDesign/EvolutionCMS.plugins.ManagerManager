@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_widget_template
- * @version 1.0 (2014-01-01)
+ * @version 1.0 (2016-01-01)
  * 
  * A template for creating new widgets
  * 
@@ -12,7 +12,7 @@
  * 
  * @link http://
  * 
- * @copyright 2014
+ * @copyright 2016
  */
 
 function mm_widget_template($fields, $other_param = 'defaultValue', $roles = '', $templates = ''){
@@ -26,8 +26,8 @@ function mm_widget_template($fields, $other_param = 'defaultValue', $roles = '',
 	if ($e->name == 'OnDocFormPrerender'){
 		// We have functions to include JS or CSS external files you might need
 		// The standard ModX API methods don't work here
-		$output .= includeJsCss($modx->config['base_url'].'assets/plugins/managermanager/widgets/template/javascript.js', 'html');
-		$output .= includeJsCss($modx->config['base_url'].'assets/plugins/managermanager/widgets/template/styles.css', 'html');
+		$output .= includeJsCss($modx->getConfig('base_url').'assets/plugins/managermanager/widgets/template/javascript.js', 'html');
+		$output .= includeJsCss($modx->getConfig('base_url').'assets/plugins/managermanager/widgets/template/styles.css', 'html');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
@@ -42,7 +42,7 @@ function mm_widget_template($fields, $other_param = 'defaultValue', $roles = '',
 		// Your output should be stored in a string, which is outputted at the end
 		// It will be inserted as a Javascript block (with jQuery), which is executed on document ready
 		// We always put a JS comment, which makes debugging much easier
-		$output .= "//---------- mm_widget_template :: Begin -----\n";
+		$output .= '//---------- mm_widget_template :: Begin -----'.PHP_EOL;
 		
 		// Do something for each of the fields supplied
 		foreach ($fields as $targetTv){
@@ -52,7 +52,7 @@ function mm_widget_template($fields, $other_param = 'defaultValue', $roles = '',
 		}
 		
 		//JS comment for end of widget
-		$output .= "//---------- mm_widget_template :: End -----\n";
+		$output .= '//---------- mm_widget_template :: End -----'.PHP_EOL;
 		
 		// Send the output to the browser
 		$e->output($output);
