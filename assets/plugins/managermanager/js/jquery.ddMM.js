@@ -138,6 +138,59 @@ $.ddMM = {
 				}
 			});
 		}
+	},
+	
+	/**
+	 * hideFields
+	 * @version 1.0 (2016-10-31)
+	 * 
+	 * @desc Hide fields.
+	 * 
+	 * @param fields {array|string_commaSeparated} — The name(s) of the document fields (or TVs) this should apply to.
+	 * @param fields[i] {string} — Field name.
+	 * 
+	 * @returns {void}
+	 */
+	hideFields: function(fields){
+		var _this = this;
+		
+		fields = _this.makeArray(fields);
+		
+		$.each(fields, function(){
+			//Field parent to hide
+			var $parent = $(),
+				//Splitter after parent to hide
+				$splitter = $();
+			
+			//If field exist
+			if ($.isPlainObject(_this.fields[this])){
+				$parent = _this.fields[this].$elem.parents('tr:first');
+				$splitter = $parent.next('tr').find('td[colspan=2]').parent('tr');
+			}
+			
+			//Exceptions
+			if (
+				this == 'keywords' ||
+				this == 'metatags'
+			){
+				$parent = $('select[name*="' + this + '"]').parent('td');
+			}else if (this == 'which_editor'){
+				$parent = $('select#which_editor').prev('span.warning');
+				$parent = $parent.add($('select#which_editor').hide());
+			}else if (this == 'content'){
+				//Hide section
+				$parent = _this.fields[this].$elem.parents('div.sectionBody:first');
+				$parent = $parent.add($parent.prev('div.sectionHeader'));
+			}else if (
+				this == 'pub_date' ||
+				this == 'unpub_date'
+			){
+				$splitter = $parent.next('tr');
+			}
+			
+			$parent.hide();
+			$splitter.hide();
+		});
 	}
 };
 
