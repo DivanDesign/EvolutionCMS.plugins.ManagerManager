@@ -142,7 +142,7 @@ $.ddMM = {
 	
 	/**
 	 * hideFields
-	 * @version 1.0 (2016-10-31)
+	 * @version 1.0.1 (2016-10-31)
 	 * 
 	 * @desc Hide fields.
 	 * 
@@ -178,9 +178,12 @@ $.ddMM = {
 				$parent = $('select#which_editor').prev('span.warning');
 				$parent = $parent.add($('select#which_editor').hide());
 			}else if (this == 'content'){
-				//Hide section
-				$parent = _this.fields[this].$elem.parents('div.sectionBody:first');
-				$parent = $parent.add($parent.prev('div.sectionHeader'));
+				//Work by default with document-weblinks
+				if ($parent.length == 0){
+					//Hide section
+					$parent = _this.fields[this].$elem.parents('div.sectionBody:first');
+					$parent = $parent.add($parent.prev('div.sectionHeader'));
+				}
 			}else if (
 				this == 'pub_date' ||
 				this == 'unpub_date'
