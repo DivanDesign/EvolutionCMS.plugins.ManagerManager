@@ -64,12 +64,15 @@ $.ddMM = {
 	
 	/**
 	 * moveFields
-	 * @version 1.1 (2014-05-28)
+	 * @version 1.1.1 (2016-10-31)
 	 * 
-	 * @desctiption Move a fields to some target (e.g. tab or section).
+	 * @desс Move a fields to some target (e.g. tab or section).
 	 * 
-	 * @param fields {comma separated string; array} - The name(s) of the document fields (or TVs) this should apply to. @required
-	 * @param targetId {string} - The ID of the target which the fields should be moved to. @required
+	 * @param fields {array|string_commaSeparated} — The name(s) of the document fields (or TVs) this should apply to.
+	 * @param fields[i] {string} — Field name.
+	 * @param targetId {string} — The ID of the target which the fields should be moved to.
+	 * 
+	 * @returns {void}
 	 */
 	moveFields: function(fields, targetId){
 		var _this = this,
@@ -103,10 +106,7 @@ $.ddMM = {
 				}else if (
 					this == 'keywords' ||
 					this == 'metatags' ||
-					this == 'which_editor' ||
-					this == 'hidemenu' ||
-					this == 'show_in_menu' ||
-					this == 'menuindex'
+					this == 'which_editor'
 				){
 					//Do nothing
 					return;

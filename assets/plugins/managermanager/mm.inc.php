@@ -3,7 +3,7 @@
  * ManagerManager plugin
  * @version 0.6.2 (2014-05-28)
  * 
- * @for MODx Evolution 1.0.x
+ * @for MODx Evolution 1.1
  * 
  * @desc Used to manipulate the display of document fields in the manager.
  * 
