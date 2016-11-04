@@ -67,15 +67,7 @@ function makeArray($csv){
 function jsSafe($str){
 	global $modx;
 	
-	// Only PHP versions > 5.2.3 allow us to prevent double_encoding
-	// If you are using an older version of PHP, and use characters which require 
-	// HTML entity encoding in new label names, etc you will have to specify the
-	// actual character, not a pre-encoded version
-	if (version_compare(PHP_VERSION, '5.2.3') >= 0){
-		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
-	}else{
-		return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset']);
-	}
+	return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
 }
 
 /**

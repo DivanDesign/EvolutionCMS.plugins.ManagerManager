@@ -18,6 +18,12 @@
  * @copyright 2014
  */
 
+//If version of PHP < 5.4
+if (version_compare(PHP_VERSION, '5.4', '<')){
+	$modx->logEvent('1', '3', '<p>PHP >= 5.4 is required. Sorry about that, but PHP 5.4 was released at <a href="https://en.wikipedia.org/wiki/PHP#Release_history" target="_blank">1 March 2012</a>, the time has come.</p>', 'ManagerManager');
+	return;
+}
+
 $mm_version = '0.6.2';
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
