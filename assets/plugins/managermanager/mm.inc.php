@@ -3,6 +3,7 @@
  * ManagerManager plugin
  * @version 0.6.2 (2014-05-28)
  * 
+ * @uses PHP >= 5.4.
  * @for MODx Evolution 1.1
  * 
  * @desc Used to manipulate the display of document fields in the manager.
@@ -29,23 +30,23 @@ $e = &$modx->Event;
 
 if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
-$jsUrls = array(
-	'jq' => array(
+$jsUrls = [
+	'jq' => [
 		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
 		'name' => 'jquery',
 		'version' => '3.1.1'
-	),
-	'mm' => array(
+	],
+	'mm' => [
 		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
 		'name' => 'ddMM',
 		'version' => '1.2.1'
-	),
-	'ddTools' => array(
+	],
+	'ddTools' => [
 		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
 		'name' => 'jquery.ddTools',
 		'version' => '1.8.6'
-	)
-);
+	]
+];
 
 $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
 
@@ -53,7 +54,7 @@ $pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
 global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJsCss;
 
 if (!is_array($mm_includedJsCss)){
-	$mm_includedJsCss = array();
+	$mm_includedJsCss = [];
 }
 
 //Include ddTools (needed for some widgets)
@@ -62,7 +63,7 @@ include_once($pluginDir.'modx.ddtools.class.php');
 include_once($pluginDir.'utilities.inc.php');
 
 // When loading widgets, ignore folders / files beginning with these chars
-$ignore_first_chars = array('.', '_', '!');
+$ignore_first_chars = ['.', '_', '!'];
 
 // Include widgets
 // We look for a PHP file with the same name as the directory - e.g.
@@ -79,7 +80,7 @@ if ($handle = opendir($widget_dir)){
 	closedir($handle);
 }
 
-$mm_current_page = array();
+$mm_current_page = [];
 
 //Get page template
 if (isset($e->params['template'])){
@@ -97,39 +98,39 @@ if (isset($e->params['template'])){
 $mm_current_page['role'] = $_SESSION['mgrRole'];
 
 // What are the fields we can change, and what types are they?
-$mm_fields = array(
-	'pagetitle' => array('fieldtype' => 'input', 'fieldname' => 'pagetitle', 'dbname' => 'pagetitle', 'tv' => false),
-	'longtitle' => array('fieldtype' => 'input', 'fieldname' => 'longtitle', 'dbname' => 'longtitle', 'tv' => false),
-	'description' => array('fieldtype' => 'input', 'fieldname' => 'description', 'dbname' => 'description', 'tv' => false),
-	'alias' => array('fieldtype' => 'input', 'fieldname' => 'alias', 'dbname' => 'alias', 'tv' => false),
-	'link_attributes' => array('fieldtype' => 'input', 'fieldname' => 'link_attributes', 'dbname' => 'link_attributes', 'tv' => false),
-	'introtext' => array('fieldtype' => 'textarea', 'fieldname' => 'introtext', 'dbname' => 'introtext', 'tv' => false),
-	'template' => array('fieldtype' => 'select', 'fieldname' => 'template', 'dbname' => 'template', 'tv' => false),
-	'menutitle' => array('fieldtype' => 'input', 'fieldname' => 'menutitle','dbname' => 'menutitle', 'tv' => false),
-	'menuindex' => array('fieldtype' => 'input', 'fieldname' => 'menuindex', 'dbname' => 'menuindex', 'tv' => false),
-	'show_in_menu' => array('fieldtype' => 'input', 'fieldname' => 'hidemenucheck','dbname' => 'hidemenu', 'tv' => false),
+$mm_fields = [
+	'pagetitle' => ['fieldtype' => 'input', 'fieldname' => 'pagetitle', 'dbname' => 'pagetitle', 'tv' => false],
+	'longtitle' => ['fieldtype' => 'input', 'fieldname' => 'longtitle', 'dbname' => 'longtitle', 'tv' => false],
+	'description' => ['fieldtype' => 'input', 'fieldname' => 'description', 'dbname' => 'description', 'tv' => false],
+	'alias' => ['fieldtype' => 'input', 'fieldname' => 'alias', 'dbname' => 'alias', 'tv' => false],
+	'link_attributes' => ['fieldtype' => 'input', 'fieldname' => 'link_attributes', 'dbname' => 'link_attributes', 'tv' => false],
+	'introtext' => ['fieldtype' => 'textarea', 'fieldname' => 'introtext', 'dbname' => 'introtext', 'tv' => false],
+	'template' => ['fieldtype' => 'select', 'fieldname' => 'template', 'dbname' => 'template', 'tv' => false],
+	'menutitle' => ['fieldtype' => 'input', 'fieldname' => 'menutitle','dbname' => 'menutitle', 'tv' => false],
+	'menuindex' => ['fieldtype' => 'input', 'fieldname' => 'menuindex', 'dbname' => 'menuindex', 'tv' => false],
+	'show_in_menu' => ['fieldtype' => 'input', 'fieldname' => 'hidemenucheck','dbname' => 'hidemenu', 'tv' => false],
 	// synonym for show_in_menu
-	'hide_menu' => array('fieldtype' => 'input', 'fieldname' => 'hidemenucheck', 'dbname' => 'hidemenu', 'tv' => false),
-	'parent' => array('fieldtype' => 'input', 'fieldname' => 'parent', 'dbname' => 'parent', 'tv' => false),
-	'is_folder' => array('fieldtype' => 'input', 'fieldname' => 'isfoldercheck', 'dbname' => 'isfolder', 'tv' => false),
-	'alias_visible' => array('fieldtype' => 'input', 'fieldname' => 'alias_visible_check', 'dbname' => 'alias_visible', 'tv' => false),
-	'is_richtext' => array('fieldtype' => 'input', 'fieldname' => 'richtextcheck','dbname' => 'richtext', 'tv' => false),
-	'log' => array('fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false),
-	'published' => array('fieldtype' => 'input', 'fieldname' => 'publishedcheck','dbname' => 'published', 'tv' => false),
-	'pub_date' => array('fieldtype' => 'input', 'fieldname' => 'pub_date', 'dbname' => 'pub_date', 'tv' => false),
-	'unpub_date' => array('fieldtype' => 'input', 'fieldname' => 'unpub_date', 'dbname' => 'unpub_date', 'tv' => false),
-	'searchable' => array('fieldtype' => 'input', 'fieldname' => 'searchablecheck','dbname' => 'searchable', 'tv' => false),
-	'cacheable' => array('fieldtype' => 'input', 'fieldname' => 'cacheablecheck', 'dbname' => 'cacheable', 'tv' => false),
-	'clear_cache' => array('fieldtype' => 'input', 'fieldname' => 'syncsitecheck','dbname' => '', 'tv' => false),
-	'content_type' => array('fieldtype' => 'select', 'fieldname' => 'contentType', 'dbname' => 'contentType', 'tv' => false),
-	'content_dispo' => array('fieldtype' => 'select', 'fieldname' => 'content_dispo', 'dbname' => 'content_dispo', 'tv' => false),
-	'keywords' => array('fieldtype' => 'select', 'fieldname' => 'keywords[]', 'dbname' => '', 'tv' => false),
-	'metatags' => array('fieldtype' => 'select', 'fieldname' => 'metatags[]', 'dbname' => '', 'tv' => false),
-	'content' => array('fieldtype' => 'textarea', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false),
-	'which_editor' => array('fieldtype' => 'select', 'fieldname' => 'which_editor','dbname' => '', 'tv' => false),
-	'resource_type' => array('fieldtype' => 'select', 'fieldname' => 'type', 'dbname' => 'isfolder', 'tv' => false),
-	'weblink' => array('fieldtype' => 'input', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false)
-);
+	'hide_menu' => ['fieldtype' => 'input', 'fieldname' => 'hidemenucheck', 'dbname' => 'hidemenu', 'tv' => false],
+	'parent' => ['fieldtype' => 'input', 'fieldname' => 'parent', 'dbname' => 'parent', 'tv' => false],
+	'is_folder' => ['fieldtype' => 'input', 'fieldname' => 'isfoldercheck', 'dbname' => 'isfolder', 'tv' => false],
+	'alias_visible' => ['fieldtype' => 'input', 'fieldname' => 'alias_visible_check', 'dbname' => 'alias_visible', 'tv' => false],
+	'is_richtext' => ['fieldtype' => 'input', 'fieldname' => 'richtextcheck','dbname' => 'richtext', 'tv' => false],
+	'log' => ['fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false],
+	'published' => ['fieldtype' => 'input', 'fieldname' => 'publishedcheck','dbname' => 'published', 'tv' => false],
+	'pub_date' => ['fieldtype' => 'input', 'fieldname' => 'pub_date', 'dbname' => 'pub_date', 'tv' => false],
+	'unpub_date' => ['fieldtype' => 'input', 'fieldname' => 'unpub_date', 'dbname' => 'unpub_date', 'tv' => false],
+	'searchable' => ['fieldtype' => 'input', 'fieldname' => 'searchablecheck','dbname' => 'searchable', 'tv' => false],
+	'cacheable' => ['fieldtype' => 'input', 'fieldname' => 'cacheablecheck', 'dbname' => 'cacheable', 'tv' => false],
+	'clear_cache' => ['fieldtype' => 'input', 'fieldname' => 'syncsitecheck','dbname' => '', 'tv' => false],
+	'content_type' => ['fieldtype' => 'select', 'fieldname' => 'contentType', 'dbname' => 'contentType', 'tv' => false],
+	'content_dispo' => ['fieldtype' => 'select', 'fieldname' => 'content_dispo', 'dbname' => 'content_dispo', 'tv' => false],
+	'keywords' => ['fieldtype' => 'select', 'fieldname' => 'keywords[]', 'dbname' => '', 'tv' => false],
+	'metatags' => ['fieldtype' => 'select', 'fieldname' => 'metatags[]', 'dbname' => '', 'tv' => false],
+	'content' => ['fieldtype' => 'textarea', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false],
+	'which_editor' => ['fieldtype' => 'select', 'fieldname' => 'which_editor','dbname' => '', 'tv' => false],
+	'resource_type' => ['fieldtype' => 'select', 'fieldname' => 'type', 'dbname' => 'isfolder', 'tv' => false],
+	'weblink' => ['fieldtype' => 'input', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false]
+];
 
 // Add in TVs to the list of available fields
 $all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
@@ -174,7 +175,7 @@ foreach ($all_tvs as $thisTv){
 	
 	// check if there are any name clashes between TVs and default field names? If there is, preserve the default field
 	if (!isset($mm_fields[$n])){
-		$mm_fields[$n] = array('fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true);
+		$mm_fields[$n] = ['fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true];
 	}
 }
 

@@ -52,7 +52,7 @@ function makeArray($csv){
 	
 	// Else if we have an empty string
 	if (trim($csv) == ''){
-		return array();
+		return [];
 	}
 	
 	// Otherwise, turn it into an array
@@ -104,7 +104,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 	$tv_table = $modx->getFullTableName('site_tmplvars');	
 	$rel_table = $modx->getFullTableName('site_tmplvar_templates');
 	
-	$where = array();
+	$where = [];
 	//Are we looking at specific TVs, or all?
 	if (!empty($fields)){$where[] = 'tvs.name IN '.makeSqlList($fields);}
 	
@@ -129,7 +129,7 @@ function tplUseTvs($tpl_id, $tvs = '', $types = '', $dbFields = 'id', $resultKey
 	}else{
 		//If return of an associative array is required
 		if ($resultKey !== false){
-			$rsArray = array();
+			$rsArray = [];
 			
 			while ($row = $modx->db->getRow($result)){
 				//If result contains the result key
@@ -174,7 +174,7 @@ function getTplMatchedFields($fields, $tvTypes = '', $tempaleId = ''){
 		$tempaleId = $mm_current_page['template'];
 	}
 	
-	$docFields = array();
+	$docFields = [];
 	
 	//Only document fields
 	foreach ($fields as $field){
@@ -253,22 +253,22 @@ function includeJsCss($source, $output_type = 'js', $name = '', $version = '', $
 			return $result;
 		}
 		
-		$nameVersion = array(
+		$nameVersion = [
 			'name' => $name,
 			'version' => $version,
 			'extension' => $type
-		);
+		];
 	}else{
 		if (empty($name) || empty($version)){
 			$nameVersion = ddTools::parseFileNameVersion($source);
 		}else{
 			$temp = pathinfo($source);
 			
-			$nameVersion = array(
+			$nameVersion = [
 				'name' => $name,
 				'version' => $version,
 				'extension' => !empty($type) ? $type : ($temp['extension'] ? $temp['extension'] : 'js')
-			);
+			];
 		}
 	}
 	
@@ -278,7 +278,7 @@ function includeJsCss($source, $output_type = 'js', $name = '', $version = '', $
 		$useThisVer = version_compare($mm_includedJsCss[$nameVersion['name']]['version'], $nameVersion['version'], '<');
 	}else{
 		//Add
-		$mm_includedJsCss[$nameVersion['name']] = array();
+		$mm_includedJsCss[$nameVersion['name']] = [];
 	}
 	
 	//If the new version is used
