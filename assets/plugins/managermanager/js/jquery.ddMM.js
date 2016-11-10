@@ -4,8 +4,7 @@
  * 
  * @uses jQuery 1.9.1
  * 
- * @copyright 2014, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2013–2016 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 
 (function($){
@@ -20,51 +19,56 @@ $.ddMM = {
 		mm: 'assets/plugins/managermanager/'
 	},
 	/**
-	 * fields {plain object} - All document fields (include tvs).
-	 * fields[item] {plain object} - A field.
-	 * fields[item].fieldtype {string} - Field type.
-	 * fields[item].fieldname {string} - Field name.
-	 * fields[item].dbname {string} - Field db name.
-	 * fields[item].tv {boolean} - Is the field a tv?
-	 * fields[item].$elem {jQuery} - Field jQuery element.
+	 * fields {plain object} — All document fields (include tvs).
+	 * fields[item] {plain object} — A field.
+	 * fields[item].fieldtype {string} — Field type.
+	 * fields[item].fieldname {string} — Field name.
+	 * fields[item].dbname {string} — Field db name.
+	 * fields[item].tv {boolean} — Is the field a tv?
+	 * fields[item].$elem {jQuery} — Field jQuery element.
 	 */
 	fields: {},
 	lang: {},
 	$mutate: $(),
 	
 	/**
-	 * makeArray
-	 * @version 1.1 (2013-10-24)
+	 * @method makeArray
+	 * @version 1.1 (2016-11-10)
 	 * 
-	 * @desctiption Makes a commas separated list into an array.
+	 * @desc Makes a commas separated list into an array.
 	 * 
-	 * @param csv {comma separated string} - List. @required
-	 * @param splitter {string} - Splitter. Default: ','.
+	 * @param csv {string_commaSeparated} — List.
+	 * @param [splitter=','] {string} — Splitter.
 	 * 
-	 * @return {array}
+	 * @returns {array}
 	 */
 	makeArray: function(csv, splitter){
-		// If we've already been supplied an array, just return it
+		var result = new Array();
+		
+		//If we've already been supplied an array, just return it
 		if ($.isArray(csv)){
-			return csv;
+			result = csv;
+		}else{
+			//Else if we have an not empty string
+			if ($.trim(csv) != ''){
+				if (
+					$.type(splitter) != 'string' ||
+					splitter.length == 0
+				){
+					splitter = ',';
+				}
+				
+				//Turn it into an array
+				result = csv.split(new RegExp('\\s*' + splitter + '\\s*'));
+			}
 		}
 		
-		// Else if we have an empty string
-		if ($.trim(csv) == ''){
-			return new Array();
-		}
-		
-		if ($.type(splitter) != 'string' || splitter.length == 0){
-			splitter = ',';
-		}
-		
-		// Otherwise, turn it into an array
-		return csv.split(new RegExp('\\s*' + splitter + '\\s*'));
+		return result;
 	},
 	
 	/**
-	 * moveFields
-	 * @version 1.1.1 (2016-10-31)
+	 * @method moveFields
+	 * @version 1.1.2 (2016-11-10)
 	 * 
 	 * @desс Move a fields to some target (e.g. tab or section).
 	 * 
@@ -80,7 +84,10 @@ $.ddMM = {
 		
 		fields = _this.makeArray(fields);
 		
-		if ($target.length > 0 && fields.length > 0){
+		if (
+			$target.length > 0 &&
+			fields.length > 0
+		){
 			var ruleHtml = '<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>';
 			
 			$('select[id$=_prefix]').each(function(){
@@ -141,7 +148,7 @@ $.ddMM = {
 	},
 	
 	/**
-	 * hideFields
+	 * @method hideFields
 	 * @version 1.0.1 (2016-10-31)
 	 * 
 	 * @desc Hide fields.

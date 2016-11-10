@@ -1,22 +1,23 @@
 <?php
 /**
- * ManagerManager plugin
+ * ManagerManager
  * @version 0.6.2 (2014-05-28)
- * 
- * @uses PHP >= 5.4.
- * @for MODx Evolution 1.1
  * 
  * @desc Used to manipulate the display of document fields in the manager.
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.6.2
+ * @uses PHP >= 5.4.
+ * @uses MODXEvo >= 1.1.
  * 
- * @author DivanDesign studio (www.DivanDesign.biz), Nick Crossland (www.rckt.co.uk)
+ * @author DivanDesign studio (www.DivanDesign.biz)
+ * @author Nick Crossland (www.rckt.co.uk)
  * 
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
  * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
  * 
- * @copyright 2014
+ * @link http://code.divandesign.biz/modx/managermanager/0.6.2
+ * 
+ * @copyright 2012–2016
  */
 
 global $mm_version;
@@ -71,9 +72,13 @@ $ignore_first_chars = ['.', '_', '!'];
 $widget_dir = $pluginDir.'widgets';
 
 if ($handle = opendir($widget_dir)){
-	while (false !== ($file = readdir($handle))){
-		if (!in_array(substr($file, 0, 1), $ignore_first_chars) && $file != '..' && is_dir($widget_dir.'/'.$file)){
-				include_once($widget_dir.'/'.$file.'/'.$file.'.php');
+	while (($file = readdir($handle)) !== false){
+		if (
+			!in_array(substr($file, 0, 1), $ignore_first_chars) &&
+			$file != '..' &&
+			is_dir($widget_dir.'/'.$file)
+		){
+			include_once($widget_dir.'/'.$file.'/'.$file.'.php');
 		}
 	}
 	
@@ -133,13 +138,18 @@ $mm_fields = [
 ];
 
 // Add in TVs to the list of available fields
-$all_tvs = $modx->db->makeArray($modx->db->select('name,type,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC'));
-foreach ($all_tvs as $thisTv){
+$allTvs = $modx->db->makeArray($modx->db->select(
+	'name,type,id',
+	ddTools::$tables['site_tmplvars'],
+	'',
+	'name ASC'
+));
+foreach ($allTvs as $thisTv){
 	// What is the field name?
-	$n = $thisTv['name'];
+	$fieldName = $thisTv['name'];
 	
 	// Checkboxes place an underscore in the ID, so accommodate this...
-	$fieldname_suffix = '';
+	$fieldName_suffix = '';
 	
 	// What fieldtype is this TV type?
 	// fix for MODX EVO 1.1 by Dmi3yy
@@ -150,64 +160,87 @@ foreach ($all_tvs as $thisTv){
 		case 'textareamini':
 		case 'richtext':
 		case 'custom_tv':
-			$t = 'textarea';
+			$fieldType = 'textarea';
 		break;
 		
 		case 'dropdown':
 		case 'listbox':
-			$t = 'select';
+			$fieldType = 'select';
 		break;
 		
 		case 'listbox-multiple':
-			$t = 'select';
-			$fieldname_suffix = '[]';
+			$fieldType = 'select';
+			$fieldName_suffix = '[]';
 		break;
 		
 		case 'checkbox':
-			$t = 'input';
-			$fieldname_suffix = '[]';
+			$fieldType = 'input';
+			$fieldName_suffix = '[]';
 		break;
 		
 		default:
-			$t = 'input';
+			$fieldType = 'input';
 		break;
 	}
 	
 	// check if there are any name clashes between TVs and default field names? If there is, preserve the default field
-	if (!isset($mm_fields[$n])){
-		$mm_fields[$n] = ['fieldtype' => $t, 'fieldname' => 'tv'.$thisTv['id'].$fieldname_suffix, 'dbname' => '', 'tv' => true];
+	if (!isset($mm_fields[$fieldName])){
+		$mm_fields[$fieldName] = [
+			'fieldtype' => $fieldType,
+			'fieldname' => 'tv'.$thisTv['id'].$fieldName_suffix,
+			'dbname' => '',
+			'tv' => true
+		];
 	}
 }
 
-// Get the contents of the config chunk, and put it in the “make_changes” function, to be run at the appropriate moment later on
-if (!function_exists('make_changes')){
-	function make_changes($chunk){
-		//Global modx object & $content for rules
-		global $modx, $content;
-		
-		$config_file = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
-		
-		//See if there is any chunk output (e.g. it exists, and is not empty)
-		$chunk_output = $modx->getChunk($chunk);
-		if (!empty($chunk_output)){
-			// If there is, run it.
-			eval($chunk_output);
-			return "// Getting rules from chunk: $chunk \n\n";
-		//If there's no chunk output, read in the file.
-		}else if (is_readable($config_file)){
-			include($config_file);
-			return "// Getting rules from file: $config_file \n\n";
-		}else{
-			return "// No rules found \n\n";
-		}
+/**
+ * ManagerManager_includeRules
+ * @version 1.0 (2016-11-10)
+ * 
+ * @desc Include the rules.
+ * 
+ * @param $chunkName {string} — Chunk that contains rules. Default: —.
+ * 
+ * @return {string} — Including status message.
+ */
+if (!function_exists('ManagerManager_includeRules')){function ManagerManager_includeRules($chunkName){
+	//Global modx object & $content for rules
+	global $modx, $content;
+	
+	$result = '';
+	
+	$configFilePath = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
+	
+	//See if there is any chunk output (e.g. it exists, and is not empty)
+	$chunkContent = $modx->getChunk($chunkName);
+	if (!empty($chunkContent)){
+		// If there is, run it.
+		eval($chunkContent);
+		$result = '// Getting rules from chunk: '.$chunkName;
+	//If there's no chunk output, read in the file.
+	}else if (is_readable($configFilePath)){
+		include($configFilePath);
+		$result = '// Getting rules from file: '.$configFilePath;
+	}else{
+		$result = '// No rules found';
 	}
-}
+	
+	return $result.PHP_EOL.PHP_EOL;
+}}
 
-if (!function_exists('initJQddManagerManager')){
-	function initJQddManagerManager(){
-		global $modx, $mm_fields;
-		
-		$output =
+/**
+ * ManagerManger_initJQddMM
+ * @version 1.0 (2016-11-10)
+ * 
+ * @desc jQuery.ddMM initialization.
+ * 
+ * @return {string_js}
+ */
+if (!function_exists('ManagerManger_initJQddMM')){function ManagerManger_initJQddMM(){
+	global $modx, $mm_fields;
+	
+	$result =
 '
 $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
@@ -217,77 +250,91 @@ $j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
 
 $j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
 ';
-		
-		return $output;
-	}
-}
+	
+	return $result;
+}}
 
 // The start of adding or editing a document (before the main form)
 switch ($e->name){
 	// if it's the plugin config form, give us a copy of all the relevant values
 	case 'OnPluginFormRender':
-		// The ID of the plugin we're editing
-		$plugin_id_editing = $e->params['id'];
-		$result = $modx->db->select('name', $modx->getFullTableName('site_plugins'), 'id='.$plugin_id_editing);
-		$plugin_editing_name = $modx->db->getValue($result);
+		$editingPluginName = $modx->db->getValue($modx->db->select(
+			'name',
+			$modx->getFullTableName('site_plugins'),
+			// The ID of the plugin we're editing
+			'id='.$e->params['id']
+		));
 		
 		// if it's the right plugin
-		if (strtolower($plugin_editing_name) == 'managermanager'){
+		if (strtolower($editingPluginName) == 'managermanager'){
 			// Get all templates
-			$result = $modx->db->select('templatename, id, description', $modx->getFullTableName('site_templates'), '', 'templatename ASC');
-			$all_templates = $modx->db->makeArray($result);
+			$allTemplates = $modx->db->makeArray($modx->db->select(
+				'templatename, id, description',
+				$modx->getFullTableName('site_templates'),
+				'',
+				'templatename ASC'
+			));
 			
-			$template_table = '<table>';
-			$template_table .= '<tr><th class="gridHeader">Template name</th><th class="gridHeader">Template description</th><th class="gridHeader">ID</th></tr>';
-			$template_table .= '<tr><td class="gridItem">(blank)</td><td class="gridItem">Blank</td><td class="gridItem">0</td></tr>';
+			$output_templates = '<table>';
+			$output_templates .= '<tr><th class="gridHeader">Template name</th><th class="gridHeader">Template description</th><th class="gridHeader">ID</th></tr>';
+			$output_templates .= '<tr><td class="gridItem">(blank)</td><td class="gridItem">Blank</td><td class="gridItem">0</td></tr>';
 			
-			foreach ($all_templates as $count => $tpl){
+			foreach ($allTemplates as $count => $tpl){
 				$class = ($count % 2) ? 'gridItem':'gridAltItem';
-				$template_table .= '<tr>';
-				$template_table .= '<td class="'.$class.'">'.jsSafe($tpl['templatename']).'</td>';
-				$template_table .= '<td class="'.$class.'">'.jsSafe($tpl['description']).'</td>';
-				$template_table .= '<td class="'.$class.'">'.$tpl['id'].'</td>';
-				$template_table .= '</tr>';
+				$output_templates .= '<tr>';
+				$output_templates .= '<td class="'.$class.'">'.jsSafe($tpl['templatename']).'</td>';
+				$output_templates .= '<td class="'.$class.'">'.jsSafe($tpl['description']).'</td>';
+				$output_templates .= '<td class="'.$class.'">'.$tpl['id'].'</td>';
+				$output_templates .= '</tr>';
 			}
 			
-			$template_table .= '</table>';
+			$output_templates .= '</table>';
 			
 			// Get all tvs
-			$result = $modx->db->select('name,caption,id', $modx->getFullTableName('site_tmplvars'), '', 'name ASC');
-			$all_tvs = $modx->db->makeArray($result);
-			$tvs_table = '<table>';
-			$tvs_table .= '<tr><th class="gridHeader">TV name</th><th class="gridHeader">TV caption</th><th class="gridHeader">ID</th></tr>';
+			$allTvs = $modx->db->makeArray($modx->db->select(
+				'name,caption,id',
+				ddTools::$tables['site_tmplvars'],
+				'',
+				'name ASC'
+			));
 			
-			foreach ($all_tvs as $count => $tv){
+			$output_tvs = '<table>';
+			$output_tvs .= '<tr><th class="gridHeader">TV name</th><th class="gridHeader">TV caption</th><th class="gridHeader">ID</th></tr>';
+			
+			foreach ($allTvs as $count => $tv){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
-				$tvs_table .= '<tr>';
-				$tvs_table .= '<td class="'.$class.'">'.jsSafe($tv['name']).'</td>';
-				$tvs_table .= '<td class="'.$class.'">'.jsSafe($tv['caption']).'</td>';
-				$tvs_table .= '<td class="'.$class.'">'.$tv['id'].'</td>';
-				$tvs_table .= '</tr>';
+				$output_tvs .= '<tr>';
+				$output_tvs .= '<td class="'.$class.'">'.jsSafe($tv['name']).'</td>';
+				$output_tvs .= '<td class="'.$class.'">'.jsSafe($tv['caption']).'</td>';
+				$output_tvs .= '<td class="'.$class.'">'.$tv['id'].'</td>';
+				$output_tvs .= '</tr>';
 			}
 			
-			$tvs_table .= '</table>';
+			$output_tvs .= '</table>';
 			
 			// Get all roles
-			$result = $modx->db->select('name, id', $modx->getFullTableName('user_roles'), '', 'name ASC');
-			$all_roles = $modx->db->makeArray($result);
+			$allRoles = $modx->db->makeArray($modx->db->select(
+				'name, id',
+				$modx->getFullTableName('user_roles'),
+				'',
+				'name ASC'
+			));
 			
-			$roles_table = '<table>';
-			$roles_table .= '<tr><th class="gridHeader">Role name</th><th class="gridHeader">ID</th></tr>';
+			$output_roles = '<table>';
+			$output_roles .= '<tr><th class="gridHeader">Role name</th><th class="gridHeader">ID</th></tr>';
 			
-			foreach ($all_roles as $count => $role){
+			foreach ($allRoles as $count => $role){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
-				$roles_table .= '<tr>';
-				$roles_table .= '<td class="'.$class.'">'.jsSafe($role['name']).'</td>';
-				$roles_table .= '<td class="'.$class.'">'.$role['id'].'</td>';
-				$roles_table .= '</tr>';
+				$output_roles .= '<tr>';
+				$output_roles .= '<td class="'.$class.'">'.jsSafe($role['name']).'</td>';
+				$output_roles .= '<td class="'.$class.'">'.$role['id'].'</td>';
+				$output_roles .= '</tr>';
 			}
 			
-			$roles_table .= '</table>';
+			$output_roles .= '</table>';
 			
 			// Load the jquery library
-			$output = '<!-- Begin ManagerManager output -->'."\n";
+			$output = '<!-- Begin ManagerManager output -->'.PHP_EOL;
 			if(
 				!isset($modx->config['mgr_jquery_path']) ||
 				empty($modx->config['mgr_jquery_path'])
@@ -296,24 +343,24 @@ switch ($e->name){
 			}
 			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
 			
-			$output .= '<script type="text/javascript">'."\n";
+			$output .= '<script type="text/javascript">'.PHP_EOL;
 			//produces var $j = jQuery.noConflict();
-			$output .= "var \$j = jQuery.noConflict(); \n";
+			$output .= 'var $j = jQuery.noConflict();'.PHP_EOL;
 			
-			$output .= initJQddManagerManager();
+			$output .= ManagerManger_initJQddMM();
 			
-			$output .= "mm_lastTab = 'tabEvents'; \n";
+			$output .= 'mm_lastTab = "tabEvents";'.PHP_EOL;
 			$e->output($output);
 			
-			mm_createTab('Templates, TVs &amp; Roles', 'rolestemplates', '', '', '<p>These are the IDs for current templates,tvs and roles in your site.</p>'.$template_table.'&nbsp;'.$tvs_table.'&nbsp;'.$roles_table);
+			mm_createTab('Templates, TVs &amp; Roles', 'rolestemplates', '', '', '<p>These are the IDs for current templates,tvs and roles in your site.</p>'.$output_templates.'&nbsp;'.$output_tvs.'&nbsp;'.$output_roles);
 			
 			$e->output('</script>');
-			$e->output('<!-- End ManagerManager output -->'."\n");
+			$e->output('<!-- End ManagerManager output -->'.PHP_EOL);
 		}
 	break;
 	
 	case 'OnDocFormPrerender':
-		$e->output("<!-- Begin ManagerManager output -->\n");
+		$e->output('<!-- Begin ManagerManager output -->'.PHP_EOL);
 		// Load the js libraries
 		if(
 			!isset($modx->config['mgr_jquery_path']) ||
@@ -330,7 +377,7 @@ switch ($e->name){
 <div id="loadingmask">&nbsp;</div>
 <script type="text/javascript">
 window.$j = jQuery.noConflict();
-'.initJQddManagerManager().'
+'.ManagerManger_initJQddMM().'
 $j("#loadingmask").css({
 	width: "100%",
 	minHeight: "100%",
@@ -338,7 +385,7 @@ $j("#loadingmask").css({
 	zIndex: "1000",
 	backgroundColor: "#ffffff"
 });
-				
+
 $j(function(){
 	$j("#loadingmask").css({height: $j("body").height()});
 });
@@ -346,9 +393,9 @@ $j(function(){
 ');
 		
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		ManagerManager_includeRules($e->params['config_chunk']);
 		
-		$e->output("<!-- End ManagerManager output -->\n");
+		$e->output('<!-- End ManagerManager output -->'.PHP_EOL);
 	break;
 	
 	// The main document editing form
@@ -381,7 +428,7 @@ $j(function(){
 		');
 		
 		// Get the JS for the changes & display the status
-		$e->output(make_changes($e->params['config_chunk']));
+		$e->output(ManagerManager_includeRules($e->params['config_chunk']));
 		
 		// Close it off
 		$e->output('
@@ -403,11 +450,11 @@ $j(function(){
 			$j("#template optgroup").each(function(){
 				var $this = $j(this),
 					visibleOptions = 0;
-					
+				
 				$this.find("option").each(function(){
 					if ($j(this).css("display") != "none"){visibleOptions++;}
 				});
-					
+				
 				if (visibleOptions == 0){$this.remove();}
 			});
 			
@@ -434,11 +481,12 @@ $j(function(){
 	
 	case 'OnTVFormRender':
 		// Should we remove deprecated Template variable types from the TV creation list?
-		$remove_deprecated_tv_types = ($e->params['remove_deprecated_tv_types_pref'] == 'yes') ? true : false;
+		$removeDeprecatedTvTypes = ($e->params['remove_deprecated_tv_types_pref'] == 'yes') ? true : false;
 		
-		if ($remove_deprecated_tv_types){
+		if ($removeDeprecatedTvTypes){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
+			
 			if(
 				!isset($modx->config['mgr_jquery_path']) ||
 				empty($modx->config['mgr_jquery_path'])
@@ -451,7 +499,7 @@ $j(function(){
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
 	
-	$j("select[name=type] option").each(function(){
+	$j("select[name="type"] option").each(function(){
 		var $this = $j(this);
 		if(!($this.text().match("deprecated") == null)){
 			$this.remove();
@@ -459,22 +507,27 @@ $j(function(){
 	});
 </script>
 			';
+			
 			echo '<!-- End ManagerManager output -->';
 		}
 	break;
 	
 	case 'OnDocDuplicate':
 		//Get document template from db
-		$mm_current_page['template'] = $modx->db->getValue($modx->db->select('template', ddTools::$tables['site_content'], '`id` = '.$e->params['new_id']));
+		$mm_current_page['template'] = $modx->db->getValue($modx->db->select(
+			'template',
+			ddTools::$tables['site_content'],
+			'`id` = '.$e->params['new_id']
+		));
 		
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		ManagerManager_includeRules($e->params['config_chunk']);
 	break;
 	
 	case 'OnDocFormSave':
 	case 'OnBeforeDocFormSave':
 		//Just run widgets
-		make_changes($e->params['config_chunk']);
+		ManagerManager_includeRules($e->params['config_chunk']);
 	break;
 }
 ?>
