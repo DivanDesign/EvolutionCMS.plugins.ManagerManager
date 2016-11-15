@@ -1,13 +1,12 @@
 /**
- * jQuery ddMM.mm_ddMaxLength Plugin
- * @version: 1.0 (2013-12-10)
+ * jQuery.ddMM.mm_ddMaxLength
+ * @version 1.0 (2013-12-10)
  * 
  * @uses jQuery 1.9.1
- * @uses $.ddTools 1.8.1
- * @uses $.ddMM 1.1.2
+ * @uses jQuery.ddTools 1.8.1
+ * @uses jQuery.ddMM 1.1.2
  * 
- * @copyright 2013, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2013 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 
 (function($){
