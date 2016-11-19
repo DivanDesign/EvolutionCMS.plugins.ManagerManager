@@ -1,37 +1,93 @@
 <?php
 /**
  * mm_ddMultipleFields
- * @version 4.6 (2014-10-24)
+ * @version 4.7 (2016-11-19)
  * 
  * @desc Widget for plugin ManagerManager that allows you to add any number of fields values (TV) in one document (values is written as one with using separator symbols). For example: a few images.
  * 
- * @uses ManagerManager plugin 0.6.3.
+ * @uses PHP >= 5.4.
+ * @uses MODXEvo.plugin.ManagerManager >= 0.7.
  * 
- * @param $tvs {comma separated string} - Names of TV for which the widget is applying. @required
- * @param $roles {comma separated string} - The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
- * @param $templates {comma separated string} - Templates IDs for which the widget is applying (empty value means the widget is applying to all templates). Default: ''.
- * @param $columns {comma separated string} - Column types: field — field type column; text — text type column; textarea — multiple lines column; richtext — column with rich text editor; date — date column; id — hidden column containing unique id; select — list with options (parameter “columnsData”). Default: 'field'.
- * @param $columnsTitle {comma separated string} - Columns titles. Default: ''.
- * @param $colWidth {comma separated string} - Columns width (one value can be set). Default: 180;
- * @param $splY {string} - Strings separator. Default: '||'.
- * @param $splX {string} - Columns separator. Default: '::'.
- * @param $imgW {integer} - Maximum value of image preview width. Default: 300.
- * @param $imgH {integer} - Maximum value of image preview height. Default: 100.
- * @param $minRow {integer} - Minimum number of strings. Default: 0.
- * @param $maxRow {integer} - Maximum number of strings. Default: 0 (без лимита).
- * @param $columnsData {separated string} - List of valid values in json format (with “||”). Default: ''.
+ * @param $params {array_associative|stdClass} — The object of params. @required
+ * @param $params['fields'] {string_commaSeparated} — Names of TV for which the widget is applying. @required
+ * @param $params['columns'] {array} — Columns. Default: [ ['type' => 'text'] ].
+ * @param $params['columns'][i] {array_associative} — Column. @required
+ * @param $params['columns'][i]['type'] {'text'|'textarea'|'richtext'|'date'|'id'|'select'} — Column type: “text” — text type column; “textarea” — multiple lines column; “richtext” — column with rich text editor; “date” — date column; “id” — hidden column containing unique id; “select” — list with options (see “$params['columns'][i]['data']”). @required
+ * @param $params['columns'][i]['title'] {string} — Column title. Default: ''.
+ * @param $params['columns'][i]['width'] {integer} — Column width. Default: 180.
+ * @param $params['columns'][i]['data'] {string_JSON_array} — Valid values (JSON array for the “select” type). Default: —.
+ * if $params['columns'][i]['type'] == select
+ * @param $params['columns'][i]['data'][i] {array_associative} — Item. @required
+ * @param $params['columns'][i]['data'][i]['value'] {integer} — Value. @required
+ * @param $params['columns'][i]['data'][i]['title'] {integer} — Value. Default: $params['columns'][i]['data'][i]['value'].
+ * e. g. '[{"value": "Some value", "title": "Optional title"}, {"value": "Some value 2"}]' 
+ * @param $params['minRowsNumber'] {integer} — Minimum number of strings. Default: 0.
+ * @param $params['maxRowsNumber'] {integer} — Maximum number of strings. Default: 0 (без лимита).
+ * @param $params['rowDelimiter'] {string} — Strings separator. Default: '||'.
+ * @param $params['colDelimiter'] {string} — Columns separator. Default: '::'.
+ * @param $params['previewWidth'] {integer} — Maximum value of image preview width. Default: 300.
+ * @param $params['previewHeight'] {integer} — Maximum value of image preview height. Default: 100.
+ * @param $params['roles'] {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles). Default: ''.
+ * @param $params['templates'] {string_commaSeparated} — Templates IDs for which the widget is applying (empty value means the widget is applying to all templates). Default: ''.
  * 
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddmultiplefields/4.5.1
+ * @link http://code.divandesign.biz/modx/mm_ddmultiplefields/4.7
  * 
- * @copyright 2014, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
-function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns = 'field', $columnsTitle = '', $colWidth = '180', $splY = '||', $splX = '::', $imgW = 300, $imgH = 100, $minRow = 0, $maxRow = 0, $columnsData = ''){
-	if (!useThisRule($roles, $templates)){return;}
+function mm_ddMultipleFields($params){
+	//For backward compatibility
+	if (
+		!is_array($params) &&
+		!is_object($params)
+	){
+		//Convert ordered list of params to named
+		$params = ddTools::orderedParamsToNamed([
+			'paramsList' => func_get_args(),
+			'compliance' => [
+				'fields',
+				'roles',
+				'templates',
+				'columns',
+				'columnsTitles',
+				'columnsWidth',
+				'rowDelimiter',
+				'colDelimiter',
+				'previewWidth',
+				'previewHeight',
+				'minRowsNumber',
+				'maxRowsNumber',
+				'columnsData'
+			]
+		]);
+	}
+	
+	//Defaults
+	$params = (object) array_merge([
+		'fields' => '',
+		'columns' => [
+			[
+				'type' => 'text'
+			]
+		],
+		'minRowsNumber' => 0,
+		'maxRowsNumber' => 0,
+		'rowDelimiter' => '||',
+		'colDelimiter' => '::',
+		'previewWidth' => 300,
+		'previewHeight' => 100,
+		'roles' => '',
+		'templates' => '',
+		//Deprecated
+		'columnsTitles' => '',
+		'columnsWidth' => '180',
+		'columnsData' => ''
+	], (array) $params);
+	
+	if (!useThisRule($params->roles, $params->templates)){return;}
 	
 	global $modx;
 	$e = &$modx->Event;
@@ -46,7 +102,7 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 		
 		$output .= includeJsCss($site.'assets/plugins/managermanager/js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
 		$output .= includeJsCss($widgetDir.'ddmultiplefields.css', 'html');
-		$output .= includeJsCss($widgetDir.'jquery.ddMM.mm_ddMultipleFields.js', 'html', 'jquery.ddMM.mm_ddMultipleFields', '1.1.1');
+		$output .= includeJsCss($widgetDir.'jQuery.ddMM.mm_ddMultipleFields.js', 'html', 'jQuery.ddMM.mm_ddMultipleFields', '2.1.2');
 		
 		$output .= includeJsCss('$j.ddMM.lang.edit = "'.$_lang['edit'].'";', 'html', 'mm_ddMultipleFields_plain', '1', true, 'js');
 		
@@ -54,63 +110,118 @@ function mm_ddMultipleFields($tvs = '', $roles = '', $templates = '', $columns =
 	}else if ($e->name == 'OnDocFormRender'){
 		global $mm_current_page;
 		
-		if ($columnsData){
-			$columnsDataTemp = explode('||', $columnsData);
-			$columnsData = array();
-			
-			foreach ($columnsDataTemp as $value){
-				//Евалим знение и записываем результат или исходное значени
-				$eval = @eval($value);
-				$columnsData[] = $eval ? addslashes(json_encode($eval)) : addslashes($value);
+		$params->fields = tplUseTvs($mm_current_page['template'], $params->fields, 'image,file,text,email,textarea', 'type,name');
+		if ($params->fields == false){return;}
+		
+		//Колонки, заданные как «field», теперь их нужно будет заменить на «image» и «file» соответственно
+		$columns_fieldKeyIndex = [];
+		
+		//Old columns format backward compatibility
+		if (!is_array($params->columns)){
+			$columnsTemp = makeArray($params->columns);
+			$params->columnsTitles = makeArray($params->columnsTitles);
+			$params->columnsWidth = makeArray($params->columnsWidth);
+			//Prepare data
+			if ($params->columnsData){
+				$columnsDataTemp = explode('||', $params->columnsData);
+				$params->columnsData = [];
+				
+				foreach ($columnsDataTemp as $dataItem){
+					//Евалим знение и записываем результат или исходное значени
+					$eval = @eval($dataItem);
+					$dataItem = $eval ? json_encode($eval) : $dataItem;
+					
+					//For backward compatibility '[{"Value 1", "Title 1"}, {"Value 2"}]' → '[{"value" => "Value 1", "title" => "Title 1"}, {"value" => "Value 2"}]'
+					if ($dataItem != ''){
+						$dataItemTemp = json_decode($dataItem, true);
+						$dataItem = [];
+						
+						//Build list
+						foreach ($dataItemTemp as $dataItem_item_index => $dataItem_item_value){
+							$dataItem[$dataItem_item_index] = [];
+							$dataItem[$dataItem_item_index]['value'] = $dataItem_item_value[0];
+							//Title
+							if (isset($dataItem_item_value[1])){
+								$dataItem[$dataItem_item_index]['title'] = $dataItem_item_value[1];
+							}
+						}
+						
+						$dataItem = json_encode($dataItem);
+					}
+					
+					$params->columnsData[] = $dataItem;
+				}
+			}else{
+				$params->columnsData = [];
 			}
-			//Сливаем в строку, что бы передать на клиент
-			$columnsData = implode('||', $columnsData);
+			
+			$params->columns = [];
+			
+			foreach ($columnsTemp as $index => $value){
+				//“field” value compatibility
+				if ($value == 'field'){
+					$columns_fieldKeyIndex[] = $index;
+				}
+				
+				$value = ['type' => $value];
+				
+				if (isset($params->columnsTitles[$index])){
+					$value['title'] = $params->columnsTitles[$index];
+				}
+				if (isset($params->columnsWidth[$index])){
+					$value['width'] = $params->columnsWidth[$index];
+				}
+				if (isset($params->columnsData[$index])){
+					$value['data'] = $params->columnsData[$index];
+				}
+				
+				$params->columns[] = $value;
+			}
+		}
+		
+		//Default value for columns
+		if (empty($params->columns)){
+			$params->columns = [
+				['type' => 'text']
+			];
 		}
 		
 		//Стиль превью изображения
-		$stylePrewiew = "max-width:{$imgW}px; max-height:{$imgH}px; margin: 4px 0; cursor: pointer;";
+		$previewStyle = 'max-width:'.$params->previewWidth.'px; max-height:'.$params->previewHeight.'px; margin: 4px 0; cursor: pointer;';
 		
-		$tvsMas = tplUseTvs($mm_current_page['template'], $tvs, 'image,file,text,email,textarea', 'id,type');
-		if ($tvsMas == false){return;}
+		$output .= '//---------- mm_ddMultipleFields :: Begin -----'.PHP_EOL;
 		
-		$output .= "//---------- mm_ddMultipleFields :: Begin -----\n";
-		
-		//For backward compatibility
-		$columns = makeArray($columns);
-		//Находим колонки, заданные как «field», теперь их нужно будет заменить на «image» и «file» соответственно
-		$columns_fieldIndex = array_keys($columns, 'field');
-		
-		foreach ($tvsMas as $tv){
+		foreach ($params->fields as $field){
 			//For backward compatibility
-			if ($tv['type'] == 'image' || $tv['type'] == 'file'){
+			if (
+				$field['type'] == 'image' ||
+				$field['type'] == 'file'
+			){
 				//Проходимся по всем колонкам «field» и заменяем на соответствующий тип
-				foreach($columns_fieldIndex as $val){
-					$columns[$val] = $tv['type'];
+				foreach($columns_fieldKeyIndex as $index){
+					$params->columns[$index]['type'] = $field['type'];
 				}
 			}
 			
 			$output .=
 '
-$j("#tv'.$tv['id'].'").mm_ddMultipleFields({
-	splY: "'.$splY.'",
-	splX: "'.$splX.'",
-	coloumns: "'.implode(',', $columns).'",
-	coloumnsTitle: "'.$columnsTitle.'",
-	coloumnsData: "'.$columnsData.'",
-	colWidth: "'.$colWidth.'",
-	imageStyle: "'.$stylePrewiew.'",
-	minRow: "'.$minRow.'",
-	maxRow: "'.$maxRow.'"
+$j.ddMM.fields.'.$field['name'].'.$elem.mm_ddMultipleFields({
+	rowDelimiter: "'.$params->rowDelimiter.'",
+	colDelimiter: "'.$params->colDelimiter.'",
+	columns: '.json_encode($params->columns, JSON_UNESCAPED_UNICODE).',
+	previewStyle: "'.$previewStyle.'",
+	minRowsNumber: "'.$params->minRowsNumber.'",
+	maxRowsNumber: "'.$params->maxRowsNumber.'"
 });
 ';
 		}
 		
 		//Поругаемся
-		if (!empty($columns_fieldIndex)){
+		if (!empty($columns_fieldKeyIndex)){
 			$modx->logEvent(1, 2, '<p>You are currently using the deprecated column type “field”. Please, replace it with “image” or “file” respectively.</p><p>The plugin has been called in the document with template id '.$mm_current_page['template'].'.</p>', 'ManagerManager: mm_ddMultipleFields');
 		}
 		
-		$output .= "//---------- mm_ddMultipleFields :: End -----\n";
+		$output .= '//---------- mm_ddMultipleFields :: End -----'.PHP_EOL;
 		
 		$e->output($output);
 	}

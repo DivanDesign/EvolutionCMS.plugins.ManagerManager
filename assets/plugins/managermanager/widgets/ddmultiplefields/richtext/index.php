@@ -1,6 +1,6 @@
 <?php
 //Kill them all
-$_GET = $_POST = $_REQUEST = array();
+$_GET = $_POST = $_REQUEST = [];
 
 //Root dir
 $richtextIncludeDirectory = '../../../../../../';
@@ -36,19 +36,23 @@ if ($_SESSION['mgrValidated']){
 	//Include the ddTools library
 	require_once($modx->config['base_path'].$mmDir.'modx.ddtools.class.php');
 	
-	$temp = $modx->invokeEvent('OnRichTextEditorInit', array(
+	$temp = $modx->invokeEvent('OnRichTextEditorInit', [
 		'editor' => 'TinyMCE',
-		'elements' => array('ddMultipleFields_richtext')
-	));
+		'elements' => ['ddMultipleFields_richtext']
+	]);
 	
-	echo ddTools::parseText(file_get_contents($modx->config['base_path'].$windowDir.'template.html'), array(
-		'site_url' => $modx->config['site_url'],
-		'mmDir' => $mmDir,
-		'windowDir' => $windowDir,
-		'charset' => '<meta charset="'.$modx->config['modx_charset'].'" />',
-		'style' => MODX_MANAGER_URL.'media/style/'.$modx->config['manager_theme'].'/style.css',
-		'tinyMCE' => $temp[0]
-	), '[+', '+]', false);
+	echo ddTools::parseText([
+		'text' => file_get_contents($modx->config['base_path'].$windowDir.'template.html'),
+		'data' => [
+			'site_url' => $modx->config['site_url'],
+			'mmDir' => $mmDir,
+			'windowDir' => $windowDir,
+			'charset' => '<meta charset="'.$modx->config['modx_charset'].'" />',
+			'style' => MODX_MANAGER_URL.'media/style/'.$modx->config['manager_theme'].'/style.css',
+			'tinyMCE' => $temp[0]
+		],
+		'mergeAll' => false
+	]);
 }else{
 	echo file_get_contents(dirname(__FILE__).'/index.html');
 }
