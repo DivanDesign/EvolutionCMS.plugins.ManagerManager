@@ -67,6 +67,34 @@ $.ddMM = {
 	},
 	
 	/**
+	 * @method getFieldElems
+	 * @version 1.0 (2016-11-20)
+	 * 
+	 * @desс Gets dom elements of needed fields.
+	 * 
+	 * @param params {object_plain} — The parameters.
+	 * @param params.fields {array|string_commaSeparated} — The name(s) of the document fields (or TVs).
+	 * @param params.fields[i] {string} — Field name.
+	 * 
+	 * @returns {jQuery}
+	 */
+	getFieldElems: function(params){
+		var _this = this,
+			$result = $();
+		
+		params.fields = _this.makeArray(params.fields);
+		
+		$.each(params.fields, function(){
+			//If the field exists
+			if ($.isPlainObject(_this.fields[this])){
+				$result = $result.add(_this.fields[this].$elem);
+			}
+		});
+		
+		return $result;
+	},
+	
+	/**
 	 * @method moveFields
 	 * @version 1.1.2 (2016-11-10)
 	 * 
