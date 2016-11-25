@@ -1,14 +1,13 @@
 /**
- * jQuery ddMM.mm_ddYMap Plugin
- * @version 1.1 (2015-05-07)
+ * jQuery.ddMM.mm_ddYMap
+ * @version 1.1.5 (2016-11-25)
  * 
  * @uses Yandex.Maps 2.1.
  * @uses jQuery 1.10.2.
  * @uses jQuery.ddMM 1.0.
- * @uses jQuery.ddYMap 1.3.1.
+ * @uses jQuery.ddYMap 1.4.
  * 
- * @copyright 2015, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2013–2016 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 
 (function($){
@@ -20,16 +19,34 @@ $.ddMM.mm_ddYMap = {
 		//Ширина контейнера с картой
 		width: 'auto',
 		//Высота контейнера с картой
-		height: 400
+		height: 400,
+		//Default map zoom
+		defaultZoom: 15,
+		//Default map position when field has no value
+		defaultPosition: '55.20432131317031,61.28999948501182'
 	},
-	//Инициализация карты
+	
+	/**
+	 * @method init
+	 * @version 3.0 (2016-11-25)
+	 * 
+	 * @desc Инициализация карты.
+	 * 
+	 * @param elem {object_plain} — The parameters.
+	 * @param elem.position {array} — Position.
+	 * @param elem.position[0] {float} — Lat.
+	 * @param elem.position[1] {float} — Lng.
+	 * @param elem.$map {jQuery} — Map container.
+	 * @param elem.$coordInput {jQuery} — Coordinates field.
+	 * @param elem.defaultZoom {integer} — Default map zoom.
+	 * 
+	 * @returns {void}
+	 */
 	init: function(elem){
-		var $mapElement = $('#ddYMap' + elem.id);
-		
 		//После инициализации карты
-		$mapElement.on('ddAfterInit', function(){
+		elem.$map.on('ddAfterInit', function(){
 			//Объект карты
-			var map = $mapElement.data('ddYMap').map,
+			var map = elem.$map.data('ddYMap').map,
 				//Контрол поиска
 				serachControl = new ymaps.control.SearchControl({
 					options: {
@@ -50,7 +67,7 @@ $.ddMM.mm_ddYMap = {
 				placemark.geometry.setCoordinates(coords);
 				
 				//Запишем значение в оригинальное поле
-				elem.$elem.val(coords[0] + ',' + coords[1]);
+				elem.$coordInput.val(coords[0] + ',' + coords[1]);
 			});
 			
 			map.controls.add(serachControl);
@@ -61,37 +78,38 @@ $.ddMM.mm_ddYMap = {
 				
 				placemark.geometry.setCoordinates([coords[0], coords[1]]);
 				
-				elem.$elem.val(coords[0] + ',' + coords[1]);
+				elem.$coordInput.val(coords[0] + ',' + coords[1]);
 			});
 			
 			//Перетаскивание метки
 			placemark.events.add('dragend', function(event){
 				var coords = placemark.geometry.getCoordinates();
 				
-				elem.$elem.val(coords[0] + ',' + coords[1]);
+				elem.$coordInput.val(coords[0] + ',' + coords[1]);
 			});
 		}).ddYMap({
-			placemarks: elem.LngLat,
-			placemarkOptions: {draggable: true}
+			placemarks: elem.position,
+			placemarkOptions: {draggable: true},
+			defaultZoom: elem.defaultZoom
 		});
 	}
 };
 
 /**
- * jQuery.fn.mm_ddYMap Plugin
- * @version 1.0.2 (2015-05-07)
+ * jQuery.fn.mm_ddYMap
+ * @version 1.1.4 (2016-11-25)
  * 
  * @desc Делает карту.
  * 
- * @uses $.ddMM.mm_ddYMap
+ * @uses $.ddMM.mm_ddYMap.
  * 
- * @param params {plain object} - Параметры передаются в виде plain object.
- * @param params.hideField {boolean} - Нужно ли скрывать оригинальное поле. Default: true.
- * @param params.width {integer; 'auto'} - Ширина контейнера с картой. Default: 'auto'.
- * @param params.height {integer} - Высота контейнера с картой. Default: 400.
+ * @param [params] {object_plain} — Параметры передаются в виде plain object.
+ * @param [params.hideField=true] {boolean} — Нужно ли скрывать оригинальное поле.
+ * @param [params.width='auto'] {integer|'auto'} — Ширина контейнера с картой.
+ * @param [params.height=400] {integer} — Высота контейнера с картой.
+ * @param [params.defaultZoom] {integer} — Default map zoom.
  * 
- * @copyright 2015, DivanDesign
- * http://www.DivanDesign.biz
+ * @copyright 2013–2016 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 $.fn.mm_ddYMap = function(params){
 	//Обрабатываем параметры
@@ -107,38 +125,40 @@ $.fn.mm_ddYMap = function(params){
 		var elem = {};
 		
 		//TV с координатами
-		elem.$elem = $(this);
-		//ID оригинальной TV
-		elem.id = elem.$elem.attr('id');
+		elem.$coordInput = $(this);
 		//Координаты
-		elem.LngLat = elem.$elem.val();
+		elem.position = elem.$coordInput.val();
+		//Default map zoom
+		elem.defaultZoom = params.defaultZoom;
 		
 		//Родитель
-		var	$elemParent = elem.$elem.parents('tr:first'),
+		var	$coordInputParent = elem.$coordInput.parents('tr:first'),
 			//Запоминаем название поля
-			sectionName = $elemParent.find('.warning').text(),
+			sectionName = $coordInputParent.find('.warning').html(),
 			//Контейнер для карты
-			$sectionContainer = $('<div class="sectionHeader">' + sectionName + '</div><div class="sectionBody"><div id="ddYMap' + elem.id + '" style="width: ' + params.width + '; height: ' + params.height + 'px; position: relative; border: 1px solid #c3c3c3;"></div></div>'),
-			$YMap = $sectionContainer.find('#ddYMap' + elem.id);
+			$sectionContainer = $('<div class="sectionHeader">' + sectionName + '</div><div class="sectionBody"></div>');
+		
+		elem.$map = $('<div style="width: ' + params.width + '; height: ' + params.height + 'px; position: relative; border: 1px solid #c3c3c3;"></div>');
+		elem.$map.appendTo($sectionContainer.filter('.sectionBody'));
 		
 		//Добавляем контейнер
-		elem.$elem.parents('.tab-page:first').append($sectionContainer);
+		elem.$coordInput.parents('.tab-page:first').append($sectionContainer);
 		
 		//Скрываем родителя и разделитель
-		$elemParent.hide().prev('tr').hide();
+		$coordInputParent.hide().prev('tr').hide();
 		
 		//Если скрывать не надо, засовываем перед картой
 		if (!params.hideField){
-		 	elem.$elem.insertBefore($YMap);
+		 	elem.$coordInput.insertBefore(elem.$map);
 		}
 		
 		//Если координаты не заданны, то задаём дефолт
-		if ($.trim(elem.LngLat) == ''){
-			elem.LngLat = '55.17725339420589,61.29035648102616';
+		if ($.trim(elem.position) == ''){
+			elem.position = params.defaultPosition;
 		}
 		
 		//Разбиваем координаты
-		elem.LngLat = elem.LngLat.split(',');
+		elem.position = elem.position.split(',');
 		
 		//Инициализируем
 		$.ddMM.mm_ddYMap.init(elem);
