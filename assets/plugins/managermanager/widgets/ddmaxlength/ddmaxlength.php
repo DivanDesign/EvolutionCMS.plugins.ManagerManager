@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddMaxLength
- * @version 1.2 (2016-11-16)
+ * @version 1.2.1 (2016-12-06)
  * 
  * @desc Widget for ManagerManager plugin allowing number limitation of chars inputing in fields (or TVs).
  * 
@@ -17,7 +17,7 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddmaxlength/1.2
+ * @link http://code.divandesign.biz/modx/mm_ddmaxlength/1.2.1
  * 
  * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -74,7 +74,7 @@ function mm_ddMaxLength($params){
 $j.ddMM.fields.'.$field.'.$elem.addClass("ddMaxLengthField").each(function(){
 	$j(this).parent().append("<div class=\"ddMaxLengthCount\"><span></span></div>");
 }).ddMaxLength({
-	max: '.$length.',
+	max: '.intval($params->length).',
 	containerSelector: "div.ddMaxLengthCount span",
 	warningClass: "maxLengthWarning"
 });
