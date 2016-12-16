@@ -1,7 +1,7 @@
 <?php
 /**
- * mm_ddReadonly
- * @version 1.1 (2016-05-16)
+ * MODXEvo.plugin.ManagerManager.mm_ddReadonly
+ * @version 1.1.1 (2016-12-16)
  * 
  * @desc A widget for ManagerManager allowing read-only mode for fields and TVs (their values are still visible but can not be changed).
  * 
@@ -18,7 +18,7 @@
  * @event OnDocDuplicate
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddreadonly/1.1
+ * @link http://code.divandesign.biz/modx/mm_ddreadonly/1.1.1
  * 
  * @copyright 2013–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -54,15 +54,21 @@ function mm_ddReadonly($params){
 	
 	//Перед сохранением документа
 	if ($e->name == 'OnBeforeDocFormSave'){
-		//Если создаётся новый документ, у него нет никакого id ещё (да и нам без разницы, т.к. никто ничего с ним всё равно не мог сделать до первого сохранения)
-		if ($e->params['mode'] == 'new'){return;}
+		if (
+			//Sometimes it is not set O_o
+			!is_array($e->params) ||
+			//Если создаётся новый документ, у него нет никакого id ещё (да и нам без разницы, т.к. никто ничего с ним всё равно не мог сделать до первого сохранения)
+			$e->params['mode'] == 'new'
+		){
+			return;
+		}
 		
 		//ID документа
 		$docId = $e->params['id'];
 		
 		//Если нужная переменная в сессии не определена, определим
 		if (!is_array($_SESSION['mm_ddReadonly'])){
-			$_SESSION['mm_ddReadonly'] = array();
+			$_SESSION['mm_ddReadonly'] = [];
 		}
 		
 		//Разбиваем переданные поля в массивчик
@@ -71,14 +77,14 @@ function mm_ddReadonly($params){
 		$tvs = tplUseTvs($mm_current_page['template'], $params->fields, '', 'id,name');
 		
 		//Результат
-		$resultFields = array();
+		$resultFields = [];
 		
 		//Если что-то оплучили
 		if (
 			is_array($tvs) &&
 			count($tvs) > 0
 		){
-			$tvsNames = array();
+			$tvsNames = [];
 			
 			//Пробежимся, переделаем под удобный нам формат
 			foreach ($tvs as $val){
@@ -168,7 +174,7 @@ function mm_ddReadonly($params){
 			is_array($tvs) &&
 			count($tvs) > 0
 		){
-			$tvIds = array();
+			$tvIds = [];
 			foreach ($tvs as $val){$tvIds[] = $val['id'];}
 			
 			//Удаляем значение TV для данного документа
