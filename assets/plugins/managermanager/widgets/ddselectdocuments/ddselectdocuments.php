@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddSelectDocuments
- * @version 1.4 (2016-11-04)
+ * @version 1.5 (2016-12-20)
  * 
  * @desc A widget for ManagerManager that makes selection of documents ids easier.
  * 
@@ -9,8 +9,9 @@
  * @uses MODXEvo.plugin.ManagerManager >= 0.7.
  * 
  * @param $params {array_associative|stdClass} — The object of params. @required
- * @param $params['fields'] {string_commaSeparated} — TVs names that the widget is applied to. @required
- * @param $params['parentIds'] {string_commaSeparated} — Parent documents IDs. Default: '0'.
+ * @param $params['fields'] {string_commaSeparated|array} — TVs names that the widget is applied to. @required
+ * @param $params['parentIds'] {string_commaSeparated|array} — Parent documents IDs. Default: '0'.
+ * @param $params['parentIds'][i] {integer|'current'} — IDs or current document Id. Default: '0'.
  * @param $params['depth'] {integer} — Depth of search. Default: 1.
  * @param $params['filter'] {separated string} — Filter clauses, separated by '&' between pairs and by '=' between keys and values. For example, 'template=15&published=1' means to choose the published documents with template id=15. Default: ''.
  * @param $params['listItemLabelMask'] {string} — Template to be used while rendering elements of the document selection list. It is set as a string containing placeholders for document fields and TVs. Also, there is the additional placeholder “[+title+]” that is substituted with either “menutitle” (if defined) or “pagetitle”. Default: '[+title+] ([+id+])'.
@@ -22,7 +23,7 @@
  * @event OnDocFormPrerender
  * @event OnDocFormRender
  * 
- * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.4
+ * @link http://code.divandesign.biz/modx/mm_ddselectdocuments/1.5
  * 
  * @copyright 2013–2016 DivanDesign {@link http://www.DivanDesign.biz }
  */
@@ -88,6 +89,24 @@ function mm_ddSelectDocuments($params){
 		$params->fields = tplUseTvs($mm_current_page['template'], $params->fields);
 		if ($params->fields == false){return;}
 		
+		$params->parentIds = makeArray($params->parentIds);
+		//Если используется current, то сделаем id текущего документа
+		foreach ($params->parentIds as $key => $id){
+			if ($id == 'current'){
+				if (
+					is_array($e->params) &&
+					isset($e->params['id']) &&
+					is_numeric($e->params['id'])
+				){
+					$params->parentIds[$key] = $e->params['id'];
+				}else{
+					unset($params->parentIds[$key]);
+				}
+			}
+		}
+		//Может быть пустым если указан current и создаем новый документ
+		if (count($params->parentIds) == 0){return;}
+		
 		$params->filter = ddTools::explodeAssoc($params->filter, '&', '=');
 		
 		//Необходимые поля
@@ -108,7 +127,7 @@ function mm_ddSelectDocuments($params){
 		
 		//Получаем все дочерние документы
 		$listDocs = mm_ddSelectDocuments_getDocsList([
-			'parentIds' => explode(',', $params->parentIds),
+			'parentIds' => $params->parentIds,
 			'filter' => $params->filter,
 			'depth' => $params->depth,
 			'listItemLabelMask' => $params->listItemLabelMask,
