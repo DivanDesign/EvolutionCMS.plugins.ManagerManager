@@ -278,7 +278,7 @@ function makeSqlList($fieldsArray){
 
 /**
  * includeJsCss
- * @version 1.3.3 (2016-12-16)
+ * @version 1.3.4 (2017-01-23)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -351,19 +351,23 @@ function includeJsCss(
 		
 		$result = $source;
 		
+		if (!$plaintext){
+			$result .= strrpos($result, '?') !== false ? '&' : '?';
+			//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
+			$result .= 'version='.$nameVersion['version'];
+		}
+		
 		if ($nameVersion['extension'] == 'css'){
 			if ($plaintext){
 				$result = '<style type="text/css">'.$result.'</sty\'+\'le>';
 			}else{
-				//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
-				$result = '<link href="'.$result.'?version='.$nameVersion['version'].'" rel="stylesheet" type="text/css" />';
+				$result = '<link href="'.$result.'" rel="stylesheet" type="text/css" />';
 			}
 		}else{
 			if ($plaintext){
 				$result = '<script type="text/javascript" charset="'.$modx->config['modx_charset'].'">'.$result.'</script>';
 			}else{
-				//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
-				$result = '<script src="'.$result.'?version='.$nameVersion['version'].'" type="text/javascript"></script>';
+				$result = '<script src="'.$result.'" type="text/javascript"></script>';
 			}
 			
 			if ($outputType == 'js'){
