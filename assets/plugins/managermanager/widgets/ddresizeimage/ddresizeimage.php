@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddResizeImage
- * @version 1.4 (2016-11-01)
+ * @version 1.5 (2017-04-17)
  * 
  * @desc A widget for ManagerManager plugin that allows image size to be changed (TV) so it is possible to create a little preview (thumb).
  * 
@@ -32,9 +32,9 @@
  * 
  * @event OnBeforeDocFormSave.
  * 
- * @link http://code.divandesign.biz/modx/mm_ddresizeimage/1.4
+ * @link http://code.divandesign.biz/modx/mm_ddresizeimage/1.5
  * 
- * @copyright 2012–2016 DivanDesign {@link http://www.DivanDesign.biz }
+ * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 function mm_ddResizeImage($params){
