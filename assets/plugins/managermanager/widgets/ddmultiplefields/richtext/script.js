@@ -4,7 +4,9 @@ $(function(){
 	$textarea.val(window.$ddField.html()).trigger('change');
 	
 	$('.js-ok').on('click', function(){
-		tinyMCE.triggerSave();
+		if (typeof tinyMCE != 'undefined'){
+			tinyMCE.triggerSave();
+		}
 		window.$ddField.html($textarea.val());
 		$textarea.val('');
 		window.close();
