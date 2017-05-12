@@ -231,20 +231,25 @@ if (!function_exists('ManagerManager_includeRules')){function ManagerManager_inc
 
 /**
  * ManagerManger_initJQddMM
- * @version 1.0 (2016-11-10)
+ * @version 1.1 (2017-05-12)
  * 
  * @desc jQuery.ddMM initialization.
  * 
  * @return {string_js}
  */
 if (!function_exists('ManagerManger_initJQddMM')){function ManagerManger_initJQddMM(){
-	global $modx, $mm_fields;
+	global $modx, $_lang, $mm_fields;
 	
 	$result =
 '
 $j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
 $j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
 $j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+
+$j.ddMM.lang.dp_dayNames = '.$_lang['dp_dayNames'].';
+$j.ddMM.lang.dp_monthNames = '.$_lang['dp_monthNames'].';
+$j.ddMM.lang.dp_startDay = '.$_lang['dp_startDay'].';
+$j.ddMM.lang.edit = "'.$_lang['edit'].'";
 
 $j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
 

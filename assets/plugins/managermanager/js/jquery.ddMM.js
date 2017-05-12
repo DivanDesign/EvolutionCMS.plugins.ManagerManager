@@ -28,7 +28,19 @@ $.ddMM = {
 	 * fields[item].$elem {jQuery} — Field jQuery element.
 	 */
 	fields: {},
-	lang: {},
+	/**
+	 * lang {plain object} — $_lang.
+	 * lang.dp_dayNames {array} — Datepicker day names.
+	 * lang.dp_monthNames {array} — Datepicker months names.
+	 * lang.dp_startDay {integer} — Datepicker start day (1 = starts on Monday, 7 = week starts on Sunday).
+	 * lang.edit {string} — 
+	 */
+	lang: {
+		dp_dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+		dp_monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+		dp_startDay: '1',
+		edit: 'Edit'
+	},
 	$mutate: $(),
 	
 	/**
