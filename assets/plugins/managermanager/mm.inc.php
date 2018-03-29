@@ -120,7 +120,7 @@ $mm_fields = [
 	'is_folder' => ['fieldtype' => 'input', 'fieldname' => 'isfoldercheck', 'dbname' => 'isfolder', 'tv' => false],
 	'alias_visible' => ['fieldtype' => 'input', 'fieldname' => 'alias_visible_check', 'dbname' => 'alias_visible', 'tv' => false],
 	'is_richtext' => ['fieldtype' => 'input', 'fieldname' => 'richtextcheck','dbname' => 'richtext', 'tv' => false],
-	'log' => ['fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false],
+	'donthit' => ['fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false],
 	'published' => ['fieldtype' => 'input', 'fieldname' => 'publishedcheck','dbname' => 'published', 'tv' => false],
 	'pub_date' => ['fieldtype' => 'input', 'fieldname' => 'pub_date', 'dbname' => 'pub_date', 'tv' => false],
 	'unpub_date' => ['fieldtype' => 'input', 'fieldname' => 'unpub_date', 'dbname' => 'unpub_date', 'tv' => false],
