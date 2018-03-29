@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddMultipleFields
- * @version 4.7.1 (2017-05-03)
+ * @version 4.7.2 (2018-03-29)
  * 
  * @desc Widget for plugin ManagerManager that allows you to add any number of fields values (TV) in one document (values is written as one with using separator symbols). For example: a few images.
  * 
@@ -35,7 +35,7 @@
  * 
  * @link http://code.divandesign.biz/modx/mm_ddmultiplefields/4.7.1
  * 
- * @copyright 2012–2017 DivanDesign {@link http://www.DivanDesign.biz }
+ * @copyright 2012–2018 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 function mm_ddMultipleFields($params){
@@ -98,13 +98,9 @@ function mm_ddMultipleFields($params){
 	$widgetDir = $site.'assets/plugins/managermanager/widgets/ddmultiplefields/';
 	
 	if ($e->name == 'OnDocFormPrerender'){
-		global $_lang;
-		
 		$output .= includeJsCss($site.'assets/plugins/managermanager/js/jquery-ui-1.10.3.min.js', 'html', 'jquery-ui', '1.10.3');
 		$output .= includeJsCss($widgetDir.'ddmultiplefields.css', 'html');
 		$output .= includeJsCss($widgetDir.'jQuery.ddMM.mm_ddMultipleFields.js', 'html', 'jQuery.ddMM.mm_ddMultipleFields', '2.1.2');
-		
-		$output .= includeJsCss('$j.ddMM.lang.edit = "'.$_lang['edit'].'";', 'html', 'mm_ddMultipleFields_plain', '1', true, 'js');
 		
 		$e->output($output);
 	}else if ($e->name == 'OnDocFormRender'){
@@ -127,10 +123,6 @@ function mm_ddMultipleFields($params){
 				$params->columnsData = [];
 				
 				foreach ($columnsDataTemp as $dataItem){
-					//Евалим знение и записываем результат или исходное значени
-					$eval = @eval($dataItem);
-					$dataItem = $eval ? json_encode($eval) : $dataItem;
-					
 					//For backward compatibility '[{"Value 1", "Title 1"}, {"Value 2"}]' → '[{"value" => "Value 1", "title" => "Title 1"}, {"value" => "Value 2"}]'
 					if ($dataItem != ''){
 						$dataItemTemp = json_decode($dataItem, true);

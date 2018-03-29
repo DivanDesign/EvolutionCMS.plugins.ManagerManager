@@ -1,12 +1,12 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.1.2 (2016-11-18)
+ * @version 2.1.4 (2018-03-29)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
  * @uses jQuery.ddMM 1.1.2
  * 
- * @copyright 2013–2014 [DivanDesign]{@link http://www.DivanDesign.biz }
+ * @copyright 2013–2018 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 
 (function($){
@@ -545,9 +545,9 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method makeDate
-	 * @version 2.0 (2016-11-16)
+	 * @version 2.1 (2017-05-12)
 	 * 
-	 * @desc Make date field.
+	 * @desc Makes date field.
 	 * 
 	 * @param params {object_plain} — The parameters.
 	 * @param params.value {string} — Field value.
@@ -561,8 +561,11 @@ $.ddMM.mm_ddMultipleFields = {
 		var $field = $('<input type="text" title="' + params.title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(params.value).appendTo(params.$fieldCol);
 		
 		new DatePicker($field.get(0), {
-			'yearOffset': $.ddMM.config.datepicker_offset,
-			'format': $.ddMM.config.datetime_format + ' hh:mm:00'
+			yearOffset: $.ddMM.config.datepicker_offset,
+			format: $.ddMM.config.datetime_format + ' hh:mm:00',
+			dayNames: $.ddMM.lang.dp_dayNames,
+			monthNames: $.ddMM.lang.dp_monthNames,
+			startDay: $.ddMM.lang.dp_startDay
 		});
 		
 		return $field;
@@ -670,7 +673,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method makeSelect
-	 * @version 3.0 (2016-11-17)
+	 * @version 3.1 (2018-01-29)
 	 * 
 	 * @desc Функция создания списка.
 	 * 
@@ -707,6 +710,7 @@ $.ddMM.mm_ddMultipleFields = {
 		
 		if (params.value){$select.val(params.value);}
 		
+		$select.css('width', params.width ? params.width : 180 );
 		return $select.appendTo(params.$fieldCol);
 	},
 	
