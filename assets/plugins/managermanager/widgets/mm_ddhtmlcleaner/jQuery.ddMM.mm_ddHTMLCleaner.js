@@ -1,12 +1,12 @@
 /**
- * jQuery ddMM.mm_ddHTMLCleaner Plugin
- * @version: 1.0.1 (2013-12-10)
+ * jQuery.ddMM.mm_ddHTMLCleaner
+ * @version 1.0.2 (2018-04-03)
  * 
- * @uses jQuery 1.10.2
- * @uses $.ddMM 1.1.2
- *
- * @copyright 2013, DivanDesign
- * http://www.DivanDesign.biz
+ * @requires jQuery 1.10.2.
+ * @requires jQuery.ddMM 1.1.2.
+ * @requires jQuery.ddHTMLCleaner 0.2.
+ * 
+ * @copyright 2013–2018 [DivanDesign]{@link http://www.DivanDesign.biz }
  */
 
 (function($){
@@ -38,9 +38,12 @@ $.ddMM.mm_ddHTMLCleaner = {
 			
 			//Разрешённые атрибуты для конкретных тегов
 			if ($.isPlainObject(params.validAttrs)){
-				$.each(params.validAttrs, function(key, val){
-					params.validAttrs[key] = $.ddMM.makeArray(val);
-				});
+				$.each(
+					params.validAttrs,
+					function(key, val){
+						params.validAttrs[key] = $.ddMM.makeArray(val);
+					}
+				);
 			}else{
 				delete params.validAttrs;
 			}
@@ -58,16 +61,25 @@ $.ddMM.mm_ddHTMLCleaner = {
 //On document.ready
 $(function(){
 	//Самбмит главной формы
-	$.ddMM.$mutate.on('submit', function(){
-		$.each($.ddMM.mm_ddHTMLCleaner.instances, function(){
-			var instance = this;
-			
-			instance.$fields.each(function(){
-				var $this = $(this);
-				
-				$this.val($.ddHTMLCleaner.clean($this.val(), instance.params));
-			});
-		});
-	});
+	$.ddMM.$mutate.on(
+		'submit',
+		function(){
+			$.each(
+				$.ddMM.mm_ddHTMLCleaner.instances,
+				function(){
+					var instance = this;
+					
+					instance.$fields.each(function(){
+						var $this = $(this);
+						
+						$this.val($.ddHTMLCleaner.clean(
+							$this.val(),
+							instance.params
+						));
+					});
+				}
+			);
+		}
+	);
 });
 })(jQuery);
