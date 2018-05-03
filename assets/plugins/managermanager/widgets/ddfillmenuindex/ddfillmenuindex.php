@@ -1,21 +1,26 @@
 <?php
 /**
  * mm_ddFillMenuindex
- * @version 1.2 (2016-11-15)
+ * @version 1.3 (2018-05-03)
  * 
  * @desc A widget for the ManagerManager plugin that was made to keep “menuindex” in order:
  * 1. “menuindex” of a new document is set equal to a free minimal value within its parent (“menuindex”, by default, used to be the number of siblings which was not always preferred).
  * 2. “menuindex” is incremented automatically by 1 on document duplicate.
+ * 3. “menuindex” of the following siblings will be incremented automatically by 1 when doc will be saved if siblings with equal menuindex are exist.
  * 
  * @uses PHP >= 5.4.
- * @uses MODXEvo.plugin.ManagerManager >= 0.7.
+ * @uses MODXEvo.plugins.ManagerManager >= 0.7 {@link http://code.divandesign.biz/modx/managermanager }.
  * 
  * @param $params {array_associative|stdClass} — The object of params. @required
  * @param $params['parentId'] {integer|''} — Id of parent document. Default: '' (all parents).
  * 
- * @link http://code.divandesign.biz/modx/mm_ddfillmenuindex/1.2
+ * @event OnDocFormPrerender
+ * @event OnDocFormSave
+ * @event OnDocDuplicate
  * 
- * @copyright 2013–2016 DivanDesign {@link http://www.DivanDesign.biz }
+ * @link http://code.divandesign.biz/modx/mm_ddfillmenuindex/1.3
+ * 
+ * @copyright 2013–2018 DivanDesign {@link http://www.DivanDesign.biz }
  */
 
 function mm_ddFillMenuindex($params = []){
@@ -78,6 +83,43 @@ function mm_ddFillMenuindex($params = []){
 			//Задаём следующим
 			$content['menuindex'] = $freeMenuIndex + 1;
 		}
+	//When doc is saved
+	}else if ($e->name == 'OnDocFormSave'){
+		//Get its menuindex and parent ID
+		$docData = ddTools::getDocument(
+			$e->params['id'],
+			'menuindex,parent',
+			//Include unpublished and deleted
+			'all',
+			'all'
+		);
+		
+		//Try to get siblings with equal menu index
+		$docSiblingsWighEqualMenuIndex = ddTools::getDocumentChildren(
+			$docData['parent'],
+			//Include unpublished and deleted
+			'all',
+			'all',
+			//Just something
+			'id',
+			'
+				`sc`.`id` != '.$e->params['id'].' AND
+				`sc`.`menuindex` = '.$docData['menuindex'].'
+			'
+		);
+		
+		if (count($docSiblingsWighEqualMenuIndex) > 0){
+			//Increace menuindex in following siblings
+			$modx->db->update(
+				'`menuindex` = `menuindex` + 1',
+				ddTools::$tables['site_content'],
+				'
+					`parent` = '.$docData['parent'].' AND
+					`menuindex` >= '.$docData['menuindex'].'
+				'
+			);
+		}
+	//When doc is duplicated
 	}else if ($e->name == 'OnDocDuplicate'){
 		//Инкрементируем menuindex при копировании
 		$modx->db->query('
