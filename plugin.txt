@@ -47,5 +47,5 @@ if (version_compare(
 	);
 }else{
 	// Run the main code
-	include($modx->config['base_path'].'assets/plugins/managermanager/mm.inc.php');
+	include($modx->getConfig('base_path').'assets/plugins/managermanager/mm.inc.php');
 }

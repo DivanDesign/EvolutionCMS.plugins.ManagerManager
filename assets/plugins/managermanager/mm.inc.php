@@ -33,23 +33,23 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = [
 	'jq' => [
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
+		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
 		'name' => 'jquery',
 		'version' => '3.1.1'
 	],
 	'mm' => [
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jquery.ddMM.js',
 		'name' => 'ddMM',
 		'version' => '1.2.1'
 	],
 	'ddTools' => [
-		'url' => $modx->config['site_url'].'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
 		'name' => 'jquery.ddTools',
 		'version' => '1.8.6'
 	]
 ];
 
-$pluginDir = $modx->config['base_path'].'assets/plugins/managermanager/';
+$pluginDir = $modx->getConfig('base_path').'assets/plugins/managermanager/';
 
 // Set variables
 global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJsCss;
@@ -224,7 +224,7 @@ if (!function_exists('ManagerManager_includeRules')){function ManagerManager_inc
 	
 	$result = '';
 	
-	$configFilePath = $modx->config['base_path'].'assets/plugins/managermanager/mm_rules.inc.php';
+	$configFilePath = $modx->getConfig('base_path').'assets/plugins/managermanager/mm_rules.inc.php';
 	
 	//See if there is any chunk output (e.g. it exists, and is not empty)
 	$chunkContent = $modx->getChunk($chunkName);
@@ -256,9 +256,9 @@ if (!function_exists('ManagerManger_initJQddMM')){function ManagerManger_initJQd
 	
 	$result =
 '
-$j.ddMM.config.site_url = "'.$modx->config['site_url'].'";
-$j.ddMM.config.datetime_format = "'.$modx->config['datetime_format'].'";
-$j.ddMM.config.datepicker_offset = '.$modx->config['datepicker_offset'].';
+$j.ddMM.config.site_url = "'.$modx->getConfig('site_url').'";
+$j.ddMM.config.datetime_format = "'.$modx->getConfig('datetime_format').'";
+$j.ddMM.config.datepicker_offset = '.$modx->getConfig('datepicker_offset').';
 
 $j.ddMM.lang.dp_dayNames = '.$_lang['dp_dayNames'].';
 $j.ddMM.lang.dp_monthNames = '.$_lang['dp_monthNames'].';
@@ -363,10 +363,7 @@ switch ($e->name){
 			
 			// Load the jquery library
 			$output = '<!-- Begin ManagerManager output -->'.PHP_EOL;
-			if(
-				!isset($modx->config['mgr_jquery_path']) ||
-				empty($modx->config['mgr_jquery_path'])
-			){
+			if(empty($modx->getConfig('mgr_jquery_path'))){
 				$output .= includeJsCss(
 					$jsUrls['jq']['url'],
 					'html',
@@ -406,10 +403,7 @@ switch ($e->name){
 	case 'OnDocFormPrerender':
 		$e->output('<!-- Begin ManagerManager output -->'.PHP_EOL);
 		// Load the js libraries
-		if(
-			!isset($modx->config['mgr_jquery_path']) ||
-			empty($modx->config['mgr_jquery_path'])
-		){
+		if(empty($modx->config['mgr_jquery_path'])){
 			$e->output(includeJsCss(
 				$jsUrls['jq']['url'],
 				'html',
@@ -465,7 +459,7 @@ $j(function(){
 <!-- This document is using template: '. $mm_current_page['template'] .' -->
 <!-- You are logged into the following role: '. $mm_current_page['role'] .' -->
 
-<script type="text/javascript" charset="'.$modx->config['modx_charset'].'">
+<script type="text/javascript" charset="'.$modx->getConfig('modx_charset').'">
 	var mm_lastTab = "tabGeneral";
 	var mm_sync_field_count = 0;
 	var synch_field = new Array();
@@ -537,10 +531,7 @@ $j(function(){
 			// Load the jquery library
 			echo '<!-- Begin ManagerManager output -->';
 			
-			if(
-				!isset($modx->config['mgr_jquery_path']) ||
-				empty($modx->config['mgr_jquery_path'])
-			){
+			if(empty($modx->getConfig('mgr_jquery_path'))){
 				echo includeJsCss(
 					$jsUrls['jq']['url'],
 					'html',

@@ -127,7 +127,7 @@ function makeArray($csv){
 
 /**
  * jsSafe
- * @version 1.0.1 (2018-11-10)
+ * @version 1.0.2 (2018-11-10)
  * 
  * @desc Make an output JS safe.
  * 
@@ -141,7 +141,7 @@ function jsSafe($str){
 	return htmlentities(
 		$str,
 		ENT_QUOTES,
-		$modx->config['modx_charset'],
+		$modx->getConfig('modx_charset'),
 		false
 	);
 }
@@ -348,7 +348,7 @@ function makeSqlList($fieldsArray){
 
 /**
  * includeJsCss
- * @version 1.3.5 (2018-11-10)
+ * @version 1.3.6 (2018-11-10)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -439,7 +439,7 @@ function includeJsCss(
 			}
 		}else{
 			if ($plaintext){
-				$result = '<script type="text/javascript" charset="'.$modx->config['modx_charset'].'">'.$result.'</script>';
+				$result = '<script type="text/javascript" charset="'.$modx->getConfig('modx_charset').'">'.$result.'</script>';
 			}else{
 				$result = '<script src="'.$result.'" type="text/javascript"></script>';
 			}
