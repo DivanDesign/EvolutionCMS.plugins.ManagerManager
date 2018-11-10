@@ -64,7 +64,11 @@ include_once($pluginDir.'modx.ddtools.class.php');
 include_once($pluginDir.'utilities.inc.php');
 
 // When loading widgets, ignore folders / files beginning with these chars
-$ignore_first_chars = ['.', '_', '!'];
+$ignore_first_chars = [
+	'.',
+	'_',
+	'!'
+];
 
 // Include widgets
 // We look for a PHP file with the same name as the directory - e.g.
@@ -74,7 +78,14 @@ $widget_dir = $pluginDir.'widgets';
 if ($handle = opendir($widget_dir)){
 	while (($file = readdir($handle)) !== false){
 		if (
-			!in_array(substr($file, 0, 1), $ignore_first_chars) &&
+			!in_array(
+				substr(
+					$file,
+					0,
+					1
+				),
+				$ignore_first_chars
+			) &&
 			$file != '..' &&
 			is_dir($widget_dir.'/'.$file)
 		){
@@ -153,7 +164,10 @@ foreach ($allTvs as $thisTv){
 	
 	// What fieldtype is this TV type?
 	// fix for MODX EVO 1.1 by Dmi3yy
-	$thisTvI = explode(':', $thisTv['type']);	
+	$thisTvI = explode(
+		':',
+		$thisTv['type']
+	);	
 	switch ($thisTvI[0]){
 		case 'textarea':
 		case 'rawtextarea':
@@ -284,7 +298,10 @@ switch ($e->name){
 			$output_templates .= '<tr><th class="gridHeader">Template name</th><th class="gridHeader">Template description</th><th class="gridHeader">ID</th></tr>';
 			$output_templates .= '<tr><td class="gridItem">(blank)</td><td class="gridItem">Blank</td><td class="gridItem">0</td></tr>';
 			
-			foreach ($allTemplates as $count => $tpl){
+			foreach (
+				$allTemplates as
+				$count => $tpl
+			){
 				$class = ($count % 2) ? 'gridItem':'gridAltItem';
 				$output_templates .= '<tr>';
 				$output_templates .= '<td class="'.$class.'">'.jsSafe($tpl['templatename']).'</td>';
@@ -306,7 +323,10 @@ switch ($e->name){
 			$output_tvs = '<table>';
 			$output_tvs .= '<tr><th class="gridHeader">TV name</th><th class="gridHeader">TV caption</th><th class="gridHeader">ID</th></tr>';
 			
-			foreach ($allTvs as $count => $tv){
+			foreach (
+				$allTvs as
+				$count => $tv
+			){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
 				$output_tvs .= '<tr>';
 				$output_tvs .= '<td class="'.$class.'">'.jsSafe($tv['name']).'</td>';
@@ -328,7 +348,10 @@ switch ($e->name){
 			$output_roles = '<table>';
 			$output_roles .= '<tr><th class="gridHeader">Role name</th><th class="gridHeader">ID</th></tr>';
 			
-			foreach ($allRoles as $count => $role){
+			foreach (
+				$allRoles as
+				$count => $role
+			){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
 				$output_roles .= '<tr>';
 				$output_roles .= '<td class="'.$class.'">'.jsSafe($role['name']).'</td>';
@@ -344,9 +367,19 @@ switch ($e->name){
 				!isset($modx->config['mgr_jquery_path']) ||
 				empty($modx->config['mgr_jquery_path'])
 			){
-				$output .= includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+				$output .= includeJsCss(
+					$jsUrls['jq']['url'],
+					'html',
+					$jsUrls['jq']['name'],
+					$jsUrls['jq']['version']
+				);
 			}
-			$output .= includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']);
+			$output .= includeJsCss(
+				$jsUrls['mm']['url'],
+				'html',
+				$jsUrls['mm']['name'],
+				$jsUrls['mm']['version']
+			);
 			
 			$output .= '<script type="text/javascript">'.PHP_EOL;
 			//produces var $j = jQuery.noConflict();
@@ -357,7 +390,13 @@ switch ($e->name){
 			$output .= 'mm_lastTab = "tabEvents";'.PHP_EOL;
 			$e->output($output);
 			
-			mm_createTab('Templates, TVs &amp; Roles', 'rolestemplates', '', '', '<p>These are the IDs for current templates,tvs and roles in your site.</p>'.$output_templates.'&nbsp;'.$output_tvs.'&nbsp;'.$output_roles);
+			mm_createTab(
+				'Templates, TVs &amp; Roles',
+				'rolestemplates',
+				'',
+				'',
+				'<p>These are the IDs for current templates,tvs and roles in your site.</p>'.$output_templates.'&nbsp;'.$output_tvs.'&nbsp;'.$output_roles
+			);
 			
 			$e->output('</script>');
 			$e->output('<!-- End ManagerManager output -->'.PHP_EOL);
@@ -371,10 +410,25 @@ switch ($e->name){
 			!isset($modx->config['mgr_jquery_path']) ||
 			empty($modx->config['mgr_jquery_path'])
 		){
-			$e->output(includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']));
+			$e->output(includeJsCss(
+				$jsUrls['jq']['url'],
+				'html',
+				$jsUrls['jq']['name'],
+				$jsUrls['jq']['version']
+			));
 		}
-		$e->output(includeJsCss($jsUrls['mm']['url'], 'html', $jsUrls['mm']['name'], $jsUrls['mm']['version']));
-		$e->output(includeJsCss($jsUrls['ddTools']['url'], 'html', $jsUrls['ddTools']['name'], $jsUrls['ddTools']['version']));
+		$e->output(includeJsCss(
+			$jsUrls['mm']['url'],
+			'html',
+			$jsUrls['mm']['name'],
+			$jsUrls['mm']['version']
+		));
+		$e->output(includeJsCss(
+			$jsUrls['ddTools']['url'],
+			'html',
+			$jsUrls['ddTools']['name'],
+			$jsUrls['ddTools']['version']
+		));
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		$e->output(
@@ -487,7 +541,12 @@ $j(function(){
 				!isset($modx->config['mgr_jquery_path']) ||
 				empty($modx->config['mgr_jquery_path'])
 			){
-				echo includeJsCss($jsUrls['jq']['url'], 'html', $jsUrls['jq']['name'], $jsUrls['jq']['version']);
+				echo includeJsCss(
+					$jsUrls['jq']['url'],
+					'html',
+					$jsUrls['jq']['name'],
+					$jsUrls['jq']['version']
+				);
 			}
 			
 			// Create a mask to cover the page while the fields are being rearranged

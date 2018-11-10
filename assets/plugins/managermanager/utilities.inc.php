@@ -1,7 +1,7 @@
 <?php
 /**
  * useThisRule
- * @version 1.1 (2016-11-10)
+ * @version 1.1.1 (2018-11-10)
  * 
  * @desc Pass useThisRule a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
  * 
@@ -23,14 +23,28 @@ function useThisRule(
 	$excludeTemplates = false;
 	
 	// Are they negative roles?
-	if (substr($roles, 0, 1) == '!'){
-		$roles = substr($roles, 1);
+	if (substr(
+		$roles,
+		0,
+		1
+	) == '!'){
+		$roles = substr(
+			$roles,
+			1
+		);
 		$excludeRoles = true;
 	}
 	
 	// Are they negative templates?
-	if (substr($templates, 0, 1) == '!'){
-		$templates = substr($templates, 1);
+	if (substr(
+		$templates,
+		0,
+		1
+	) == '!'){
+		$templates = substr(
+			$templates,
+			1
+		);
 		$excludeTemplates = true;
 	}
 	
@@ -39,10 +53,22 @@ function useThisRule(
 	$templates = makeArray($templates);
 	
 	// Does the current role match the conditions supplied?
-	$matchRoleList = ($excludeRoles) ? !in_array($mm_current_page['role'], $roles) : in_array($mm_current_page['role'], $roles);
+	$matchRoleList = ($excludeRoles) ? !in_array(
+		$mm_current_page['role'],
+		$roles
+	) : in_array(
+		$mm_current_page['role'],
+		$roles
+	);
 	
 	// Does the current template match the conditions supplied?
-	$matchTemplateList = ($excludeTemplates) ? !in_array($mm_current_page['template'], $templates) : in_array($mm_current_page['template'], $templates);
+	$matchTemplateList = ($excludeTemplates) ? !in_array(
+		$mm_current_page['template'],
+		$templates
+	) : in_array(
+		$mm_current_page['template'],
+		$templates
+	);
 	
 	// If we've matched either list in any way, return true	
 	if (
@@ -63,7 +89,7 @@ function useThisRule(
 
 /**
  * makeArray
- * @version 1.1 (2016-11-10)
+ * @version 1.1.1 (2018-11-10)
  * 
  * @desc Makes a commas separated list into an array.
  * 
@@ -81,9 +107,18 @@ function makeArray($csv){
 		// Else if we have an not empty string
 		if (trim($csv) != ''){
 			// Otherwise, turn it into an array
-			$result = explode(',', $csv);
+			$result = explode(
+				',',
+				$csv
+			);
 			// Remove any whitespace
-			array_walk($result, create_function('$v, $k', 'return trim($v);'));
+			array_walk(
+				$result,
+				create_function(
+					'$v, $k',
+					'return trim($v);'
+				)
+			);
 		}
 	}
 	
@@ -92,7 +127,7 @@ function makeArray($csv){
 
 /**
  * jsSafe
- * @version 1.0 (2016-11-10)
+ * @version 1.0.1 (2018-11-10)
  * 
  * @desc Make an output JS safe.
  * 
@@ -103,12 +138,17 @@ function makeArray($csv){
 function jsSafe($str){
 	global $modx;
 	
-	return htmlentities($str, ENT_QUOTES, $modx->config['modx_charset'], false);
+	return htmlentities(
+		$str,
+		ENT_QUOTES,
+		$modx->config['modx_charset'],
+		false
+	);
 }
 
 /**
  * tplUseTvs
- * @version 1.3 (2016-11-10)
+ * @version 1.3.1 (2016-11-10)
  * 
  * @desc Does the specified template use the specified TVs?
  * 
@@ -141,7 +181,10 @@ function tplUseTvs(
 		//Add the result key in DB fields if return of an associative array is required & result key is absent there
 		if (
 			$resultKey !== false &&
-			!in_array($resultKey, $dbFields)
+			!in_array(
+				$resultKey,
+				$dbFields
+			)
 		){
 			$dbFields[] = $resultKey;
 		}
@@ -158,9 +201,15 @@ function tplUseTvs(
 		
 		//Execute the SQL query
 		$dbResult = $modx->db->select(
-			implode(',', $dbFields),
+			implode(
+				',',
+				$dbFields
+			),
 			ddTools::$tables['site_tmplvars'].' AS tvs LEFT JOIN '.ddTools::$tables['site_tmplvar_templates'].' AS rel ON rel.tmplvarid = tvs.id',
-			implode(' AND ', $where)
+			implode(
+				' AND ',
+				$where
+			)
 		);
 		
 		$recordCount = $modx->db->getRecordCount($dbResult);
@@ -173,7 +222,10 @@ function tplUseTvs(
 				
 				while ($row = $modx->db->getRow($dbResult)){
 					//If result contains the result key
-					if (array_key_exists($resultKey, $row)){
+					if (array_key_exists(
+						$resultKey,
+						$row
+					)){
 						$rsArray[$row[$resultKey]] = $row;
 					}else{
 						$rsArray[] = $row;
@@ -192,7 +244,7 @@ function tplUseTvs(
 
 /**
  * getTplMatchedFields
- * @version 1.1 (2016-11-10)
+ * @version 1.1.1 (2016-11-10)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
@@ -226,7 +278,10 @@ function getTplMatchedFields(
 		
 		//Only document fields
 		foreach ($fields as $field){
-			if (isset($mm_fields[$field]) && !$mm_fields[$field]['tv']){
+			if (
+				isset($mm_fields[$field]) &&
+				!$mm_fields[$field]['tv']
+			){
 				$docFields[] = $field;
 			}
 		}
@@ -236,7 +291,13 @@ function getTplMatchedFields(
 			$result = $docFields;
 		}else{
 			//Get specified TVs for this template
-			$fields = tplUseTvs($tempaleId, $fields, $tvTypes, 'name', 'name');
+			$fields = tplUseTvs(
+				$tempaleId,
+				$fields,
+				$tvTypes,
+				'name',
+				'name'
+			);
 			
 			//If there are no appropriate TVs
 			if ($fields == false){
@@ -244,7 +305,10 @@ function getTplMatchedFields(
 					$result = $docFields;
 				}
 			}else{
-				$result = array_merge(array_keys($fields), $docFields);
+				$result = array_merge(
+					array_keys($fields),
+					$docFields
+				);
 			}
 		}
 	}
@@ -254,7 +318,7 @@ function getTplMatchedFields(
 
 /**
  * makeSqlList
- * @version 1.0.3 (2016-11-10)
+ * @version 1.0.4 (2016-11-10)
  * 
  * @desc Create a MySQL-safe list from an array.
  * 
@@ -267,18 +331,24 @@ function makeSqlList($fieldsArray){
 	
 	$fieldsArray = makeArray($fieldsArray);
 	
-	foreach($fieldsArray as $name => $value){
+	foreach(
+		$fieldsArray as
+		$name => $value
+	){
 		//if (substr($value, 0, 2) == 'tv'){$value = substr($value, 2);}
 		// Escape them for MySQL
 		$fieldsArray[$name] = "'".$modx->db->escape($value)."'";
 	}
 	
-	return " (".implode(',', $fieldsArray).") ";
+	return " (".implode(
+		',',
+		$fieldsArray
+	).") ";
 }
 
 /**
  * includeJsCss
- * @version 1.3.4 (2017-01-23)
+ * @version 1.3.5 (2018-11-10)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -338,7 +408,11 @@ function includeJsCss(
 	//If this script is already included
 	if (isset($mm_includedJsCss[$nameVersion['name']])){
 		//If old < new, use new, else — old
-		$useThisVer = version_compare($mm_includedJsCss[$nameVersion['name']]['version'], $nameVersion['version'], '<');
+		$useThisVer = version_compare(
+			$mm_includedJsCss[$nameVersion['name']]['version'],
+			$nameVersion['version'],
+			'<'
+		);
 	}else{
 		//Add
 		$mm_includedJsCss[$nameVersion['name']] = [];
@@ -371,7 +445,11 @@ function includeJsCss(
 			}
 			
 			if ($outputType == 'js'){
-				$result = str_replace('</script>', '</scr\'+\'ipt>', $result);
+				$result = str_replace(
+					'</script>',
+					'</scr\'+\'ipt>',
+					$result
+				);
 			}
 		}
 		
