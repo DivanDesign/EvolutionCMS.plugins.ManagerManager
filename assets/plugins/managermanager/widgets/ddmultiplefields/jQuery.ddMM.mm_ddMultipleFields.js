@@ -1,6 +1,6 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.1.4 (2018-03-29)
+ * @version 2.1.5 (2018-11-22)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
@@ -150,7 +150,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init
-	 * @version 4.1 (2016-11-18)
+	 * @version 4.1.1 (2016-11-22)
 	 * 
 	 * @desc Инициализация.
 	 * 
@@ -195,33 +195,39 @@ $.ddMM.mm_ddMultipleFields = {
 			showTableHeader = false;
 		
 		//Перебираем колонки
-		$.each(instance.columns, function(key, val){
-			//Defaults
-			if (!val.title){
-				instance.columns[key].title = '';
-			}else{
-				showTableHeader = true;
-			}
-			if (!val.width){
-				if (key > 0){
-					//Take from preverious column
-					instance.columns[key].width = instance.columns[key - 1].width;
+		$.each(
+			instance.columns,
+			function(
+				key,
+				val
+			){
+				//Defaults
+				if (!val.title){
+					instance.columns[key].title = '';
 				}else{
-					//Or by default
-					instance.columns[key].width = 180;
+					showTableHeader = true;
+				}
+				if (!val.width){
+					if (key > 0){
+						//Take from preverious column
+						instance.columns[key].width = instance.columns[key - 1].width;
+					}else{
+						//Or by default
+						instance.columns[key].width = 180;
+					}
+				}
+				if (!val.data){
+					instance.columns[key].data = '';
+				}
+				
+				//Если это колонка с id
+				if (val.type == 'id'){
+					tableHeaderHtml += '<th style="display: none;"></th>';
+				}else{
+					tableHeaderHtml += '<th>' + val.title + '</th>';
 				}
 			}
-			if (!val.data){
-				instance.columns[key].data = '';
-			}
-			
-			//Если это колонка с id
-			if (val.type == 'id'){
-				tableHeaderHtml += '<th style="display: none;"></th>';
-			}else{
-				tableHeaderHtml += '<th>' + val.title + '</th>';
-			}
-		});
+		);
 		
 		if (showTableHeader){
 			$('<tr><th></th>' + tableHeaderHtml + '<th></th></tr>').appendTo(instance.$table);
@@ -260,14 +266,17 @@ $.ddMM.mm_ddMultipleFields = {
 			axis: 'y',
 			placeholder: 'ui-state-highlight',
 			start: function(event, ui){
-				ui.placeholder.html('<td colspan="' + (instance.columns.length + 2) + '"><div></div></td>').find('div').css('height', ui.item.height());
+				ui.placeholder.html('<td colspan="' + (instance.columns.length + 2) + '"><div></div></td>').find('div').css(
+					'height',
+					ui.item.height()
+				);
 			}
 		});
 	},
 	
 	/**
 	 * @method makeFieldRow
-	 * @version 2.1 (2016-11-18)
+	 * @version 2.1.2 (2018-11-22)
 	 * 
 	 * @desc Функция создания строки.
 	 * 
@@ -280,9 +289,12 @@ $.ddMM.mm_ddMultipleFields = {
 	 */
 	makeFieldRow: function(params){
 		//Defaults
-		params = $.extend({
-			value: ''
-		}, params);
+		params = $.extend(
+			{
+				value: ''
+			},
+			params
+		);
 		
 		var _this = this;
 		
@@ -298,7 +310,7 @@ $.ddMM.mm_ddMultipleFields = {
 			return;
 		}
 		
-		var $fieldBlock = $('<tr class="ddFieldBlock ' + params.id + 'ddFieldBlock"><td class="ddSortHandle"><div></div></td></tr>');
+		var $fieldBlock = $('<tr class="ddFieldBlock ' + params.id + 'ddFieldBlock"><td class="ddSortHandle"><div class="fa fa-sort"></div></td></tr>');
 		
 		if (params.$insertAfter){
 			$fieldBlock.insertAfter(params.$insertAfter);
@@ -312,100 +324,109 @@ $.ddMM.mm_ddMultipleFields = {
 		var $field;
 		
 		//Перебираем колонки
-		$.each(_this.instances[params.id].columns, function(key){
-			if (!params.value[key]){params.value[key] = '';}
-			
-			var $col = _this.makeFieldCol({$fieldRow: $fieldBlock});
-			
-			//Если текущая колонка является изображением
-			if(_this.instances[params.id].columns[key].type == 'image'){
-				$field = _this.makeText({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
+		$.each(
+			_this.instances[params.id].columns,
+			function(key){
+				if (!params.value[key]){params.value[key] = '';}
 				
-				_this.makeImage({
-					id: params.id,
-					$fieldCol: $col
-				});
+				var $col = _this.makeFieldCol({$fieldRow: $fieldBlock});
 				
-				//Create Attach browse button
-				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
-					_this.instances[params.id].$currentField = $(this).siblings('.ddField');
-					BrowseServer(params.id);
-				});
-			//Если текущая колонка является файлом
-			}else if(_this.instances[params.id].columns[key].type == 'file'){
-				$field = _this.makeText({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
-				
-				//Create Attach browse button
-				$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on('click', function(){
-					_this.instances[params.id].$currentField = $(this).siblings('.ddField');
-					BrowseFileServer(params.id);
-				});	
-			//Если id
-			}else if (_this.instances[params.id].columns[key].type == 'id'){
-				$field = _this.makeText({
-					value: params.value[key],
-					title: '',
-					width: 0,
-					$fieldCol: $col
-				});
-				
-				if (!($field.val())){
-					$field.val((new Date).getTime());
+				//Если текущая колонка является изображением
+				if(_this.instances[params.id].columns[key].type == 'image'){
+					$field = _this.makeText({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
+					
+					_this.makeImage({
+						id: params.id,
+						$fieldCol: $col
+					});
+					
+					//Create Attach browse button
+					$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on(
+						'click',
+						function(){
+							_this.instances[params.id].$currentField = $(this).siblings('.ddField');
+							BrowseServer(params.id);
+						}
+					);
+				//Если текущая колонка является файлом
+				}else if(_this.instances[params.id].columns[key].type == 'file'){
+					$field = _this.makeText({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
+					
+					//Create Attach browse button
+					$('<input class="ddAttachButton" type="button" value="Вставить" />').insertAfter($field).on(
+						'click',
+						function(){
+							_this.instances[params.id].$currentField = $(this).siblings('.ddField');
+							BrowseFileServer(params.id);
+						}
+					);	
+				//Если id
+				}else if (_this.instances[params.id].columns[key].type == 'id'){
+					$field = _this.makeText({
+						value: params.value[key],
+						title: '',
+						width: 0,
+						$fieldCol: $col
+					});
+					
+					if (!($field.val())){
+						$field.val((new Date).getTime());
+					}
+					
+					$col.hide();
+				//Если селект
+				}else if(_this.instances[params.id].columns[key].type == 'select'){
+					_this.makeSelect({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						data: _this.instances[params.id].columns[key].data,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
+				//Если дата
+				}else if(_this.instances[params.id].columns[key].type == 'date'){
+					_this.makeDate({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						$fieldCol: $col
+					});
+				//Если textarea
+				}else if(_this.instances[params.id].columns[key].type == 'textarea'){
+					_this.makeTextarea({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
+				//Если richtext
+				}else if(_this.instances[params.id].columns[key].type == 'richtext'){
+					_this.makeRichtext({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
+				//По дефолту делаем текстовое поле
+				}else{
+					_this.makeText({
+						value: params.value[key],
+						title: _this.instances[params.id].columns[key].title,
+						width: _this.instances[params.id].columns[key].width,
+						$fieldCol: $col
+					});
 				}
-				
-				$col.hide();
-			//Если селект
-			}else if(_this.instances[params.id].columns[key].type == 'select'){
-				_this.makeSelect({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					data: _this.instances[params.id].columns[key].data,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
-			//Если дата
-			}else if(_this.instances[params.id].columns[key].type == 'date'){
-				_this.makeDate({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					$fieldCol: $col
-				});
-			//Если textarea
-			}else if(_this.instances[params.id].columns[key].type == 'textarea'){
-				_this.makeTextarea({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
-			//Если richtext
-			}else if(_this.instances[params.id].columns[key].type == 'richtext'){
-				_this.makeRichtext({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
-			//По дефолту делаем текстовое поле
-			}else{
-				_this.makeText({
-					value: params.value[key],
-					title: _this.instances[params.id].columns[key].title,
-					width: _this.instances[params.id].columns[key].width,
-					$fieldCol: $col
-				});
 			}
-		});
+		);
 		
 		var $lastCol = _this.makeFieldCol({$fieldRow: $fieldBlock});
 		
@@ -427,11 +448,17 @@ $.ddMM.mm_ddMultipleFields = {
 			//Если будет равно максимуму при создании этого поля
 			fieldBlocksLen + 1 == _this.instances[params.id].maxRowsNumber
 		){
-			_this.instances[params.id].$addButtons.attr('disabled', true);
+			_this.instances[params.id].$addButtons.attr(
+				'disabled',
+				true
+			);
 		}
 		
 		//Специально для полей, содержащих изображения необходимо инициализировать
-		$('.ddFieldCol:has(.ddField_image) .ddField', $fieldBlock).trigger('change.ddEvents');
+		$(
+			'.ddFieldCol:has(.ddField_image) .ddField',
+			$fieldBlock
+		).trigger('change.ddEvents');
 		
 		return $fieldBlock;
 	},
@@ -453,7 +480,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method makeDeleteButton
-	 * @version 2.0.2 (2016-11-18)
+	 * @version 2.1 (2018-11-22)
 	 * 
 	 * @desc Makes delete button.
 	 * 
@@ -466,40 +493,49 @@ $.ddMM.mm_ddMultipleFields = {
 	makeDeleteButton: function(params){
 		var _this = this;
 		
-		$('<input class="ddDeleteButton" type="button" value="×" />').appendTo(params.$fieldCol).on('click', function(){
-			//Проверяем на минимальное количество строк
-			if (
-				_this.instances[params.id].minRowsNumber &&
-				_this.instances[params.id].$table.find('.ddFieldBlock').length <= _this.instances[params.id].minRowsNumber
-			){
-				return;
-			}
-			
-			var $this = $(this),
-				$par = $this.parents('.ddFieldBlock:first')/*,
-				$table = $this.parents('.ddMultipleField:first')*/;
-			
-			//Отчистим значения полей
-			$par.find('.ddField').val('');
-			
-			//Если больше одной строки, то можно удалить текущую строчку
-			if ($par.siblings('.ddFieldBlock').length > 0){
-				$par.animate({opacity: 0}, 300, function(){
-					//Сносим
-					$par.remove();
-					
-					//При любом удалении показываем кнопки добавления
-					_this.instances[params.id].$addButtons.removeAttr('disabled');
-					
+		$('<button class="fa fa-trash btn ddDeleteButton"></button>').appendTo(params.$fieldCol).on(
+			'click',
+			function(event){
+				//Проверяем на минимальное количество строк
+				if (
+					_this.instances[params.id].minRowsNumber &&
+					_this.instances[params.id].$table.find('.ddFieldBlock').length <= _this.instances[params.id].minRowsNumber
+				){
 					return;
-				});
+				}
+				
+				var $this = $(this),
+					$par = $this.parents('.ddFieldBlock:first')/*,
+					$table = $this.parents('.ddMultipleField:first')*/;
+				
+				//Отчистим значения полей
+				$par.find('.ddField').val('');
+				
+				//Если больше одной строки, то можно удалить текущую строчку
+				if ($par.siblings('.ddFieldBlock').length > 0){
+					$par.animate(
+						{opacity: 0},
+						300,
+						function(){
+							//Сносим
+							$par.remove();
+							
+							//При любом удалении показываем кнопки добавления
+							_this.instances[params.id].$addButtons.removeAttr('disabled');
+							
+							return;
+						}
+					);
+				}
+				
+				event.preventDefault();
 			}
-		});
+		);
 	},
 	
 	/**
 	 * @method makeAddButton
-	 * @version 3.0 (2016-11-18)
+	 * @version 3.1 (2018-11-22)
 	 * 
 	 * @desc Функция создания кнопки +, вызывается при инициализации.
 	 * 
@@ -512,12 +548,22 @@ $.ddMM.mm_ddMultipleFields = {
 	makeAddButton: function(params){
 		var _this = this,
 			//Вешаем на кнопку создание новой строки
-			$button = $('<input class="ddAddButton" type="button" value="+" />').appendTo(params.$fieldCol).on('click', function(){
-				_this.makeFieldRow({
-					id: params.id,
-					$insertAfter: $(this).parents('.ddFieldBlock:first')
-				}).css({opacity: 0}).animate({opacity: 1}, 300);
-			});
+			$button = $('<button class="fa fa-plus btn ddAddButton"></button>').appendTo(params.$fieldCol).on(
+				'click',
+				function(event){
+					_this.makeFieldRow({
+						id: params.id,
+						$insertAfter: $(this).parents('.ddFieldBlock:first')
+					}).css(
+						{opacity: 0}
+					).animate(
+						{opacity: 1},
+						300
+					);
+					
+					event.preventDefault();
+				}
+			);
 		
 		//Сохраняем в коллекцию
 		_this.instances[params.id].$addButtons = _this.instances[params.id].$addButtons.add($button);
@@ -545,7 +591,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method makeDate
-	 * @version 2.1 (2017-05-12)
+	 * @version 2.1.1 (2018-11-22)
 	 * 
 	 * @desc Makes date field.
 	 * 
@@ -560,13 +606,16 @@ $.ddMM.mm_ddMultipleFields = {
 		//name нужен для DatePicker`а
 		var $field = $('<input type="text" title="' + params.title + '" class="ddField DatePicker" name="ddMultipleDate" />').val(params.value).appendTo(params.$fieldCol);
 		
-		new DatePicker($field.get(0), {
-			yearOffset: $.ddMM.config.datepicker_offset,
-			format: $.ddMM.config.datetime_format + ' hh:mm:00',
-			dayNames: $.ddMM.lang.dp_dayNames,
-			monthNames: $.ddMM.lang.dp_monthNames,
-			startDay: $.ddMM.lang.dp_startDay
-		});
+		new DatePicker(
+			$field.get(0),
+			{
+				yearOffset: $.ddMM.config.datepicker_offset,
+				format: $.ddMM.config.datetime_format + ' hh:mm:00',
+				dayNames: $.ddMM.lang.dp_dayNames,
+				monthNames: $.ddMM.lang.dp_monthNames,
+				startDay: $.ddMM.lang.dp_startDay
+			}
+		);
 		
 		return $field;
 	},
@@ -591,7 +640,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method makeRichtext
-	 * @version 2.0 (2016-11-16)
+	 * @version 2.0.2 (2018-11-22)
 	 * 
 	 * @desc Make richtext field.
 	 * 
@@ -607,33 +656,40 @@ $.ddMM.mm_ddMultipleFields = {
 		var _this = this,
 			$field = $('<div title="' + params.title + '" style="width:' + params.width + 'px;" class="ddField">' + params.value + '</div>').appendTo(params.$fieldCol);
 		
-		$('<div class="ddFieldCol_edit"><a class="false" href="#">' + $.ddMM.lang.edit + '</a></div>').appendTo(params.$fieldCol).find('a').on('click', function(event){
-			_this.richtextWindow = window.open($.ddMM.config.site_url + $.ddMM.urls.mm + 'widgets/ddmultiplefields/richtext/index.php', 'mm_ddMultipleFields_richtext', new Array(
-				'width=600',
-				'height=550',
-				'left=' + (($.ddTools.windowWidth - 600) / 2),
-				'top=' + (($.ddTools.windowHeight - 550) / 2),
-				'menubar=no',
-				'toolbar=no',
-				'location=no',
-				'status=no',
-				'resizable=no',
-				'scrollbars=yes'
-			).join(','));
-			
-			if (_this.richtextWindow != null){
-				_this.richtextWindow.$ddField = $field;
+		$('<div class="ddFieldCol_edit"><a class="false" href="#">' + $.ddMM.lang.edit + '</a></div>').appendTo(params.$fieldCol).find('a').on(
+			'click',
+			function(event){
+				_this.richtextWindow = window.open(
+					$.ddMM.config.site_url + $.ddMM.urls.mm + 'widgets/ddmultiplefields/richtext/index.php',
+					'mm_ddMultipleFields_richtext',
+					new Array(
+						'width=700',
+						'height=600',
+						'left=' + (($.ddTools.windowWidth - 700) / 2),
+						'top=' + (($.ddTools.windowHeight - 600) / 2),
+						'menubar=no',
+						'toolbar=no',
+						'location=no',
+						'status=no',
+						'resizable=no',
+						'scrollbars=yes'
+					).join(',')
+				);
+				
+				if (_this.richtextWindow != null){
+					_this.richtextWindow.$ddField = $field;
+				}
+				
+				event.preventDefault();
 			}
-			
-			event.preventDefault();
-		});
+		);
 		
 		return $field;
 	},
 	
 	/**
 	 * @method makeImage
-	 * @version 2.0 (2016-11-16)
+	 * @version 2.0.1 (2018-11-22)
 	 * 
 	 * @desc Make image field.
 	 * 
@@ -647,33 +703,49 @@ $.ddMM.mm_ddMultipleFields = {
 		var _this = this;
 		
 		// Create a new preview and Attach a browse event to the picture, so it can trigger too
-		$('<div class="ddField_image"><img src="" style="' + _this.instances[params.id].previewStyle + '" /></div>').appendTo(params.$fieldCol).hide().find('img').on('click', function(){
-			params.$fieldCol.find('.ddAttachButton').trigger('click');
-		}).on('load.ddEvents', function(){
-			//Удаление дерьма, блеать (превьюшка, оставленная от виджета showimagetvs)
-			$('#' + params.id + 'PreviewContainer').remove();
-		});
+		$('<div class="ddField_image"><img src="" style="' + _this.instances[params.id].previewStyle + '" /></div>').appendTo(params.$fieldCol).hide().find('img').on(
+			'click',
+			function(){
+				params.$fieldCol.find('.ddAttachButton').trigger('click');
+			}
+		).on(
+			'load.ddEvents',
+			function(){
+				//Удаление превьюшки, оставленная от виджета showimagetvs
+				$('#' + params.id + 'PreviewContainer').remove();
+			}
+		);
 		
 		//Находим поле, привязываем события
-		$('.ddField', params.$fieldCol).on('change.ddEvents load.ddEvents', function(){
-			var $this = $(this), url = $this.val();
-			
-			url = (url != '' && url.search(/http:\/\//i) == -1) ? ($.ddMM.config.site_url + url) : url;
-			
-			//If field not empty
-			if (url != ''){
-				//Show preview
-				$this.siblings('.ddField_image').show().find('img').attr('src', url);
-			}else{
-				//Hide preview
-				$this.siblings('.ddField_image').hide();
+		$(
+			'.ddField',
+			params.$fieldCol
+		).on(
+			'change.ddEvents load.ddEvents',
+			function(){
+				var $this = $(this),
+					url = $this.val();
+				
+				url = (url != '' && url.search(/http:\/\//i) == -1) ? ($.ddMM.config.site_url + url) : url;
+				
+				//If field not empty
+				if (url != ''){
+					//Show preview
+					$this.siblings('.ddField_image').show().find('img').attr(
+						'src',
+						url
+					);
+				}else{
+					//Hide preview
+					$this.siblings('.ddField_image').hide();
+				}
 			}
-		});
+		);
 	},
 	
 	/**
 	 * @method makeSelect
-	 * @version 3.1 (2018-01-29)
+	 * @version 3.1.1 (2018-11-22)
 	 * 
 	 * @desc Функция создания списка.
 	 * 
@@ -697,20 +769,30 @@ $.ddMM.mm_ddMultipleFields = {
 			
 			params.data = $.parseJSON(params.data);
 			
-			$.each(params.data, function(index, item){
-				if (!item.title){
-					item.title = item.value;
+			$.each(
+				params.data,
+				function(
+					index,
+					item
+				){
+					if (!item.title){
+						item.title = item.value;
+					}
+					
+					options += '<option value="'+ item.value +'">' + item.title +'</option>';
 				}
-				
-				options += '<option value="'+ item.value +'">' + item.title +'</option>';
-			});
+			);
 			
 			$select.append(options);
 		}
 		
 		if (params.value){$select.val(params.value);}
 		
-		$select.css('width', params.width ? params.width : 180 );
+		$select.css(
+			'width',
+			params.width ? params.width : 180
+		);
+		
 		return $select.appendTo(params.$fieldCol);
 	},
 	
@@ -729,7 +811,7 @@ $.ddMM.mm_ddMultipleFields = {
 
 /**
  * jQuery.fn.mm_ddMultipleFields
- * @version 2.0.3 (2016-11-17)
+ * @version 2.0.4 (2018-11-22)
  * 
  * @desc Делает мультиполя.
  * 
@@ -747,42 +829,63 @@ $.fn.mm_ddMultipleFields = function(params){
 	var _this = $.ddMM.mm_ddMultipleFields;
 	
 	//Обрабатываем параметры
-	params = $.extend({}, _this.defaults, params || {});
+	params = $.extend(
+		{},
+		_this.defaults,
+		params || {}
+	);
 	
-	params.minRowsNumber = parseInt(params.minRowsNumber, 10);
-	params.maxRowsNumber = parseInt(params.maxRowsNumber, 10);
+	params.minRowsNumber = parseInt(
+		params.minRowsNumber,
+		10
+	);
+	params.maxRowsNumber = parseInt(
+		params.maxRowsNumber,
+		10
+	);
 	
 	return $(this).each(function(){
 		//Attach new load event
-		$(this).on('load.ddEvents', function(event){
-			//Оригинальное поле
-			var $this = $(this),
-				//id оригинального поля
-				id = $this.attr('id');
-			
-			//Проверим на существование (возникали какие-то непонятные варианты, при которых два раза вызов был)
-			if (!_this.instances[id]){
-				//Скрываем оригинальное поле
-				$this.removeClass('imageField').off('.mm_widget_showimagetvs').addClass('originalField').hide();
+		$(this).on(
+			'load.ddEvents',
+			function(event){
+				//Оригинальное поле
+				var $this = $(this),
+					//id оригинального поля
+					id = $this.attr('id');
 				
-				//Назначаем обработчик события при изменении (необходимо для того, чтобы после загрузки фотки адрес вставлялся в нужное место)
-				$this.on('change.ddEvents', function(){
-					//Обновляем текущее мульти-поле
-					_this.updateField({id: $this.attr('id')});
-				});
-				
-				//Если это файл или изображение, cкрываем оригинальную кнопку
-				$this.next('input[type=button]').hide();
-				
-				//Создаём мульти-поле
-				_this.init($.extend({
-					id: id,
-					value: $this.val(),
-					$parent: $this.parent(),
-					$originalField: $this
-				}, params));
+				//Проверим на существование (возникали какие-то непонятные варианты, при которых два раза вызов был)
+				if (!_this.instances[id]){
+					//Скрываем оригинальное поле
+					$this.removeClass('imageField').off('.mm_widget_showimagetvs').addClass('originalField').hide();
+					
+					//Назначаем обработчик события при изменении (необходимо для того, чтобы после загрузки фотки адрес вставлялся в нужное место)
+					$this.on(
+						'change.ddEvents',
+						function(){
+							//Обновляем текущее мульти-поле
+							_this.updateField({id: $this.attr('id')});
+						}
+					);
+					
+					//Если это файл или изображение, cкрываем оригинальную кнопку
+					$this.next('input[type=button]').hide();
+					
+					//Создаём мульти-поле
+					_this.init(
+						$.extend(
+							{
+								id: id,
+								value: $this.val(),
+								$parent: $this.parent(),
+								$originalField: $this
+							},
+							params
+						)
+					);
+				}
 			}
-		}).trigger('load');
+		).trigger('load');
 	});
 };
 
@@ -792,7 +895,11 @@ $(function(){
 		lastImageCtrl = '';
 		lastFileCtrl = '';
 		
-		OpenServerBrowser = function(url, width, height){
+		OpenServerBrowser = function(
+			url,
+			width,
+			height
+		){
 			var iLeft = (screen.width - width) / 2,
 				iTop = (screen.height - height) / 2;
 			
@@ -803,7 +910,11 @@ $(function(){
 			sOptions += ',left=' + iLeft;
 			sOptions += ',top=' + iTop;
 			
-			window.open(url, 'FCKBrowseWindow', sOptions);
+			window.open(
+				url,
+				'FCKBrowseWindow',
+				sOptions
+			);
 		};
 		
 		BrowseServer = function(ctrl){
@@ -812,7 +923,11 @@ $(function(){
 			var w = screen.width * 0.5;
 			var h = screen.height * 0.5;
 			
-			OpenServerBrowser($.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=images', w, h);
+			OpenServerBrowser(
+				$.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=images',
+				w,
+				h
+			);
 		};
 		
 		BrowseFileServer = function(ctrl){
@@ -821,25 +936,41 @@ $(function(){
 			var w = screen.width * 0.5;
 			var h = screen.height * 0.5;
 			
-			OpenServerBrowser($.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=files', w, h);
+			OpenServerBrowser(
+				$.ddMM.urls.manager + 'media/browser/mcpuk/browser.php?Type=files',
+				w,
+				h
+			);
 		};
 		
 		SetUrlChange = function(el){
 			if ('createEvent' in document){
 				var evt = document.createEvent('HTMLEvents');
 				
-				evt.initEvent('change', false, true);
+				evt.initEvent(
+					'change',
+					false,
+					true
+				);
 				el.dispatchEvent(evt);
 			}else{
 				el.fireEvent('onchange');
 			}
 		};
 		
-		SetUrl = function(url, width, height, alt){
+		SetUrl = function(
+			url,
+			width,
+			height,
+			alt
+		){
 			if(lastFileCtrl){
 				var c = document.getElementById(lastFileCtrl);
 				
-				if(c && c.value != url){
+				if(
+					c &&
+					c.value != url
+				){
 					c.value = url;
 					SetUrlChange(c);
 				}
@@ -848,7 +979,10 @@ $(function(){
 			}else if(lastImageCtrl){
 				var c = document.getElementById(lastImageCtrl);
 				
-				if(c && c.value != url){
+				if(
+					c &&
+					c.value != url
+				){
 					c.value = url;
 					SetUrlChange(c);
 				}
@@ -865,7 +999,12 @@ $(function(){
 			var oldSetUrl = SetUrl;
 			
 			//Redefine it to also tell the preview to update
-			SetUrl = function(url, width, height, alt){
+			SetUrl = function(
+				url,
+				width,
+				height,
+				alt
+			){
 				var $field = $();
 				
 				if(lastFileCtrl){
@@ -874,7 +1013,12 @@ $(function(){
 					$field = $(document.mutate[lastImageCtrl]);
 				}
 				
-				oldSetUrl(url, width, height, alt);
+				oldSetUrl(
+					url,
+					width,
+					height,
+					alt
+				);
 				
 				$field.trigger('change');
 			};
@@ -882,10 +1026,16 @@ $(function(){
 	}
 	
 	//Сабмит главной формы
-	$.ddMM.$mutate.on('submit', function(){
-		$.each($.ddMM.mm_ddMultipleFields.instances, function(key){
-			$.ddMM.mm_ddMultipleFields.updateTv({id: key});
-		});
-	});
+	$.ddMM.$mutate.on(
+		'submit',
+		function(){
+			$.each(
+				$.ddMM.mm_ddMultipleFields.instances,
+				function(key){
+					$.ddMM.mm_ddMultipleFields.updateTv({id: key});
+				}
+			);
+		}
+	);
 });
 })(jQuery);

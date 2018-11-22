@@ -3,17 +3,23 @@ $(function(){
 	
 	$textarea.val(window.$ddField.html()).trigger('change');
 	
-	$('.js-ok').on('click', function(){
-		if (typeof tinyMCE != 'undefined'){
-			tinyMCE.triggerSave();
+	$('.js-ok').on(
+		'click',
+		function(){
+			if (typeof tinyMCE != 'undefined'){
+				tinyMCE.triggerSave();
+			}
+			window.$ddField.html($textarea.val());
+			$textarea.val('');
+			window.close();
 		}
-		window.$ddField.html($textarea.val());
-		$textarea.val('');
-		window.close();
-	});
+	);
 	
-	$('.js-cancel').on('click', function(){
-		$textarea.val('');
-		window.close();
-	});
+	$('.js-cancel').on(
+		'click',
+		function(){
+			$textarea.val('');
+			window.close();
+		}
+	);
 });
