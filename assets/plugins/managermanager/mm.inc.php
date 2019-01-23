@@ -6,10 +6,10 @@
  * @desc Used to manipulate the display of document fields in the manager.
  * 
  * @uses PHP >= 5.4.
- * @uses MODXEvo >= 1.1.
+ * @uses (MODX)EvolutionCMS >= 1.1 {@link https://github.com/evolution-cms/evolution }
  * 
- * @author DivanDesign studio (www.DivanDesign.biz)
- * @author Nick Crossland (www.rckt.co.uk)
+ * @author DivanDesign studio {@link www.DivanDesign.biz }
+ * @author Nick Crossland {@link www.rckt.co.uk }
  * 
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
@@ -33,35 +33,41 @@ if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
 
 $jsUrls = [
 	'jq' => [
-		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
+		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
 		'name' => 'jquery',
 		'version' => '3.1.1'
 	],
 	'mm' => [
-		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddMM.js',
 		'name' => 'ddMM',
 		'version' => '1.2.1'
 	],
 	'ddTools' => [
-		'url' => $modx->getConfig('site_url').'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
 		'name' => 'jquery.ddTools',
 		'version' => '1.8.6'
 	]
 ];
 
-$pluginDir = $modx->getConfig('base_path').'assets/plugins/managermanager/';
+$pluginDir = $modx->getConfig('base_path') . 'assets/plugins/managermanager/';
+
+//Include ddTools (needed for some widgets)
+include_once($pluginDir . 'modx.ddtools.class.php');
+//Include Utilites
+include_once($pluginDir . 'utilities.inc.php');
 
 // Set variables
-global $content, $template, $default_template, $mm_current_page, $mm_fields, $mm_includedJsCss;
+global
+	$content,
+	$template,
+	$default_template,
+	$mm_current_page,
+	$mm_fields,
+	$mm_includedJsCss;
 
 if (!is_array($mm_includedJsCss)){
 	$mm_includedJsCss = [];
 }
-
-//Include ddTools (needed for some widgets)
-include_once($pluginDir.'modx.ddtools.class.php');
-//Include Utilites
-include_once($pluginDir.'utilities.inc.php');
 
 // When loading widgets, ignore folders / files beginning with these chars
 $ignore_first_chars = [
@@ -73,7 +79,7 @@ $ignore_first_chars = [
 // Include widgets
 // We look for a PHP file with the same name as the directory - e.g.
 // /widgets/widgetname/widgetname.php
-$widget_dir = $pluginDir.'widgets';
+$widget_dir = $pluginDir . 'widgets';
 
 if ($handle = opendir($widget_dir)){
 	while (($file = readdir($handle)) !== false){
@@ -87,9 +93,9 @@ if ($handle = opendir($widget_dir)){
 				$ignore_first_chars
 			) &&
 			$file != '..' &&
-			is_dir($widget_dir.'/'.$file)
+			is_dir($widget_dir . '/' . $file)
 		){
-			include_once($widget_dir.'/'.$file.'/'.$file.'.php');
+			include_once($widget_dir . '/' . $file . '/' . $file . '.php');
 		}
 	}
 	
@@ -167,7 +173,7 @@ foreach ($allTvs as $thisTv){
 	$thisTvI = explode(
 		':',
 		$thisTv['type']
-	);	
+	);
 	switch ($thisTvI[0]){
 		case 'textarea':
 		case 'rawtextarea':
@@ -201,7 +207,7 @@ foreach ($allTvs as $thisTv){
 	if (!isset($mm_fields[$fieldName])){
 		$mm_fields[$fieldName] = [
 			'fieldtype' => $fieldType,
-			'fieldname' => 'tv'.$thisTv['id'].$fieldName_suffix,
+			'fieldname' => 'tv' . $thisTv['id'] . $fieldName_suffix,
 			'dbname' => '',
 			'tv' => true
 		];
@@ -210,7 +216,7 @@ foreach ($allTvs as $thisTv){
 
 /**
  * ManagerManager_includeRules
- * @version 1.0 (2016-11-10)
+ * @version 1.0.1 (2019-01-23)
  * 
  * @desc Include the rules.
  * 
@@ -220,54 +226,61 @@ foreach ($allTvs as $thisTv){
  */
 if (!function_exists('ManagerManager_includeRules')){function ManagerManager_includeRules($chunkName){
 	//Global modx object & $content for rules
-	global $modx, $content;
+	global
+		$modx,
+		$content;
 	
 	$result = '';
 	
-	$configFilePath = $modx->getConfig('base_path').'assets/plugins/managermanager/mm_rules.inc.php';
+	$configFilePath = $modx->getConfig('base_path') . 'assets/plugins/managermanager/mm_rules.inc.php';
 	
 	//See if there is any chunk output (e.g. it exists, and is not empty)
 	$chunkContent = $modx->getChunk($chunkName);
 	if (!empty($chunkContent)){
 		// If there is, run it.
 		eval($chunkContent);
-		$result = '// Getting rules from chunk: '.$chunkName;
+		
+		$result = '// Getting rules from chunk: ' . $chunkName;
 	//If there's no chunk output, read in the file.
 	}else if (is_readable($configFilePath)){
 		include($configFilePath);
-		$result = '// Getting rules from file: '.$configFilePath;
+		
+		$result = '// Getting rules from file: ' . $configFilePath;
 	}else{
 		$result = '// No rules found';
 	}
 	
-	return $result.PHP_EOL.PHP_EOL;
+	return $result . PHP_EOL . PHP_EOL;
 }}
 
 /**
  * ManagerManger_initJQddMM
- * @version 1.1 (2017-05-12)
+ * @version 1.1.1 (2019-01-23)
  * 
  * @desc jQuery.ddMM initialization.
  * 
  * @return {string_js}
  */
 if (!function_exists('ManagerManger_initJQddMM')){function ManagerManger_initJQddMM(){
-	global $modx, $_lang, $mm_fields;
+	global
+		$modx,
+		$_lang,
+		$mm_fields;
 	
 	$result =
 '
-$j.ddMM.config.site_url = "'.$modx->getConfig('site_url').'";
-$j.ddMM.config.datetime_format = "'.$modx->getConfig('datetime_format').'";
-$j.ddMM.config.datepicker_offset = '.$modx->getConfig('datepicker_offset').';
+$j.ddMM.config.site_url = "' . $modx->getConfig('site_url') . '";
+$j.ddMM.config.datetime_format = "' . $modx->getConfig('datetime_format') . '";
+$j.ddMM.config.datepicker_offset = ' . $modx->getConfig('datepicker_offset') . ';
 
-$j.ddMM.lang.dp_dayNames = '.$_lang['dp_dayNames'].';
-$j.ddMM.lang.dp_monthNames = '.$_lang['dp_monthNames'].';
-$j.ddMM.lang.dp_startDay = '.$_lang['dp_startDay'].';
-$j.ddMM.lang.edit = "'.$_lang['edit'].'";
+$j.ddMM.lang.dp_dayNames = ' . $_lang['dp_dayNames'] . ';
+$j.ddMM.lang.dp_monthNames = ' . $_lang['dp_monthNames'] . ';
+$j.ddMM.lang.dp_startDay = ' . $_lang['dp_startDay'] . ';
+$j.ddMM.lang.edit = "' . $_lang['edit'] . '";
 
-$j.ddMM.urls.manager = "'.MODX_MANAGER_URL.'";
+$j.ddMM.urls.manager = "' . MODX_MANAGER_URL . '";
 
-$j.ddMM.fields = $j.parseJSON(\''.json_encode($mm_fields).'\');
+$j.ddMM.fields = $j.parseJSON(\'' . json_encode($mm_fields) . '\');
 ';
 	
 	return $result;
@@ -281,7 +294,7 @@ switch ($e->name){
 			'name',
 			$modx->getFullTableName('site_plugins'),
 			// The ID of the plugin we're editing
-			'id='.$e->params['id']
+			'id=' . $e->params['id']
 		));
 		
 		// if it's the right plugin
@@ -304,9 +317,9 @@ switch ($e->name){
 			){
 				$class = ($count % 2) ? 'gridItem':'gridAltItem';
 				$output_templates .= '<tr>';
-				$output_templates .= '<td class="'.$class.'">'.jsSafe($tpl['templatename']).'</td>';
-				$output_templates .= '<td class="'.$class.'">'.jsSafe($tpl['description']).'</td>';
-				$output_templates .= '<td class="'.$class.'">'.$tpl['id'].'</td>';
+				$output_templates .= '<td class="' . $class . '">' . jsSafe($tpl['templatename']) . '</td>';
+				$output_templates .= '<td class="' . $class . '">' . jsSafe($tpl['description']) . '</td>';
+				$output_templates .= '<td class="' . $class . '">' . $tpl['id'] . '</td>';
 				$output_templates .= '</tr>';
 			}
 			
@@ -329,9 +342,9 @@ switch ($e->name){
 			){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
 				$output_tvs .= '<tr>';
-				$output_tvs .= '<td class="'.$class.'">'.jsSafe($tv['name']).'</td>';
-				$output_tvs .= '<td class="'.$class.'">'.jsSafe($tv['caption']).'</td>';
-				$output_tvs .= '<td class="'.$class.'">'.$tv['id'].'</td>';
+				$output_tvs .= '<td class="' . $class . '">' . jsSafe($tv['name']) . '</td>';
+				$output_tvs .= '<td class="' . $class . '">' . jsSafe($tv['caption']) . '</td>';
+				$output_tvs .= '<td class="' . $class . '">' . $tv['id'] . '</td>';
 				$output_tvs .= '</tr>';
 			}
 			
@@ -354,15 +367,15 @@ switch ($e->name){
 			){
 				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
 				$output_roles .= '<tr>';
-				$output_roles .= '<td class="'.$class.'">'.jsSafe($role['name']).'</td>';
-				$output_roles .= '<td class="'.$class.'">'.$role['id'].'</td>';
+				$output_roles .= '<td class="' . $class . '">' . jsSafe($role['name']) . '</td>';
+				$output_roles .= '<td class="' . $class . '">' . $role['id'] . '</td>';
 				$output_roles .= '</tr>';
 			}
 			
 			$output_roles .= '</table>';
 			
 			// Load the jquery library
-			$output = '<!-- Begin ManagerManager output -->'.PHP_EOL;
+			$output = '<!-- Begin ManagerManager output -->' . PHP_EOL;
 			if(empty($modx->getConfig('mgr_jquery_path'))){
 				$output .= includeJsCss(
 					$jsUrls['jq']['url'],
@@ -378,13 +391,13 @@ switch ($e->name){
 				$jsUrls['mm']['version']
 			);
 			
-			$output .= '<script type="text/javascript">'.PHP_EOL;
+			$output .= '<script type="text/javascript">' . PHP_EOL;
 			//produces var $j = jQuery.noConflict();
-			$output .= 'var $j = jQuery.noConflict();'.PHP_EOL;
+			$output .= 'var $j = jQuery.noConflict();' . PHP_EOL;
 			
 			$output .= ManagerManger_initJQddMM();
 			
-			$output .= 'mm_lastTab = "tabEvents";'.PHP_EOL;
+			$output .= 'mm_lastTab = "tabEvents";' . PHP_EOL;
 			$e->output($output);
 			
 			mm_createTab(
@@ -392,16 +405,16 @@ switch ($e->name){
 				'rolestemplates',
 				'',
 				'',
-				'<p>These are the IDs for current templates,tvs and roles in your site.</p>'.$output_templates.'&nbsp;'.$output_tvs.'&nbsp;'.$output_roles
+				'<p>These are the IDs for current templates,tvs and roles in your site.</p>' . $output_templates . '&nbsp;' . $output_tvs . '&nbsp;' . $output_roles
 			);
 			
 			$e->output('</script>');
-			$e->output('<!-- End ManagerManager output -->'.PHP_EOL);
+			$e->output('<!-- End ManagerManager output -->' . PHP_EOL);
 		}
 	break;
 	
 	case 'OnDocFormPrerender':
-		$e->output('<!-- Begin ManagerManager output -->'.PHP_EOL);
+		$e->output('<!-- Begin ManagerManager output -->' . PHP_EOL);
 		// Load the js libraries
 		if(empty($modx->config['mgr_jquery_path'])){
 			$e->output(includeJsCss(
@@ -411,12 +424,14 @@ switch ($e->name){
 				$jsUrls['jq']['version']
 			));
 		}
+		
 		$e->output(includeJsCss(
 			$jsUrls['mm']['url'],
 			'html',
 			$jsUrls['mm']['name'],
 			$jsUrls['mm']['version']
 		));
+		
 		$e->output(includeJsCss(
 			$jsUrls['ddTools']['url'],
 			'html',
@@ -430,7 +445,7 @@ switch ($e->name){
 <div id="loadingmask">&nbsp;</div>
 <script type="text/javascript">
 window.$j = jQuery.noConflict();
-'.ManagerManger_initJQddMM().'
+' . ManagerManger_initJQddMM() . '
 $j("#loadingmask").css({
 	width: "100%",
 	minHeight: "100%",
@@ -448,18 +463,18 @@ $j(function(){
 		//Just run widgets
 		ManagerManager_includeRules($e->params['config_chunk']);
 		
-		$e->output('<!-- End ManagerManager output -->'.PHP_EOL);
+		$e->output('<!-- End ManagerManager output -->' . PHP_EOL);
 	break;
 	
 	// The main document editing form
 	case 'OnDocFormRender':
 		// Include the JQuery call
 		$e->output('
-<!-- ManagerManager Plugin :: '.$mm_version.' -->
-<!-- This document is using template: '. $mm_current_page['template'] .' -->
-<!-- You are logged into the following role: '. $mm_current_page['role'] .' -->
+<!-- ManagerManager Plugin :: ' . $mm_version . ' -->
+<!-- This document is using template: ' . $mm_current_page['template']  . ' -->
+<!-- You are logged into the following role: ' . $mm_current_page['role']  . ' -->
 
-<script type="text/javascript" charset="'.$modx->getConfig('modx_charset').'">
+<script type="text/javascript" charset="' . $modx->getConfig('modx_charset') . '">
 	var mm_lastTab = "tabGeneral";
 	var mm_sync_field_count = 0;
 	var synch_field = new Array();
@@ -563,7 +578,7 @@ $j(function(){
 		$mm_current_page['template'] = $modx->db->getValue($modx->db->select(
 			'template',
 			ddTools::$tables['site_content'],
-			'`id` = '.$e->params['new_id']
+			'`id` = ' . $e->params['new_id']
 		));
 		
 		//Just run widgets
