@@ -20,16 +20,48 @@
  * @copyright 2012–2016
  */
 
-global $mm_version;
+// Set variables
+global
+	$content,
+	$template,
+	$default_template,
+	$mm_pluginDir,
+	$mm_version,
+	$mm_current_page,
+	$mm_fields,
+	$mm_includedJsCss,
+	// Current event
+	$e;
+
 $mm_version = '0.6.2';
+$mm_pluginDir = $modx->getConfig('base_path') . 'assets/plugins/managermanager/';
+
+$e = &$modx->Event;
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 
-// Current event
-global $e;
-$e = &$modx->Event;
-
 if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
+
+if (!is_array($mm_includedJsCss)){
+	$mm_includedJsCss = [];
+}
+
+$mm_current_page = [];
+
+//Get page template
+if (isset($e->params['template'])){
+	$mm_current_page['template'] = $e->params['template'];
+}else if (isset($_POST['template'])){
+	$mm_current_page['template'] = $_POST['template'];
+}else if (isset($content['template'])){
+	$mm_current_page['template'] = $content['template'];
+}else if (isset($template)){
+	$mm_current_page['template'] = $template;
+}else{
+	$mm_current_page['template'] = $default_template;
+}
+
+$mm_current_page['role'] = $_SESSION['mgrRole'];
 
 $jsUrls = [
 	'jq' => [
@@ -49,25 +81,10 @@ $jsUrls = [
 	]
 ];
 
-$pluginDir = $modx->getConfig('base_path') . 'assets/plugins/managermanager/';
-
 //Include ddTools (needed for some widgets)
-include_once($pluginDir . 'modx.ddtools.class.php');
+include_once($mm_pluginDir . 'modx.ddtools.class.php');
 //Include Utilites
-include_once($pluginDir . 'utilities.inc.php');
-
-// Set variables
-global
-	$content,
-	$template,
-	$default_template,
-	$mm_current_page,
-	$mm_fields,
-	$mm_includedJsCss;
-
-if (!is_array($mm_includedJsCss)){
-	$mm_includedJsCss = [];
-}
+include_once($mm_pluginDir . 'utilities.inc.php');
 
 // When loading widgets, ignore folders / files beginning with these chars
 $ignore_first_chars = [
@@ -79,7 +96,7 @@ $ignore_first_chars = [
 // Include widgets
 // We look for a PHP file with the same name as the directory - e.g.
 // /widgets/widgetname/widgetname.php
-$widget_dir = $pluginDir . 'widgets';
+$widget_dir = $mm_pluginDir . 'widgets';
 
 if ($handle = opendir($widget_dir)){
 	while (($file = readdir($handle)) !== false){
@@ -101,23 +118,6 @@ if ($handle = opendir($widget_dir)){
 	
 	closedir($handle);
 }
-
-$mm_current_page = [];
-
-//Get page template
-if (isset($e->params['template'])){
-	$mm_current_page['template'] = $e->params['template'];
-}else if (isset($_POST['template'])){
-	$mm_current_page['template'] = $_POST['template'];
-}else if (isset($content['template'])){
-	$mm_current_page['template'] = $content['template'];
-}else if (isset($template)){
-	$mm_current_page['template'] = $template;
-}else{
-	$mm_current_page['template'] = $default_template;
-}
-
-$mm_current_page['role'] = $_SESSION['mgrRole'];
 
 // What are the fields we can change, and what types are they?
 $mm_fields = [
