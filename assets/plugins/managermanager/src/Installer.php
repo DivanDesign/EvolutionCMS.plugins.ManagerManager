@@ -68,7 +68,7 @@ class Installer
 	
 	/**
 	 * installResource
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2019-02-20)
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params->resourceType {'libs'} — Resource type. @required
@@ -105,10 +105,13 @@ class Installer
 				$desctinationData->path .= substr(
 					$distrData->path,
 					strrpos(
-						$distrData->path,
+						rtrim(
+							$distrData->path,
+							'/'
+						),
 						DIRECTORY_SEPARATOR
 					) + 1
-				) . DIRECTORY_SEPARATOR;
+				);
 				
 				//Is need to install by default
 				$isNeedToInstall = true;

@@ -29,7 +29,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render
-	 * @version 1.0 (2019-01-31)
+	 * @version 1.0.1 (2019-02-20)
 	 * 
 	 * @return {string}
 	 */
@@ -45,6 +45,6 @@ class Element extends \ManagerManager\Element\Element {
 			$this->data['attrs.srcString'] = '';
 		}
 		
-		parent::render();
+		return parent::render();
 	}
 }

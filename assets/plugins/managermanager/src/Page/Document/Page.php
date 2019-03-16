@@ -151,7 +151,7 @@ $j(document).ready(function(){
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0 (2019-01-24)
+	 * @version 2.0.1 (2019-02-21)
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
@@ -171,12 +171,12 @@ $j(document).ready(function(){
 			(array) $params
 		);
 		
-		parent::isRuleMatched($params);
+		return parent::isRuleMatched($params);
 	}
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0 (2019-02-12)
+	 * @version 1.0.1 (2019-02-21)
 	 * 
 	 * @return {void}
 	 */
@@ -227,15 +227,16 @@ $j(document).ready(function(){
 			//TODO: Remove it
 			if ($this->event->name == 'OnDocFormRender'){
 				//TODO: Don't use “$this->event->output” here and “$this->applyRules”
-				$this->event->output(\ManagerManager\Element\Element::create([
-					'name' => 'script',
-					'params' => [
-						'data' => [
-							'content' => '
+				$this->event->output('
+<script type="text/javascript" charset="' . \ddTools::$modx->getConfig('modx_charset') . '">
 $j(document).ready(function(){
 	//Lets handle errors nicely…
 	try {
-		' . $this->applyRules() . '
+				');
+				
+				$this->event->output($this->applyRules());
+				
+				$this->event->output('
 	}catch(e){
 		//If theres an error, fail nicely
 		alert("ManagerManager: An error has occurred: " + e.name + " - " + e.message);
@@ -244,10 +245,8 @@ $j(document).ready(function(){
 		$j("#loadingmask").hide();
 	}
 });
-							'
-						]
-					]
-				])->render());
+</script>
+				');
 			}else{
 				//TODO: Remove it
 				//Just run widgets

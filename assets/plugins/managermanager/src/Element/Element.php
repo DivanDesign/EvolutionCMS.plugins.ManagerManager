@@ -77,7 +77,7 @@ class Element {
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2019-01-30)
+	 * @version 1.0.1 (2019-02-20)
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params.
 	 * @param $params->data {array_associative} — Multidimensional data is supported too. Default: —.
@@ -88,22 +88,19 @@ class Element {
 		$params = (object) $params;
 		
 		//Prepare template name first
-		$templatePath = strtolower(
-			//Child class name
-			substr(
-				__NAMESPACE__,
-				strrpos(
-					__NAMESPACE__,
-					'\\'
-				) + 1
-			)
+		$templatePath = explode(
+			'\\',
+			get_class($this)
 		);
+		
+		//Child class name
+		$templatePath = strtolower($templatePath[count($templatePath) - 2]);
 		
 		$templatePath = 
 			Core::getPluginPath() .
 			'src' .	DIRECTORY_SEPARATOR .
 			'ElementTemplates' . DIRECTORY_SEPARATOR .
-			$templatePath . 'html'
+			$templatePath . '.html'
 		;
 		
 		//Save template
@@ -133,7 +130,7 @@ class Element {
 	
 	/**
 	 * render
-	 * @version 1.0 (2019-02-12)
+	 * @version 1.0.1 (2019-02-21)
 	 * 
 	 * @return {string}
 	 */
@@ -161,7 +158,15 @@ class Element {
 		}
 		
 		return \ddTools::parseText([
-			'text' => $this->template,
+			'text' => str_replace(
+				[
+					"\r\n",
+					"\r",
+					"\n"
+				],
+				' ',
+				$this->template
+			),
 			'data' => $this->data
 		]);
 	}

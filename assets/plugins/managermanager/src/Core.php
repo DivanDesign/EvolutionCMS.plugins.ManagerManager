@@ -1,8 +1,6 @@
 <?php
 namespace ManagerManager;
 
-use ManagerManager\Page;
-
 class Core {
 	public static
 		$pluginVersion = '0.6.2'
@@ -29,9 +27,11 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.1 (2019-02-20)
 	 */
-	public function __construct(){
+	public function __construct($params = []){
+		$params = (object) $params;
+		
 		//Init plugin path
 		self::getPluginPath();
 		
@@ -62,9 +62,21 @@ class Core {
 			break;
 		}
 		
-		$this->currentPage = Page::create([
+		$this->currentPage = \ManagerManager\Page\Page::create([
 			'name' => $pageType
 		]);
+		
+		if (
+			isset($params->copmatibility) &&
+			is_callable($params->copmatibility)
+		){
+			call_user_func(
+				$params->copmatibility,
+				[
+					'currentPage' => $this->currentPage
+				]
+			);
+		}
 		
 		//TODO: Remove it
 		//Include widgets

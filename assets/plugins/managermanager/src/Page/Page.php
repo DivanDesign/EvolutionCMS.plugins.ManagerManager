@@ -503,7 +503,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0 (2019-02-12)
+	 * @version 1.0.1 (2019-02-21)
 	 * 
 	 * @return {void}
 	 */
@@ -515,8 +515,8 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 		){
 			//If begining is not ejected before
 			if (
-				$this->injectedHTML->{$this->event->name}[0]->name != 'comment' &&
-				$this->injectedHTML->{$this->event->name}[0]->data['content'] != '<!-- ManagerManager : Begin -->'
+				$this->injectedHTML->{$this->event->name}[0]->name != 'comment' ||
+				$this->injectedHTML->{$this->event->name}[0]->data['content'] != 'ManagerManager : Begin'
 			){
 				//Add begining
 				array_unshift(
@@ -524,7 +524,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 					(object) [
 						'name' => 'comment',
 						'data' => [
-							'content' => '<!-- ManagerManager : Begin -->'
+							'content' => 'ManagerManager : Begin'
 						]
 					]
 				);
@@ -540,7 +540,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$this->injectedHTML->{$this->event->name}[] = (object) [
 					'name' => 'comment',
 					'data' => [
-						'content' => '<!-- ManagerManager : End -->'
+						'content' => 'ManagerManager : End'
 					]
 				];
 			}
@@ -586,7 +586,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * applyRules
-	 * @version 1.0.3 (2019-01-31)
+	 * @version 1.0.4 (2019-02-20)
 	 * 
 	 * @desc Apply the rules.
 	 * 
@@ -597,7 +597,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	 * 
 	 * @return {string} — Including status message.
 	 */
-	public function applyRules($rulesChunkName){
+	protected function applyRules($rulesChunkName){
 		//Global modx object & $content for rules :|
 		global
 			$modx,

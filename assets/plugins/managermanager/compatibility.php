@@ -1,45 +1,59 @@
 <?php
-//Backward compatibility
-global
-	$ManagerManagerCore,
-	$mm_pluginDir,
-	$mm_version,
-	$mm_current_page,
-	$mm_fields,
-	$mm_includedJsCss,
-	$e;
-
-$mm_version = \ManagerManager\Core::$pluginVersion;
-$mm_pluginDir = $ManagerManagerCore->getPluginPath();
-$mm_fields = $ManagerManagerCore->getDocFields();
-
-
-$mm_current_page = $ManagerManagerCore->currentPage->toArray();
-
-
-$mm_includedJsCss = (array) $ManagerManagerCore->currentPage->includedJsCss_get();
-foreach (
-	$mm_includedJsCss as
-	$name => $value
-){
-	$mm_includedJsCss[$name] = (array) $value;
+function mm_compatibility_init($params){
+	$params = (object) $params;
+	
+	//Backward compatibility
+	global
+		$ManagerManagerCore_currentPage,
+		$mm_pluginDir,
+		$mm_version,
+		$mm_current_page,
+		$mm_fields,
+		$mm_includedJsCss,
+		$e;
+	
+	$ManagerManagerCore_currentPage = $params->currentPage;
+	
+	$mm_version = \ManagerManager\Core::$pluginVersion;
+	$mm_pluginDir = \ManagerManager\Core::getPluginPath();
+	$mm_fields = \ManagerManager\Core::getDocFields();
+	
+	
+	$mm_current_page = $ManagerManagerCore_currentPage->toArray();
+	
+	
+	$mm_includedJsCss = (array) $ManagerManagerCore_currentPage->includedJsCss_get();
+	foreach (
+		$mm_includedJsCss as
+		$name => $value
+	){
+		$mm_includedJsCss[$name] = (array) $value;
+	}
+	
+	$e = &$modx->Event;
 }
-
-$e = $ManagerManagerCore->currentPage->event;
 
 /**
  * @deprecated, use ManagerManager\Page::isRuleMatched()
  */
 function useThisRule(
 	$roles = '',
-	$templates = ''
+	$templates = '',
+	$additionalInfo = ''
 ){
-	global $ManagerManagerCore;
+	global
+		$ManagerManagerCore_currentPage;
 	
-	return $ManagerManagerCore->currentPage->isRuleMatched([
-		'roles' => $roles,
-		'templates' => $templates
-	]);
+	$result = false;
+	
+	if (is_object($ManagerManagerCore_currentPage)){
+		$result = $ManagerManagerCore_currentPage->isRuleMatched([
+			'roles' => $roles,
+			'templates' => $templates
+		]);
+	}
+	
+	return $result;
 }
 
 /**
@@ -53,9 +67,10 @@ function includeJsCss(
 	$isPlaintext = false,
 	$extension = ''
 ){
-	global $ManagerManagerCore;
+	global
+		$ManagerManagerCore_currentPage;
 	
-	return $ManagerManagerCore->currentPage->includeJsCss([
+	return $ManagerManagerCore_currentPage->includeJsCss([
 		'source' => $source,
 		'outputType' => $outputType,
 		'isPlaintext' => $isPlaintext,

@@ -41,9 +41,12 @@ if (!Core::isPluginUsed()){
 global
 	$ManagerManagerCore;
 
-//TODO Is it needed to create new object if it's already exist?
-$ManagerManagerCore = new Core();
-
-//Backward compatibility
-include($ManagerManagerCore->getPluginPath() . 'compatibility.php');
+if (is_object($ManagerManagerCore)){
+	//Fire event
+	$ManagerManagerCore->currentPage->fireCurrentEvent();
+}else{
+	$ManagerManagerCore = new Core([
+		'copmatibility' => mm_compatibility_init
+	]);
+}
 ?>
