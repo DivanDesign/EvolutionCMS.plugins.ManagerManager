@@ -82,7 +82,7 @@ $jsUrls = [
 ];
 
 //Include ddTools (needed for some widgets)
-include_once($mm_pluginDir . 'modx.ddtools.class.php');
+include_once($mm_pluginDir . 'install/libs/ddTools/modx.ddtools.class.php');
 //Include Utilites
 include_once($mm_pluginDir . 'utilities.inc.php');
 

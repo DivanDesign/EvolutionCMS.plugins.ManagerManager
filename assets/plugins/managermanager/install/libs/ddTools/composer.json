@@ -1,0 +1,24 @@
+{
+	"name": "dd/modxevo-library-ddtools",
+	"type": "modxevo-library-ddtools",
+	"version": "0.24.1",
+	"description": "A library with various tools facilitating your work.",
+	"keywords": [
+		"modx",
+		"modx evo",
+		"modx evolution",
+		"ddtools"
+	],
+	"homepage": "http://code.divandesign.biz/modx/ddtools",
+	"license": "MIT",
+	"require": {
+		"php": ">=5.4.0",
+		"dd/composer-plugin-modxevo-library-ddtools-installer": "1.0.5"
+	},
+	"autoload": {
+		"files": ["modx.ddtools.class.php"],
+		"psr-4": {
+			"DDTools\\": "src/"
+		}
+	}
+}
