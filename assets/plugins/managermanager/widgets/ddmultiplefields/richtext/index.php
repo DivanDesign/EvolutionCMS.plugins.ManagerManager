@@ -45,7 +45,7 @@ if ($_SESSION['mgrValidated']){
 	$windowDir = $mmDir.'widgets/ddmultiplefields/richtext/';
 	
 	//Include the ddTools library
-	require_once($modx->getConfig('base_path').$mmDir.'modx.ddtools.class.php');
+	require_once($modx->getConfig('base_path').$mmDir.'install/libs/ddTools/modx.ddtools.class.php');
 	
 	$temp = $modx->invokeEvent(
 		'OnRichTextEditorInit',
