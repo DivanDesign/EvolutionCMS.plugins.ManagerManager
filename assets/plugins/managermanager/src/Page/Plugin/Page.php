@@ -12,7 +12,7 @@ class Page extends \ManagerManager\Page\Page {
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0 (2019-02-12)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {void}
 	 */
@@ -145,7 +145,10 @@ class Page extends \ManagerManager\Page\Page {
 				
 				parent::fireCurrentEvent();
 				
-				$this->event->output('<script type="text/javascript">' . PHP_EOL);
+				$this->event->output(
+					'<script type="text/javascript">' .
+					PHP_EOL
+				);
 				
 				mm_createTab(
 					'Templates, TVs &amp; Roles',

@@ -88,13 +88,16 @@ class Core {
 	
 	/**
 	 * getPluginPath
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {string}
 	 */
 	public static function getPluginPath(){
 		if (!isset(self::$pluginPath)){
-			self::$pluginPath = MODX_BASE_PATH . 'assets/plugins/managermanager/';
+			self::$pluginPath =
+				MODX_BASE_PATH .
+				'assets/plugins/managermanager/'
+			;
 		}
 		
 		return self::$pluginPath;
@@ -102,7 +105,7 @@ class Core {
 	
 	/**
 	 * getDocFields
-	 * @version 1.0 (2019-01-31)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {string}
 	 */
@@ -154,7 +157,8 @@ class Core {
 				],
 				'menutitle' => [
 					'fieldtype' => 'input',
-					'fieldname' => 'menutitle','dbname' => 'menutitle',
+					'fieldname' => 'menutitle',
+					'dbname' => 'menutitle',
 					'tv' => false
 				],
 				'menuindex' => [
@@ -165,7 +169,8 @@ class Core {
 				],
 				'show_in_menu' => [
 					'fieldtype' => 'input',
-					'fieldname' => 'hidemenucheck','dbname' => 'hidemenu',
+					'fieldname' => 'hidemenucheck',
+					'dbname' => 'hidemenu',
 					'tv' => false
 				],
 				// synonym for show_in_menu
@@ -207,7 +212,8 @@ class Core {
 				],
 				'published' => [
 					'fieldtype' => 'input',
-					'fieldname' => 'publishedcheck','dbname' => 'published',
+					'fieldname' => 'publishedcheck',
+					'dbname' => 'published',
 					'tv' => false
 				],
 				'pub_date' => [
@@ -224,7 +230,8 @@ class Core {
 				],
 				'searchable' => [
 					'fieldtype' => 'input',
-					'fieldname' => 'searchablecheck','dbname' => 'searchable',
+					'fieldname' => 'searchablecheck',
+					'dbname' => 'searchable',
 					'tv' => false
 				],
 				'cacheable' => [
@@ -235,7 +242,8 @@ class Core {
 				],
 				'clear_cache' => [
 					'fieldtype' => 'input',
-					'fieldname' => 'syncsitecheck','dbname' => '',
+					'fieldname' => 'syncsitecheck',
+					'dbname' => '',
 					'tv' => false
 				],
 				'content_type' => [
@@ -270,7 +278,8 @@ class Core {
 				],
 				'which_editor' => [
 					'fieldtype' => 'select',
-					'fieldname' => 'which_editor','dbname' => '',
+					'fieldname' => 'which_editor',
+					'dbname' => '',
 					'tv' => false
 				],
 				'resource_type' => [
@@ -341,7 +350,11 @@ class Core {
 				if (!isset(self::$docFields[$fieldName])){
 					self::$docFields[$fieldName] = [
 						'fieldtype' => $fieldType,
-						'fieldname' => 'tv' . $allTvs_item['id'] . $fieldName_suffix,
+						'fieldname' =>
+							'tv' .
+							$allTvs_item['id'] .
+							$fieldName_suffix
+						,
 						'dbname' => '',
 						'tv' => true
 					];
@@ -354,7 +367,7 @@ class Core {
 	
 	/**
 	 * getPluginJSurls
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {string}
 	 */
@@ -362,17 +375,26 @@ class Core {
 		if (!isset(self::$pluginJSurls)){
 			self::$pluginJSurls = (object) [
 				'jQuery' => (object) [
-					'source' => \ddTools::$modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
+					'source' =>
+						\ddTools::$modx->getConfig('site_url') .
+						'assets/plugins/managermanager/js/jQuery-3.1.1.min.js'
+					,
 					'name' => 'jQuery',
 					'version' => '3.1.1'
 				],
 				'jQuery.ddMM' => (object) [
-					'source' => \ddTools::$modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddMM.js',
+					'source' =>
+						\ddTools::$modx->getConfig('site_url') .
+						'assets/plugins/managermanager/js/jquery.ddMM.js'
+					,
 					'name' => 'jQuery.ddMM',
 					'version' => '1.2.1'
 				],
 				'jQuery.ddTools' => (object) [
-					'source' => \ddTools::$modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+					'source' =>
+						\ddTools::$modx->getConfig('site_url') .
+						'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js'
+					,
 					'name' => 'jQuery.ddTools',
 					'version' => '1.8.6'
 				]
@@ -397,7 +419,7 @@ class Core {
 	
 	/**
 	 * includeWidgets
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @todo Remove it, don't use “widgets” concept.
 	 * 
@@ -414,7 +436,10 @@ class Core {
 		// Include widgets
 		// We look for a PHP file with the same name as the directory - e.g.
 		// /widgets/widgetname/widgetname.php
-		$widgetDir = self::$pluginPath . 'widgets';
+		$widgetDir =
+			self::$pluginPath .
+			'widgets'
+		;
 		
 		if ($handle = opendir($widgetDir)){
 			while (($file = readdir($handle)) !== false){
@@ -428,9 +453,20 @@ class Core {
 						$ignoreFirstChars
 					) &&
 					$file != '..' &&
-					is_dir($widgetDir . '/' . $file)
+					is_dir(
+						$widgetDir .
+						'/' .
+						$file
+					)
 				){
-					include_once($widgetDir . '/' . $file . '/' . $file . '.php');
+					include_once(
+						$widgetDir .
+						'/' .
+						$file .
+						'/' .
+						$file .
+						'.php'
+					);
 				}
 			}
 			

@@ -3,21 +3,25 @@ namespace ManagerManager;
 
 use ManagerManager\Core;
 
-class Installer
-{
+class Installer {
 	/**
 	 * @var $installPath {string} — Full path to install dir.
 	 */
 	public
-		$installPath;
+		$installPath
+	;
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2020-05-20)
 	 */
 	public function __construct(){
 		//Install dir
-		$this->installPath = Core::getPluginPath() . 'install' . DIRECTORY_SEPARATOR;
+		$this->installPath =
+			Core::getPluginPath() .
+			'install' .
+			DIRECTORY_SEPARATOR
+		;
 		
 		//If install folder exist
 		if (is_dir($this->installPath)){
@@ -34,7 +38,11 @@ class Installer
 				$typeDirs as
 				$typeDirs_item
 			){
-				$typePath = $this->installPath . $typeDirs_item . DIRECTORY_SEPARATOR;
+				$typePath =
+					$this->installPath .
+					$typeDirs_item .
+					DIRECTORY_SEPARATOR
+				;
 				
 				if (is_dir($typePath)){
 					//Get resources dirs
@@ -52,14 +60,20 @@ class Installer
 					){
 						$this->installResource([
 							'resourceType' => $typeDirs_item,
-							'resourceDistrPath' => $typePath . $resourceDirs_item . DIRECTORY_SEPARATOR
+							'resourceDistrPath' =>
+								$typePath .
+								$resourceDirs_item .
+								DIRECTORY_SEPARATOR
 						]);
 					}
 				}
 			}
 			
 			//Include (MODX)EvolutionCMS.libraries.ddTools
-			require_once(MODX_BASE_PATH . 'assets/libs/ddTools/modx.ddtools.class.php');
+			require_once(
+				MODX_BASE_PATH .
+				'assets/libs/ddTools/modx.ddtools.class.php'
+			);
 			
 			//Remove distributive directory
 			\ddTools::removeDir($this->installPath);
@@ -68,7 +82,7 @@ class Installer
 	
 	/**
 	 * installResource
-	 * @version 1.0.1 (2019-02-20)
+	 * @version 1.0.2 (2020-05-20)
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params->resourceType {'libs'} — Resource type. @required
@@ -85,19 +99,31 @@ class Installer
 		];
 		
 		$desctinationData  = (object) [
-			'path' => MODX_BASE_PATH . 'assets' . DIRECTORY_SEPARATOR . $params->resourceType . DIRECTORY_SEPARATOR,
+			'path' =>
+				MODX_BASE_PATH .
+				'assets' .
+				DIRECTORY_SEPARATOR .
+				$params->resourceType .
+				DIRECTORY_SEPARATOR
+			,
 			'composer' => (object) []
 		];
 		
 		if (
 			is_dir($distrData->path) &&
 			//composer.json is required
-			is_file($distrData->path . 'composer.json') &&
+			is_file(
+				$distrData->path .
+				'composer.json'
+			) &&
 			//Resource type is valid
 			is_dir($desctinationData->path)
 		){
 			//Init distr composer
-			$distrData->composer = json_decode(file_get_contents($distrData->path . 'composer.json'));
+			$distrData->composer = json_decode(file_get_contents(
+				$distrData->path .
+				'composer.json'
+			));
 			
 			//Resource version is required
 			if (isset($distrData->composer->version)){
@@ -117,9 +143,15 @@ class Installer
 				$isNeedToInstall = true;
 				
 				//Desctination composer exists
-				if (is_file($desctinationData->path . 'composer.json')){
+				if (is_file(
+					$desctinationData->path .
+					'composer.json'
+				)){
 					//Init exist resource composer
-					$desctinationData->composer = json_decode(file_get_contents($desctinationData->path . 'composer.json'));
+					$desctinationData->composer = json_decode(file_get_contents(
+						$desctinationData->path .
+						'composer.json'
+					));
 					
 					//Exist resource composer has version (resource will be updated if not)
 					if (isset($desctinationData->composer->version)){
@@ -149,7 +181,7 @@ class Installer
 	
 	/**
 	 * copyDir
-	 * @version 2.0 (2018-10-01)
+	 * @version 2.0.1 (2020-05-20)
 	 * 
 	 * @desc Copies a required folder with all contents recursively. “ddTools::copyDir” from EvolutionCMS.libraries.ddTools.
 	 * 
@@ -163,23 +195,31 @@ class Installer
 		$params = (object) $params;
 		
 		//Допишем папкам недостающие '/' при необходимости
-		if (substr(
-			$params->sourcePath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->sourcePath,
+				-1
+			) != '/'
+		){
 			$params->sourcePath .= '/';
 		}
-		if (substr(
-			$params->destinationPath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->destinationPath,
+				-1
+			) != '/'
+		){
 			$params->destinationPath .= '/';
 		}
 		
 		//Проверяем существование
-		if (!file_exists($params->sourcePath)){return false;}
+		if (!file_exists($params->sourcePath)){
+			return false;
+		}
 		//Если папки назначения нет, создадим её
-		if (!file_exists($params->destinationPath)){mkdir($params->destinationPath);}
+		if (!file_exists($params->destinationPath)){
+			mkdir($params->destinationPath);
+		}
 		
 		//Получаем файлы в директории
 		$fileNames = array_diff(
@@ -190,17 +230,28 @@ class Installer
 			]
 		);
 		
-		foreach ($fileNames as $fileName){
+		foreach (
+			$fileNames as
+			$fileName
+		){
 			//Если это папка, обработаем её
-			if (is_dir($params->sourcePath.$fileName)){
+			if (is_dir(
+				$params->sourcePath .
+				$fileName
+			)){
 				self::copyDir([
-					'sourcePath' => $params->sourcePath.$fileName,
-					'destinationPath' => $params->destinationPath.$fileName
+					'sourcePath' =>
+						$params->sourcePath .
+						$fileName
+					,
+					'destinationPath' =>
+						$params->destinationPath .
+						$fileName
 				]);
 			}else{
 				copy(
-					$params->sourcePath.$fileName,
-					$params->destinationPath.$fileName
+					$params->sourcePath . $fileName,
+					$params->destinationPath . $fileName
 				);
 			}
 		}

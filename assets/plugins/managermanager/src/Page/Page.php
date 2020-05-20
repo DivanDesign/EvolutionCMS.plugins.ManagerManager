@@ -36,7 +36,7 @@ class Page {
 	
 	/**
 	 * create
-	 * @version 1.0 (2019-01-27)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @todo Move it somewhere to avoid code duplucation.
 	 * 
@@ -69,17 +69,37 @@ class Page {
 		);
 		
 		$params->name = ucfirst(strtolower($params->name));
-		$filePath = $params->name . DIRECTORY_SEPARATOR . $thisClassName . '.php';
+		$filePath =
+			$params->name .
+			DIRECTORY_SEPARATOR .
+			$thisClassName .
+			'.php'
+		;
 		
-		if(is_file(__DIR__ . DIRECTORY_SEPARATOR . $filePath)){
+		if(is_file(
+			__DIR__ .
+			DIRECTORY_SEPARATOR .
+			$filePath
+		)){
 			require_once($filePath);
 			
-			$objectClass = __NAMESPACE__ . '\\' . $params->name . '\\' . $thisClassName;
+			$objectClass =
+				__NAMESPACE__ .
+				'\\' .
+				$params->name .
+				'\\' .
+				$thisClassName
+			;
 			
 			return new $objectClass($params->params);
 		}else{
 			throw new \Exception(
-				$thisClassName . ' “' . $params->name . '” not found.',
+				(
+					$thisClassName .
+					' “' .
+					$params->name .
+					'” not found.'
+				),
 				500
 			);
 		}
@@ -87,7 +107,7 @@ class Page {
 	
 	/**
 	 * __construct
-	 * @version 1.0 (2019-02-12)
+	 * @version 1.0.1 (2020-05-20)
 	 */
 	public function __construct(){
 		//Init current event
@@ -107,11 +127,13 @@ class Page {
 		
 		foreach (
 			$this->injectedHTML as
-			$eventName => $elements
+			$eventName =>
+			$elements
 		){
 			foreach (
 				$elements as
-				$elements_itemIndex => $elements_itemInfo
+				$elements_itemIndex =>
+				$elements_itemInfo
 			){
 				if (is_array($elements_itemInfo)){
 					$this->injectedHTML->{$eventName}[$elements_itemIndex] = (object) $elements_itemInfo;
@@ -229,7 +251,7 @@ class Page {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0a (2019-02-01)
+	 * @version 2.0.1a (2020-05-20)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -299,7 +321,10 @@ class Page {
 					'?'
 				;
 				//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
-				$result .= 'version=' . $nameVersionExtension->version;
+				$result .=
+					'version=' .
+					$nameVersionExtension->version
+				;
 			}
 			
 			$elementName =
@@ -328,17 +353,22 @@ class Page {
 			])->render();
 			
 			if ($params->outputType == 'js'){
-				$result = '$j("head").append(\'' .
+				$result =
+					'$j("head").append(\'' .
 					//'</script>' → '</scrip' + 't>'
 					preg_replace(
 						'/(<\/.+)(.{1}>)/',
 						'$1\' + \'$2',
 						$result
 					) .
-				'\');';
+					'\');'
+				;
 			}
 			
-			$result = $result . PHP_EOL;
+			$result =
+				$result .
+				PHP_EOL
+			;
 		}
 		
 		return $result;
@@ -346,7 +376,7 @@ class Page {
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0 (2019-01-24)
+	 * @version 2.0.1 (2020-05-20)
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
@@ -368,16 +398,19 @@ class Page {
 		
 		foreach (
 			$params as
-			$fieldToCompareName => $values
+			$fieldToCompareName =>
+			$values
 		){
 			$excludeValues = false;
 			
 			//Are they negative values?
-			if (substr(
-				$values,
-				0,
-				1
-			) == '!'){
+			if (
+				substr(
+					$values,
+					0,
+					1
+				) == '!'
+			){
 				$values = substr(
 					$values,
 					1
@@ -415,7 +448,7 @@ class Page {
 	
 	/**
 	 * injectedHTML_addJSInit
-	 * @version 1.2 (2019-02-12)
+	 * @version 1.2.1 (2020-05-20)
 	 * 
 	 * @desc jQuery.ddMM initialization.
 	 * 
@@ -431,7 +464,8 @@ class Page {
 			!$this->injectedHTML_hasJSInit
 		){
 			global
-				$_lang;
+				$_lang
+			;
 			
 			$injectedScripts = [];
 			
@@ -440,7 +474,8 @@ class Page {
 			
 			foreach (
 				$pluginJSurls as
-				$pluginJSurls_itemName => $pluginJSurls_itemData
+				$pluginJSurls_itemName =>
+				$pluginJSurls_itemData
 			){
 				if (
 					$pluginJSurls_itemName != 'jQuery' ||
@@ -503,7 +538,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.1 (2019-02-21)
+	 * @version 1.0.2 (2020-05-20)
 	 * 
 	 * @return {void}
 	 */
@@ -548,10 +583,12 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 			//Inject JS init if some scripts is used on the page
 			foreach (
 				$this->injectedHTML->{$this->event->name} as
-				$elementIndex => $elementInfo
+				$elementIndex =>
+				$elementInfo
 			){
 				if (strtolower($elementInfo->name) == 'script'){
 					$this->injectedHTML_addJSInit($elementIndex);
+					
 					//Just one time
 					break;
 				}
@@ -586,7 +623,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * applyRules
-	 * @version 1.0.4 (2019-02-20)
+	 * @version 1.0.5 (2020-05-20)
 	 * 
 	 * @desc Apply the rules.
 	 * 
@@ -601,7 +638,8 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 		//Global modx object & $content for rules :|
 		global
 			$modx,
-			$content;
+			$content
+		;
 		
 		$result = '';
 		
@@ -609,7 +647,10 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 			$rulesChunkName = $this->event->params['config_chunk'];
 		}
 		
-		$rulesFilePath = Core::getPluginPath() . 'mm_rules.inc.php';
+		$rulesFilePath =
+			Core::getPluginPath() .
+			'mm_rules.inc.php'
+		;
 		
 		//See if there is any chunk output (e.g. it exists, and is not empty)
 		$chunkContent = \ddTools::$modx->getChunk($rulesChunkName);
@@ -618,17 +659,27 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 			// If there is, run it.
 			eval($chunkContent);
 			
-			$result = '//Getting rules from chunk: ' . $rulesChunkName;
+			$result =
+				'//Getting rules from chunk: ' .
+				$rulesChunkName
+			;
 		//If there's no chunk output, read in the file.
 		}else if (is_readable($rulesFilePath)){
 			include($rulesFilePath);
 			
-			$result = '//Getting rules from file: ' . $rulesFilePath;
+			$result =
+				'//Getting rules from file: ' .
+				$rulesFilePath
+			;
 		}else{
 			$result = '//No rules found';
 		}
 		
-		return $result . PHP_EOL . PHP_EOL;
+		return
+			$result .
+			PHP_EOL .
+			PHP_EOL
+		;
 	}
 	
 	/**

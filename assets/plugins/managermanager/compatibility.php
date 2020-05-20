@@ -10,7 +10,8 @@ function mm_compatibility_init($params){
 		$mm_current_page,
 		$mm_fields,
 		$mm_includedJsCss,
-		$e;
+		$e
+	;
 	
 	$ManagerManagerCore_currentPage = $params->currentPage;
 	
@@ -25,7 +26,8 @@ function mm_compatibility_init($params){
 	$mm_includedJsCss = (array) $ManagerManagerCore_currentPage->includedJsCss_get();
 	foreach (
 		$mm_includedJsCss as
-		$name => $value
+		$name =>
+		$value
 	){
 		$mm_includedJsCss[$name] = (array) $value;
 	}
@@ -68,7 +70,8 @@ function includeJsCss(
 	$extension = ''
 ){
 	global
-		$ManagerManagerCore_currentPage;
+		$ManagerManagerCore_currentPage
+	;
 	
 	return $ManagerManagerCore_currentPage->includeJsCss([
 		'source' => $source,

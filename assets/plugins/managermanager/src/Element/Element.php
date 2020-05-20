@@ -22,11 +22,12 @@ class Element {
 			'attrs.classString' => 'class="[+attrs.class+]"',
 			'attrs.idString' => 'id="[+attrs.id+]"',
 			'attrs.extraString' => ''
-		];
+		]
+	;
 	
 	/**
 	 * create
-	 * @version 1.0 (2019-01-27)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @todo Move it somewhere to avoid code duplucation.
 	 * 
@@ -59,17 +60,37 @@ class Element {
 		);
 		
 		$params->name = ucfirst(strtolower($params->name));
-		$filePath = $params->name . DIRECTORY_SEPARATOR . $thisClassName . '.php';
+		$filePath =
+			$params->name .
+			DIRECTORY_SEPARATOR .
+			$thisClassName .
+			'.php'
+		;
 		
-		if(is_file(__DIR__ . DIRECTORY_SEPARATOR . $filePath)){
+		if(is_file(
+			__DIR__ .
+			DIRECTORY_SEPARATOR .
+			$filePath
+		)){
 			require_once($filePath);
 			
-			$objectClass = __NAMESPACE__ . '\\' . $params->name . '\\' . $thisClassName;
+			$objectClass =
+				__NAMESPACE__ .
+				'\\' .
+				$params->name .
+				'\\' .
+				$thisClassName
+			;
 			
 			return new $objectClass($params->params);
 		}else{
 			throw new \Exception(
-				$thisClassName . ' “' . $params->name . '” not found.',
+				(
+					$thisClassName .
+					' “' .
+					$params->name .
+					'” not found.'
+				),
 				500
 			);
 		}
@@ -77,7 +98,7 @@ class Element {
 	
 	/**
 	 * __construct
-	 * @version 1.0.1 (2019-02-20)
+	 * @version 1.0.2 (2020-05-20)
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params.
 	 * @param $params->data {array_associative} — Multidimensional data is supported too. Default: —.
@@ -96,11 +117,14 @@ class Element {
 		//Child class name
 		$templatePath = strtolower($templatePath[count($templatePath) - 2]);
 		
-		$templatePath = 
+		$templatePath =
 			Core::getPluginPath() .
-			'src' .	DIRECTORY_SEPARATOR .
-			'ElementTemplates' . DIRECTORY_SEPARATOR .
-			$templatePath . '.html'
+			'src' .
+			DIRECTORY_SEPARATOR .
+			'ElementTemplates' .
+			DIRECTORY_SEPARATOR .
+			$templatePath .
+			'.html'
 		;
 		
 		//Save template

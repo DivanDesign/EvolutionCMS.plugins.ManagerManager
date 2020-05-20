@@ -159,12 +159,15 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render
-	 * @version 1.0 (2019-01-30)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {string}
 	 */
 	public function render(){
-		$this->data['content'] = $this->render_header() . $this->render_body();
+		$this->data['content'] =
+			$this->render_header() .
+			$this->render_body()
+		;
 		
 		return parent::render();
 	}

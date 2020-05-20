@@ -125,7 +125,7 @@ $j(document).ready(function(){
 	
 	/**
 	 * fillCurrentTemplate
-	 * @version 1.0 (2019-01-24)
+	 * @version 1.0.1 (2020-05-20)
 	 * 
 	 * @return {void}
 	 */
@@ -133,7 +133,8 @@ $j(document).ready(function(){
 		global
 			$content,
 			$template,
-			$default_template;
+			$default_template
+		;
 		
 		//Get page template
 		if (isset($this->event->params['template'])){
@@ -176,7 +177,7 @@ $j(document).ready(function(){
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.1 (2019-02-21)
+	 * @version 1.0.2 (2020-05-20)
 	 * 
 	 * @return {void}
 	 */
@@ -200,13 +201,17 @@ $j(document).ready(function(){
 						(object) [
 							'name' => 'comment',
 							'data' => [
-								'content' => 'This document is using template: ' . $this->template
+								'content' =>
+									'This document is using template: ' .
+									$this->template
 							]
 						],
 						(object) [
 							'name' => 'comment',
 							'data' => [
-								'content' => 'You are logged into the following role: ' . $this->role
+								'content' =>
+									'You are logged into the following role: ' .
+									$this->role
 							]
 						]
 					);

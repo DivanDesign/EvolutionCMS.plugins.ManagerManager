@@ -25,14 +25,20 @@ namespace ManagerManager;
 
 //Include needed files
 if(!class_exists('Core')){
-	require_once(MODX_BASE_PATH . 'assets/plugins/managermanager/require.php');
+	require_once(
+		MODX_BASE_PATH .
+		'assets/plugins/managermanager/require.php'
+	);
 }
 
 //Install required resources if needed and include ddTools
 new Installer();
 
 //Include (MODX)EvolutionCMS.libraries.ddTools
-require_once(MODX_BASE_PATH . 'assets/libs/ddTools/modx.ddtools.class.php');
+require_once(
+	MODX_BASE_PATH .
+	'assets/libs/ddTools/modx.ddtools.class.php'
+);
 
 if (!Core::isPluginUsed()){
 	return;
