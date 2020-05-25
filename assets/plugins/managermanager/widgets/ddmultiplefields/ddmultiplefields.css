@@ -29,20 +29,20 @@
 .ddMultipleField textarea {resize: vertical;}
 
 .ddMultipleField tr th,
-.ddMultipleField tr td.ddFieldCol {
+.ddMultipleField tr td.ddMultipleField_row_col {
 	min-height: 23px;
 	padding: 5px 7px;
 	vertical-align: top;
 }
 
 .ddMultipleField tr th,
-.ddMultipleField tr td.ddFieldCol:last-child {
+.ddMultipleField tr td.ddMultipleField_row_col:last-child {
 	white-space: nowrap;
 }
 
 .ddMultipleField tr th {text-align: left;}
 
-.ddMultipleField tr td.ddFieldCol,
+.ddMultipleField tr td.ddMultipleField_row_col,
 .ddMultipleField tr td.ddSortHandle {
 	border: 2px solid #FFFFFF;
 	-webkit-transition: background 0.3s ease-out;
@@ -53,12 +53,12 @@
 	background: rgb(235, 235, 235);
 }
 
-.ddMultipleField tr td.ddFieldCol:last-child {
+.ddMultipleField tr td.ddMultipleField_row_col:last-child {
 	border-color: transparent;
 	background: none !important;
 }
 
-.ddMultipleField tr td.ddFieldCol:last-child button {
+.ddMultipleField tr td.ddMultipleField_row_col:last-child button {
 	width: 1.8em !important;
 	height: 1.8em !important;
 	padding: 0 !important;
@@ -75,7 +75,7 @@
 	background: transparent;
 }
 
-.ddMultipleField tr td.ddFieldCol:nth-child(2) {border-left: none;}
+.ddMultipleField tr td.ddMultipleField_row_col:nth-child(2) {border-left: none;}
 
 .ddMultipleField tr td.ddSortHandle div {
 	width: 20px;
@@ -92,12 +92,12 @@
 	color: rgb(0, 111, 167);
 }
 
-.ddMultipleField tr.ddFieldBlock:hover td.ddFieldCol,
-.ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle {background: #B2E3FF;}
+.ddMultipleField tr.ddMultipleField_row:hover td.ddMultipleField_row_col,
+.ddMultipleField tr.ddMultipleField_row:hover td.ddSortHandle {background: #B2E3FF;}
 
-.ddMultipleField tr.ddFieldBlock:hover td.ddSortHandle div {opacity: 1;}
+.ddMultipleField tr.ddMultipleField_row:hover td.ddSortHandle div {opacity: 1;}
 
-.ddFieldCol_edit {
+.ddMultipleField_row_col_edit {
 	text-align: right;
 	font-style: italic;
 }

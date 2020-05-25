@@ -6,7 +6,15 @@ $_GET = $_POST = $_REQUEST = [];
 $richtextIncludeDirectory = '../../../../../../';
 
 //Define MGR_DIR
-if (file_exists($richtextIncludeDirectory.'assets/cache/siteManager.php')){include_once($richtextIncludeDirectory.'assets/cache/siteManager.php');}
+if (file_exists(
+	$richtextIncludeDirectory .
+	'assets/cache/siteManager.php'
+)){
+	include_once(
+		$richtextIncludeDirectory .
+		'assets/cache/siteManager.php'
+	);
+}
 if (!defined('MGR_DIR')){
 	define(
 		'MGR_DIR',
@@ -14,12 +22,21 @@ if (!defined('MGR_DIR')){
 	);
 }
 
-$richtextIncludeDirectory .= MGR_DIR.'/';
+$richtextIncludeDirectory .=
+	MGR_DIR .
+	'/'
+;
 
 //Config
 $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] = '/';
-require_once($richtextIncludeDirectory.'includes/protect.inc.php');
-require_once($richtextIncludeDirectory.'includes/config.inc.php');
+require_once(
+	$richtextIncludeDirectory .
+	'includes/protect.inc.php'
+);
+require_once(
+	$richtextIncludeDirectory .
+	'includes/config.inc.php'
+);
 startCMSSession();
 
 if ($_SESSION['mgrValidated']){
@@ -33,7 +50,10 @@ if ($_SESSION['mgrValidated']){
 		true
 	);
 	//Initiate a new document parser
-	require_once($richtextIncludeDirectory.'includes/document.parser.class.inc.php');
+	require_once(
+		$richtextIncludeDirectory .
+		'includes/document.parser.class.inc.php'
+	);
 	$modx = new DocumentParser;
 	
 	//Provide the MODx DBAPI
@@ -42,10 +62,17 @@ if ($_SESSION['mgrValidated']){
 	$modx->getSettings();
 	
 	$mmDir = 'assets/plugins/managermanager/';
-	$windowDir = $mmDir.'widgets/ddmultiplefields/richtext/';
+	$windowDir =
+		$mmDir .
+		'widgets/ddmultiplefields/richtext/'
+	;
 	
 	//Include the ddTools library
-	require_once($modx->getConfig('base_path').$mmDir.'install/libs/ddTools/modx.ddtools.class.php');
+	require_once(
+		$modx->getConfig('base_path') .
+		$mmDir .
+		'install/libs/ddTools/modx.ddtools.class.php'
+	);
 	
 	$temp = $modx->invokeEvent(
 		'OnRichTextEditorInit',
@@ -56,18 +83,34 @@ if ($_SESSION['mgrValidated']){
 	);
 	
 	echo ddTools::parseText([
-		'text' => file_get_contents($modx->getConfig('base_path').$windowDir.'template.html'),
+		'text' => file_get_contents(
+			$modx->getConfig('base_path') .
+			$windowDir .
+			'template.html'
+		),
 		'data' => [
 			'site_url' => $modx->getConfig('site_url'),
 			'mmDir' => $mmDir,
 			'windowDir' => $windowDir,
-			'charset' => '<meta charset="'.$modx->getConfig('modx_charset').'" />',
-			'style' => MODX_MANAGER_URL.'media/style/'.$modx->getConfig('manager_theme').'/style.css',
+			'charset' =>
+				'<meta charset="' .
+				$modx->getConfig('modx_charset') .
+				'" />'
+			,
+			'style' =>
+				MODX_MANAGER_URL .
+				'media/style/' .
+				$modx->getConfig('manager_theme') .
+				'/style.css'
+			,
 			'tinyMCE' => $temp[0]
 		],
 		'mergeAll' => false
 	]);
 }else{
-	echo file_get_contents(dirname(__FILE__).'/index.html');
+	echo file_get_contents(
+		dirname(__FILE__) .
+		'/index.html'
+	);
 }
 ?>
