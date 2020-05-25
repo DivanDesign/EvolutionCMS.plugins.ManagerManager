@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddMultipleFields
- * @version 4.8 (2020-05-25)
+ * @version 4.8.1 (2020-05-25)
  * 
  * @link https://code.divandesign.biz/modx/mm_ddmultiplefields
  * 
@@ -103,7 +103,7 @@ function mm_ddMultipleFields($params){
 			),
 			'html',
 			'jQuery.ddMM.mm_ddMultipleFields',
-			'2.5'
+			'2.5.5'
 		);
 		
 		$e->output($output);

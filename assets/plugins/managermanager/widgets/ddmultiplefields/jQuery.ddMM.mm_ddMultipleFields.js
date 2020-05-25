@@ -1,6 +1,6 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.5 (2020-05-25)
+ * @version 2.5.5 (2020-05-25)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
@@ -189,7 +189,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init
-	 * @version 4.3.1 (2020-05-25)
+	 * @version 4.3.3 (2020-05-25)
 	 * 
 	 * @desc Инициализация.
 	 * 
@@ -217,8 +217,6 @@ $.ddMM.mm_ddMultipleFields = {
 	init: function(instance){
 		var
 			_this = this,
-			//Объект значения поля
-			fieldValueObject = {},
 			//Шапка таблицы
 			tableHeaderHtml = '',
 			//По умолчанию без шапки
@@ -268,56 +266,18 @@ $.ddMM.mm_ddMultipleFields = {
 			}
 		);
 		
-		//If value is JSON object
-		if (
-			$.trim(instance.value).substr(
-				0,
-				1
-			) ==
-			'{'
-		){
-			fieldValueObject = $.parseJSON(instance.value);
-		//Bacward compatibility
-		}else{
-			$.each(
-				//Разбиваем значение по строкам
-				instance
-					.value
-					.split(instance.rowDelimiter)
-				,
-				function(){
-					var
-						//Split by column
-						columnValuesArray = this.split(instance.colDelimiter),
-						//Generate row ID
-						rowId = (new Date).getTime()
-					;
-					
-					//If deprecated ID column exists
-					if (columnIdIndex != -1){
-						rowId = columnValuesArray[columnIdIndex];
-					}
-					
-					//Init row
-					fieldValueObject[rowId] = {};
-					
-					$.each(
-						columnValuesArray,
-						function(
-							colKey,
-							colValue
-						){
-							//If it is deprecated ID column
-							if (colKey == columnIdIndex){
-								
-							}
-							//Save column value
-							fieldValueObject[rowId][colKey] = colValue;
-						}
-					)
-				}
-			);
-		}
+		var
+			//Объект значения поля
+			fieldValueObject = _this.init_prepareFieldValueObject({
+				value: instance.value,
+				minRowsNumber: instance.minRowsNumber,
+				maxRowsNumber: instance.maxRowsNumber,
+				
+				columnIdIndex: columnIdIndex,
+				rowDelimiter: instance.rowDelimiter,
+				colDelimiter: instance.colDelimiter
+			})
+		;
 		
 		//Это поле нужно было только для инициализации
 		delete instance.value;
@@ -346,45 +306,6 @@ $.ddMM.mm_ddMultipleFields = {
 			)
 				.appendTo(instance.$table)
 			;
-		}
-		
-		//Проверяем на максимальное и минимальное количество строк
-		if (
-			instance.maxRowsNumber &&
-			Object.keys(fieldValueObject).length > instance.maxRowsNumber
-		){
-			var fieldValueObjectLength = Object.keys(fieldValueObject).length;
-			
-			$.each(
-				fieldValueObject,
-				function(
-					rowKey,
-					rowValue
-				){
-					if (
-						fieldValueObjectLength >
-						instance.maxRowsNumber
-					){
-						delete fieldValueObject[rowKey];
-					}else{
-						return false;
-					}
-					
-					fieldValueObjectLength--;
-				}
-			);
-		}else if (
-			instance.minRowsNumber &&
-			Object.keys(fieldValueObject).length < instance.minRowsNumber
-		){
-			for (
-				var rowIndex = Object.keys(fieldValueObject).length;
-				rowIndex < instance.minRowsNumber;
-				rowIndex++
-			){
-				//Init empty row
-				fieldValueObject[rowIndex] = {};
-			}
 		}
 		
 		$.each(
@@ -430,31 +351,178 @@ $.ddMM.mm_ddMultipleFields = {
 	},
 	
 	/**
+	 * @method init_prepareFieldValueObject
+	 * @version 1.0.2 (2020-05-25)
+	 * 
+	 * @desc Инициализация → Подготовка объекта значений поля.
+	 * 
+	 * @param params {objectPlain} — The parameters.
+	 * @param params.value {string} — TV value.
+	 * @param params.minRowsNumber {integer} — Минимальное количество строк.
+	 * @param params.maxRowsNumber {integer} — Максимальное количество строк.
+	 * @param params.columnIdIndex {integer} — Index of deprecated ID column (`-1` if not exist).
+	 * 
+	 * Deprecated:
+	 * @param params.rowDelimiter {string} — Разделитель строк.
+	 * @param params.colDelimiter {string} — Разделитель колонок.
+	 * 
+	 * @returns {objectPlain}
+	 */
+	init_prepareFieldValueObject: function(params){
+		var
+			_this = this,
+			//Объект значения поля
+			fieldValueObject = {}
+		;
+		
+		//If value is JSON object
+		if (
+			$.trim(params.value).substr(
+				0,
+				1
+			) ==
+			'{'
+		){
+			fieldValueObject = $.parseJSON(params.value);
+		//Bacward compatibility
+		}else{
+			var
+				//Разбиваем значение по строкам
+				rowValuesArray =
+					params
+						.value
+						.split(params.rowDelimiter)
+			;
+			
+			$.each(
+				rowValuesArray,
+				function(){
+					var
+						//Split by column
+						columnValuesArray = this.split(params.colDelimiter),
+						//Generate row ID
+						rowId = _this.generateRowId()
+					;
+					
+					//If deprecated ID column exists
+					if (params.columnIdIndex != -1){
+						rowId = columnValuesArray[params.columnIdIndex];
+					}
+					
+					//Init row
+					fieldValueObject[rowId] = {};
+					
+					$.each(
+						columnValuesArray,
+						function(
+							colKey,
+							colValue
+						){
+							//If it is deprecated ID column
+							if (colKey != params.columnIdIndex){
+								//Save column value
+								fieldValueObject[rowId][colKey] = colValue;
+							}
+						}
+					)
+				}
+			);
+		}
+		
+		var fieldValueObjectLength = Object.keys(fieldValueObject).length;
+		
+		//Проверяем на максимальное и минимальное количество строк
+		if (
+			params.maxRowsNumber &&
+			fieldValueObjectLength > params.maxRowsNumber
+		){
+			$.each(
+				fieldValueObject,
+				function(
+					rowKey,
+					rowValue
+				){
+					if (
+						fieldValueObjectLength >
+						params.maxRowsNumber
+					){
+						delete fieldValueObject[rowKey];
+					}else{
+						return false;
+					}
+					
+					fieldValueObjectLength--;
+				}
+			);
+		}else if (
+			params.minRowsNumber &&
+			fieldValueObjectLength < params.minRowsNumber
+		){
+			for (
+				var rowIndex = fieldValueObjectLength;
+				rowIndex < params.minRowsNumber;
+				rowIndex++
+			){
+				//Init empty row
+				fieldValueObject[rowIndex] = {};
+			}
+		}
+		
+		return fieldValueObject;
+	},
+	
+	/**
+	 * @method generateRowId
+	 * @version 1.1 (2020-05-25)
+	 * 
+	 * @desc Generates an uniquie ID for table row.
+	 * 
+	 * @returns {integer}
+	 */
+	generateRowId: function(){
+		return (
+			Date.now() +
+			'' +
+			//Get random number from 100 to 999
+			Math.round(
+				(
+					Math.random() *
+					(
+						999 - 100
+					)
+				) +
+				100
+			)
+		);
+	},
+	
+	/**
 	 * @method createRow
-	 * @version 6.0 (2020-05-25)
+	 * @version 6.0.1 (2020-05-25)
 	 * 
 	 * @desc Функция создания строки.
 	 * 
 	 * @param params {objectPlain} — The parameters.
 	 * @param params.instanceId {string} — TV id.
-	 * @param [params.rowId=(new Date).getTime()] {integer} — Row ID.
+	 * @param [params.rowId=this.generateRowId()] {integer} — Row ID.
 	 * @param [params.rowValue={}] {objectPlain} — Row value.
 	 * @param [params.$insertAfter=''] {string} — Row value.
 	 * 
 	 * @returns {jQuery}
 	 */
 	createRow: function(params){
+		var	_this = this;
+		
 		//Defaults
 		params = $.extend(
 			{
-				rowId: (new Date).getTime(),
+				rowId: _this.generateRowId(),
 				rowValue: {}
 			},
 			params
 		);
 		
 		var
-			_this = this,
 			//Общее количество строк на данный момент
 			fieldRowsTotal =
 				_this
