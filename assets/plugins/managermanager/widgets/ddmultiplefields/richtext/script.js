@@ -8,15 +8,15 @@ $(function(){
 				.html()
 				//Decode some HTML entities
 				.replace(
-					'&lt;',
+					/&lt;/gi,
 					'<'
 				)
 				.replace(
-					'&gt;',
+					/&gt;/gi,
 					'>'
 				)
 				.replace(
-					'&amp;',
+					/&amp;/gi,
 					'&'
 				)
 		)
