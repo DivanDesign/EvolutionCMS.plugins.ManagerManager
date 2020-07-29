@@ -1,14 +1,15 @@
 <?php
 namespace DDTools;
 
-
-abstract class Response
-{
-	protected $meta, $data;
+abstract class Response {
+	protected
+		$meta,
+		$data
+	;
 	
 	/**
 	 * includeResponseByVersion
-	 * @version 1.0 (2017-05-25)
+	 * @version 1.0.1 (2019-06-22)
 	 * 
 	 * @param $version {string} — Response version.
 	 * 
@@ -17,36 +18,45 @@ abstract class Response
 	 */
 	public final static function includeResponseByVersion($version){
 		//Only digits
-		$className = 'Response_v'.preg_replace('/\D/', '', $version);
-		$versionPath = __DIR__.DIRECTORY_SEPARATOR.'Response'.DIRECTORY_SEPARATOR.$className.'.php';
+		$className = 'Response_v' . preg_replace(
+			'/\D/',
+			'',
+			$version
+		);
+		
+		$versionPath = __DIR__.DIRECTORY_SEPARATOR . 'Response' . DIRECTORY_SEPARATOR . $className . '.php';
 		
 		if(is_file($versionPath)){
 			require_once $versionPath;
-			return __NAMESPACE__.'\\Response\\'.$className;
+			
+			return __NAMESPACE__ . '\\Response\\' . $className;
 		}else{
-			throw new \Exception('ddTools Response '.$version.' is not found.', 500);
+			throw new \Exception(
+				'ddTools Response ' . $version . ' is not found.',
+				500
+			);
 		}
 	}
 	
 	/**
 	 * validateMeta
 	 * 
-	 * Validates the “meta” part of a response.
+	 * @desc Validates the “meta” part of a response.
 	 * 
 	 * @param $meta
 	 * 
-	 * @return bool
+	 * @return {boolean}
 	 */
 	abstract public function validateMeta(array $meta);
 	
 	/**
 	 * setMeta
 	 * 
-	 * Setter for $this->meta.
+	 * @desc Setter for $this->meta.
 	 * 
 	 * @param $meta
 	 * 
-	 * @return bool
+	 * @return {boolean}
 	 */
 	public function setMeta($meta){
 		$output = false;
@@ -62,9 +72,9 @@ abstract class Response
 	/**
 	 * getMeta
 	 * 
-	 * Getter for $this->meta
+	 * @desc Getter for $this->meta
 	 * 
-	 * @return null|array
+	 * @return {null|array}
 	 */
 	public function getMeta(){
 		return $this->meta;
@@ -73,7 +83,7 @@ abstract class Response
 	/**
 	 * setData
 	 * 
-	 * Setter for $this->data.
+	 * @desc Setter for $this->data.
 	 * 
 	 * @param $data
 	 */
@@ -84,9 +94,9 @@ abstract class Response
 	/**
 	 * getData
 	 * 
-	 * Getter for $this->data.
+	 * @desc Getter for $this->data.
 	 * 
-	 * @return mixed
+	 * @return {mixed}
 	 */
 	public function getData(){
 		return $this->data;
@@ -95,9 +105,9 @@ abstract class Response
 	/**
 	 * toArray
 	 * 
-	 * Converts this object to array.
+	 * @desc Converts this object to array.
 	 * 
-	 * @return array
+	 * @return {array}
 	 */
 	public function toArray(){
 		$output = array(
@@ -114,7 +124,7 @@ abstract class Response
 	/**
 	 * toJSON
 	 * 
-	 * Converts this object to JSON string.
+	 * @desc Converts this object to JSON string.
 	 * 
 	 * @return string
 	 */

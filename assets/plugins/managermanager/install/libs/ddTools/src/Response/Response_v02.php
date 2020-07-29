@@ -1,7 +1,6 @@
 <?php
 namespace DDTools\Response;
 
-
 use DDTools\Response;
 
 /**
@@ -9,29 +8,32 @@ use DDTools\Response;
  * 
  * @package DDTools\Response
  */
-class Response_v02 extends Response
-{
-	/**
-	 * allowedMetaKeys
-	 * 
-	 * Allowed keys in $this->meta.
-	 * 
-	 * @var array
-	 */
-	protected static $allowedMetaKeys = array(
-		'code', 'eTag', 'success', 'message'
-	);
-	
-	/**
-	 * allowedMetaMessageKeys
-	 * 
-	 * Allowed keys in $this->meta['message'].
-	 * 
-	 * @var array
-	 */
-	protected static $allowedMetaMessageKeys = array(
-		'content', 'title'
-	);
+class Response_v02 extends Response {
+	protected static
+		/**
+		 * allowedMetaKeys
+		 * 
+		 * Allowed keys in $this->meta.
+		 * 
+		 * @var array
+		 */
+		$allowedMetaKeys = array(
+			'code',
+			'eTag',
+			'success',
+			'message'
+		),
+		/**
+		 * allowedMetaMessageKeys
+		 * 
+		 * Allowed keys in $this->meta['message'].
+		 * 
+		 * @var array
+		 */
+		$allowedMetaMessageKeys = array(
+			'content',
+			'title'
+		);
 	
 	/**
 	 * validateMeta
@@ -65,26 +67,35 @@ class Response_v02 extends Response
 		
 		if(
 			//code is set and int
-			isset($meta['code']) && is_int($meta['code']) &&
+			isset($meta['code']) &&
+			is_int($meta['code']) &&
 			//success is set and bool
-			isset($meta['success']) && is_bool($meta['success']) &&
+			isset($meta['success']) &&
+			is_bool($meta['success']) &&
 			(
 				//message is not set
 				!isset($meta['message']) ||
 				(
 					//message is set and contains content
-					is_array($meta['message']) && isset($meta['message']['content'])
+					is_array($meta['message']) &&
+					isset($meta['message']['content'])
 				)
 			)
 		){
 			if(
 				//there is no diff between meta keys and allowed meta keys
-				!count(array_diff(array_keys($meta), static::$allowedMetaKeys)) &&
+				!count(array_diff(
+					array_keys($meta),
+					static::$allowedMetaKeys
+				)) &&
 				(
 					//message is not set
 					!isset($meta['message']) ||
 					//there is no diff between meta message keys and allowed meta message keys
-					!count(array_diff(array_keys($meta['message']), static::$allowedMetaMessageKeys))
+					!count(array_diff(
+						array_keys($meta['message']),
+						static::$allowedMetaMessageKeys
+					))
 				)
 			){
 				$output = true;
