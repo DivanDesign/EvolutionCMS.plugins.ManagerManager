@@ -31,16 +31,22 @@ global
 	$mm_fields,
 	$mm_includedJsCss,
 	// Current event
-	$e;
+	$e
+;
 
 $mm_version = '0.6.2';
-$mm_pluginDir = $modx->getConfig('base_path') . 'assets/plugins/managermanager/';
+$mm_pluginDir =
+	$modx->getConfig('base_path') .
+	'assets/plugins/managermanager/'
+;
 
 $e = &$modx->Event;
 
 // Bring in some preferences which have been set on the configuration tab of the plugin, and normalise them
 
-if (!isset($e->params['config_chunk'])){$e->params['config_chunk'] = '';}
+if (!isset($e->params['config_chunk'])){
+	$e->params['config_chunk'] = '';
+}
 
 if (!is_array($mm_includedJsCss)){
 	$mm_includedJsCss = [];
@@ -65,26 +71,41 @@ $mm_current_page['role'] = $_SESSION['mgrRole'];
 
 $jsUrls = [
 	'jq' => [
-		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jQuery-3.1.1.min.js',
+		'url' =>
+			$modx->getConfig('site_url') .
+			'assets/plugins/managermanager/js/jQuery-3.1.1.min.js'
+		,
 		'name' => 'jquery',
 		'version' => '3.1.1'
 	],
 	'mm' => [
-		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddMM.js',
+		'url' =>
+			$modx->getConfig('site_url') .
+			'assets/plugins/managermanager/js/jquery.ddMM.js'
+		,
 		'name' => 'ddMM',
 		'version' => '1.2.1'
 	],
 	'ddTools' => [
-		'url' => $modx->getConfig('site_url') . 'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js',
+		'url' =>
+			$modx->getConfig('site_url') .
+			'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js'
+		,
 		'name' => 'jquery.ddTools',
 		'version' => '1.8.6'
 	]
 ];
 
 //Include ddTools (needed for some widgets)
-include_once($mm_pluginDir . 'install/libs/ddTools/modx.ddtools.class.php');
+include_once(
+	$mm_pluginDir .
+	'install/libs/ddTools/modx.ddtools.class.php'
+);
 //Include Utilites
-include_once($mm_pluginDir . 'utilities.inc.php');
+include_once(
+	$mm_pluginDir .
+	'utilities.inc.php'
+);
 
 // When loading widgets, ignore folders / files beginning with these chars
 $ignore_first_chars = [
@@ -96,7 +117,10 @@ $ignore_first_chars = [
 // Include widgets
 // We look for a PHP file with the same name as the directory - e.g.
 // /widgets/widgetname/widgetname.php
-$widget_dir = $mm_pluginDir . 'widgets';
+$widget_dir =
+	$mm_pluginDir .
+	'widgets'
+;
 
 if ($handle = opendir($widget_dir)){
 	while (($file = readdir($handle)) !== false){
@@ -110,9 +134,20 @@ if ($handle = opendir($widget_dir)){
 				$ignore_first_chars
 			) &&
 			$file != '..' &&
-			is_dir($widget_dir . '/' . $file)
+			is_dir(
+				$widget_dir .
+				'/' .
+				$file
+			)
 		){
-			include_once($widget_dir . '/' . $file . '/' . $file . '.php');
+			include_once(
+				$widget_dir .
+				'/' .
+				$file .
+				'/' .
+				$file .
+				'.php'
+			);
 		}
 	}
 	
@@ -121,47 +156,193 @@ if ($handle = opendir($widget_dir)){
 
 // What are the fields we can change, and what types are they?
 $mm_fields = [
-	'pagetitle' => ['fieldtype' => 'input', 'fieldname' => 'pagetitle', 'dbname' => 'pagetitle', 'tv' => false],
-	'longtitle' => ['fieldtype' => 'input', 'fieldname' => 'longtitle', 'dbname' => 'longtitle', 'tv' => false],
-	'description' => ['fieldtype' => 'input', 'fieldname' => 'description', 'dbname' => 'description', 'tv' => false],
-	'alias' => ['fieldtype' => 'input', 'fieldname' => 'alias', 'dbname' => 'alias', 'tv' => false],
-	'link_attributes' => ['fieldtype' => 'input', 'fieldname' => 'link_attributes', 'dbname' => 'link_attributes', 'tv' => false],
-	'introtext' => ['fieldtype' => 'textarea', 'fieldname' => 'introtext', 'dbname' => 'introtext', 'tv' => false],
-	'template' => ['fieldtype' => 'select', 'fieldname' => 'template', 'dbname' => 'template', 'tv' => false],
-	'menutitle' => ['fieldtype' => 'input', 'fieldname' => 'menutitle','dbname' => 'menutitle', 'tv' => false],
-	'menuindex' => ['fieldtype' => 'input', 'fieldname' => 'menuindex', 'dbname' => 'menuindex', 'tv' => false],
-	'show_in_menu' => ['fieldtype' => 'input', 'fieldname' => 'hidemenucheck','dbname' => 'hidemenu', 'tv' => false],
+	'pagetitle' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'pagetitle',
+		'dbname' => 'pagetitle',
+		'tv' => false
+	],
+	'longtitle' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'longtitle',
+		'dbname' => 'longtitle',
+		'tv' => false
+	],
+	'description' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'description',
+		'dbname' => 'description',
+		'tv' => false
+	],
+	'alias' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'alias',
+		'dbname' => 'alias',
+		'tv' => false
+	],
+	'link_attributes' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'link_attributes',
+		'dbname' => 'link_attributes',
+		'tv' => false
+	],
+	'introtext' => [
+		'fieldtype' => 'textarea',
+		'fieldname' => 'introtext',
+		'dbname' => 'introtext',
+		'tv' => false
+	],
+	'template' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'template',
+		'dbname' => 'template',
+		'tv' => false
+	],
+	'menutitle' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'menutitle','dbname' => 'menutitle',
+		'tv' => false
+	],
+	'menuindex' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'menuindex',
+		'dbname' => 'menuindex',
+		'tv' => false
+	],
+	'show_in_menu' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'hidemenucheck','dbname' => 'hidemenu',
+		'tv' => false
+	],
 	// synonym for show_in_menu
-	'hide_menu' => ['fieldtype' => 'input', 'fieldname' => 'hidemenucheck', 'dbname' => 'hidemenu', 'tv' => false],
-	'parent' => ['fieldtype' => 'input', 'fieldname' => 'parent', 'dbname' => 'parent', 'tv' => false],
-	'is_folder' => ['fieldtype' => 'input', 'fieldname' => 'isfoldercheck', 'dbname' => 'isfolder', 'tv' => false],
-	'alias_visible' => ['fieldtype' => 'input', 'fieldname' => 'alias_visible_check', 'dbname' => 'alias_visible', 'tv' => false],
-	'is_richtext' => ['fieldtype' => 'input', 'fieldname' => 'richtextcheck','dbname' => 'richtext', 'tv' => false],
-	'donthit' => ['fieldtype' => 'input', 'fieldname' => 'donthitcheck', 'dbname' => 'donthit', 'tv' => false],
-	'published' => ['fieldtype' => 'input', 'fieldname' => 'publishedcheck','dbname' => 'published', 'tv' => false],
-	'pub_date' => ['fieldtype' => 'input', 'fieldname' => 'pub_date', 'dbname' => 'pub_date', 'tv' => false],
-	'unpub_date' => ['fieldtype' => 'input', 'fieldname' => 'unpub_date', 'dbname' => 'unpub_date', 'tv' => false],
-	'searchable' => ['fieldtype' => 'input', 'fieldname' => 'searchablecheck','dbname' => 'searchable', 'tv' => false],
-	'cacheable' => ['fieldtype' => 'input', 'fieldname' => 'cacheablecheck', 'dbname' => 'cacheable', 'tv' => false],
-	'clear_cache' => ['fieldtype' => 'input', 'fieldname' => 'syncsitecheck','dbname' => '', 'tv' => false],
-	'content_type' => ['fieldtype' => 'select', 'fieldname' => 'contentType', 'dbname' => 'contentType', 'tv' => false],
-	'content_dispo' => ['fieldtype' => 'select', 'fieldname' => 'content_dispo', 'dbname' => 'content_dispo', 'tv' => false],
-	'keywords' => ['fieldtype' => 'select', 'fieldname' => 'keywords[]', 'dbname' => '', 'tv' => false],
-	'metatags' => ['fieldtype' => 'select', 'fieldname' => 'metatags[]', 'dbname' => '', 'tv' => false],
-	'content' => ['fieldtype' => 'textarea', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false],
-	'which_editor' => ['fieldtype' => 'select', 'fieldname' => 'which_editor','dbname' => '', 'tv' => false],
-	'resource_type' => ['fieldtype' => 'select', 'fieldname' => 'type', 'dbname' => 'isfolder', 'tv' => false],
-	'weblink' => ['fieldtype' => 'input', 'fieldname' => 'ta', 'dbname' => 'content', 'tv' => false]
+	'hide_menu' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'hidemenucheck',
+		'dbname' => 'hidemenu',
+		'tv' => false
+	],
+	'parent' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'parent',
+		'dbname' => 'parent',
+		'tv' => false
+	],
+	'is_folder' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'isfoldercheck',
+		'dbname' => 'isfolder',
+		'tv' => false
+	],
+	'alias_visible' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'alias_visible_check',
+		'dbname' => 'alias_visible',
+		'tv' => false
+	],
+	'is_richtext' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'richtextcheck','dbname' => 'richtext',
+		'tv' => false
+	],
+	'donthit' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'donthitcheck',
+		'dbname' => 'donthit',
+		'tv' => false
+	],
+	'published' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'publishedcheck','dbname' => 'published',
+		'tv' => false
+	],
+	'pub_date' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'pub_date',
+		'dbname' => 'pub_date',
+		'tv' => false
+	],
+	'unpub_date' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'unpub_date',
+		'dbname' => 'unpub_date',
+		'tv' => false
+	],
+	'searchable' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'searchablecheck','dbname' => 'searchable',
+		'tv' => false
+	],
+	'cacheable' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'cacheablecheck',
+		'dbname' => 'cacheable',
+		'tv' => false
+	],
+	'clear_cache' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'syncsitecheck','dbname' => '',
+		'tv' => false
+	],
+	'content_type' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'contentType',
+		'dbname' => 'contentType',
+		'tv' => false
+	],
+	'content_dispo' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'content_dispo',
+		'dbname' => 'content_dispo',
+		'tv' => false
+	],
+	'keywords' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'keywords[]',
+		'dbname' => '',
+		'tv' => false
+	],
+	'metatags' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'metatags[]',
+		'dbname' => '',
+		'tv' => false
+	],
+	'content' => [
+		'fieldtype' => 'textarea',
+		'fieldname' => 'ta',
+		'dbname' => 'content',
+		'tv' => false
+	],
+	'which_editor' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'which_editor','dbname' => '',
+		'tv' => false
+	],
+	'resource_type' => [
+		'fieldtype' => 'select',
+		'fieldname' => 'type',
+		'dbname' => 'isfolder',
+		'tv' => false
+	],
+	'weblink' => [
+		'fieldtype' => 'input',
+		'fieldname' => 'ta',
+		'dbname' => 'content',
+		'tv' => false
+	]
 ];
 
 // Add in TVs to the list of available fields
 $allTvs = $modx->db->makeArray($modx->db->select(
 	'name,type,id',
-	ddTools::$tables['site_tmplvars'],
+	\ddTools::$tables['site_tmplvars'],
 	'',
 	'name ASC'
 ));
-foreach ($allTvs as $thisTv){
+foreach (
+	$allTvs as
+	$thisTv
+){
 	// What is the field name?
 	$fieldName = $thisTv['name'];
 	
@@ -174,6 +355,7 @@ foreach ($allTvs as $thisTv){
 		':',
 		$thisTv['type']
 	);
+	
 	switch ($thisTvI[0]){
 		case 'textarea':
 		case 'rawtextarea':
@@ -207,67 +389,90 @@ foreach ($allTvs as $thisTv){
 	if (!isset($mm_fields[$fieldName])){
 		$mm_fields[$fieldName] = [
 			'fieldtype' => $fieldType,
-			'fieldname' => 'tv' . $thisTv['id'] . $fieldName_suffix,
+			'fieldname' =>
+				'tv' .
+				$thisTv['id'] .
+				$fieldName_suffix
+			,
 			'dbname' => '',
 			'tv' => true
 		];
 	}
 }
 
-/**
- * ManagerManager_includeRules
- * @version 1.0.1 (2019-01-23)
- * 
- * @desc Include the rules.
- * 
- * @param $chunkName {string} — Chunk that contains rules. Default: —.
- * 
- * @return {string} — Including status message.
- */
-if (!function_exists('ManagerManager_includeRules')){function ManagerManager_includeRules($chunkName){
-	//Global modx object & $content for rules
-	global
-		$modx,
-		$content;
-	
-	$result = '';
-	
-	$configFilePath = $modx->getConfig('base_path') . 'assets/plugins/managermanager/mm_rules.inc.php';
-	
-	//See if there is any chunk output (e.g. it exists, and is not empty)
-	$chunkContent = $modx->getChunk($chunkName);
-	if (!empty($chunkContent)){
-		// If there is, run it.
-		eval($chunkContent);
+if (!function_exists('ManagerManager_includeRules')){
+	/**
+	 * ManagerManager_includeRules
+	 * @version 1.0.2 (2020-07-29)
+	 * 
+	 * @desc Include the rules.
+	 * 
+	 * @param $chunkName {string} — Chunk that contains rules. Default: —.
+	 * 
+	 * @return {string} — Including status message.
+	 */
+	function ManagerManager_includeRules($chunkName){
+		//Global modx object & $content for rules
+		global
+			$modx,
+			$content
+		;
 		
-		$result = '// Getting rules from chunk: ' . $chunkName;
-	//If there's no chunk output, read in the file.
-	}else if (is_readable($configFilePath)){
-		include($configFilePath);
+		$result = '';
 		
-		$result = '// Getting rules from file: ' . $configFilePath;
-	}else{
-		$result = '// No rules found';
+		$configFilePath =
+			$modx->getConfig('base_path') .
+			'assets/plugins/managermanager/mm_rules.inc.php'
+		;
+		
+		//See if there is any chunk output (e.g. it exists, and is not empty)
+		$chunkContent = $modx->getChunk($chunkName);
+		
+		if (!empty($chunkContent)){
+			// If there is, run it.
+			eval($chunkContent);
+			
+			$result =
+				'// Getting rules from chunk: ' .
+				$chunkName
+			;
+		//If there's no chunk output, read in the file.
+		}else if (is_readable($configFilePath)){
+			include($configFilePath);
+			
+			$result =
+				'// Getting rules from file: ' .
+				$configFilePath
+			;
+		}else{
+			$result = '// No rules found';
+		}
+		
+		return
+			$result .
+			PHP_EOL .
+			PHP_EOL
+		;
 	}
-	
-	return $result . PHP_EOL . PHP_EOL;
-}}
+}
 
-/**
- * ManagerManger_initJQddMM
- * @version 1.1.1 (2019-01-23)
- * 
- * @desc jQuery.ddMM initialization.
- * 
- * @return {string_js}
- */
-if (!function_exists('ManagerManger_initJQddMM')){function ManagerManger_initJQddMM(){
-	global
-		$modx,
-		$_lang,
-		$mm_fields;
-	
-	$result =
+if (!function_exists('ManagerManger_initJQddMM')){
+	/**
+	 * ManagerManger_initJQddMM
+	 * @version 1.1.2 (2020-07-29)
+	 * 
+	 * @desc jQuery.ddMM initialization.
+	 * 
+	 * @return {string_js}
+	 */
+	function ManagerManger_initJQddMM(){
+		global
+			$modx,
+			$_lang,
+			$mm_fields
+		;
+		
+		$result =
 '
 $j.ddMM.config.site_url = "' . $modx->getConfig('site_url') . '";
 $j.ddMM.config.datetime_format = "' . $modx->getConfig('datetime_format') . '";
@@ -282,9 +487,10 @@ $j.ddMM.urls.manager = "' . MODX_MANAGER_URL . '";
 
 $j.ddMM.fields = $j.parseJSON(\'' . json_encode($mm_fields) . '\');
 ';
-	
-	return $result;
-}}
+		
+		return $result;
+	}
+}
 
 // The start of adding or editing a document (before the main form)
 switch ($e->name){
@@ -293,8 +499,11 @@ switch ($e->name){
 		$editingPluginName = $modx->db->getValue($modx->db->select(
 			'name',
 			$modx->getFullTableName('site_plugins'),
-			// The ID of the plugin we're editing
-			'id=' . $e->params['id']
+			(
+				'id=' .
+				// The ID of the plugin we're editing
+				$e->params['id']
+			)
 		));
 		
 		// if it's the right plugin
@@ -313,9 +522,15 @@ switch ($e->name){
 			
 			foreach (
 				$allTemplates as
-				$count => $tpl
+				$count =>
+				$tpl
 			){
-				$class = ($count % 2) ? 'gridItem':'gridAltItem';
+				$class =
+					$count % 2 ?
+					'gridItem' :
+					'gridAltItem'
+				;
+				
 				$output_templates .= '<tr>';
 				$output_templates .= '<td class="' . $class . '">' . jsSafe($tpl['templatename']) . '</td>';
 				$output_templates .= '<td class="' . $class . '">' . jsSafe($tpl['description']) . '</td>';
@@ -328,7 +543,7 @@ switch ($e->name){
 			// Get all tvs
 			$allTvs = $modx->db->makeArray($modx->db->select(
 				'name,caption,id',
-				ddTools::$tables['site_tmplvars'],
+				\ddTools::$tables['site_tmplvars'],
 				'',
 				'name ASC'
 			));
@@ -340,7 +555,12 @@ switch ($e->name){
 				$allTvs as
 				$count => $tv
 			){
-				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
+				$class =
+					$count % 2 ?
+					'gridItem' :
+					'gridAltItem'
+				;
+				
 				$output_tvs .= '<tr>';
 				$output_tvs .= '<td class="' . $class . '">' . jsSafe($tv['name']) . '</td>';
 				$output_tvs .= '<td class="' . $class . '">' . jsSafe($tv['caption']) . '</td>';
@@ -363,9 +583,15 @@ switch ($e->name){
 			
 			foreach (
 				$allRoles as
-				$count => $role
+				$count =>
+				$role
 			){
-				$class = ($count % 2) ? 'gridItem' : 'gridAltItem';
+				$class =
+					$count % 2 ?
+					'gridItem' :
+					'gridAltItem'
+				;
+				
 				$output_roles .= '<tr>';
 				$output_roles .= '<td class="' . $class . '">' . jsSafe($role['name']) . '</td>';
 				$output_roles .= '<td class="' . $class . '">' . $role['id'] . '</td>';
@@ -375,7 +601,11 @@ switch ($e->name){
 			$output_roles .= '</table>';
 			
 			// Load the jquery library
-			$output = '<!-- Begin ManagerManager output -->' . PHP_EOL;
+			$output =
+				'<!-- Begin ManagerManager output -->' .
+				PHP_EOL
+			;
+			
 			if(empty($modx->getConfig('mgr_jquery_path'))){
 				$output .= includeJsCss(
 					$jsUrls['jq']['url'],
@@ -384,6 +614,7 @@ switch ($e->name){
 					$jsUrls['jq']['version']
 				);
 			}
+			
 			$output .= includeJsCss(
 				$jsUrls['mm']['url'],
 				'html',
@@ -391,13 +622,23 @@ switch ($e->name){
 				$jsUrls['mm']['version']
 			);
 			
-			$output .= '<script type="text/javascript">' . PHP_EOL;
+			$output .=
+				'<script type="text/javascript">' .
+				PHP_EOL
+			;
 			//produces var $j = jQuery.noConflict();
-			$output .= 'var $j = jQuery.noConflict();' . PHP_EOL;
+			$output .=
+				'var $j = jQuery.noConflict();' .
+				PHP_EOL
+			;
 			
 			$output .= ManagerManger_initJQddMM();
 			
-			$output .= 'mm_lastTab = "tabEvents";' . PHP_EOL;
+			$output .=
+				'mm_lastTab = "tabEvents";' .
+				PHP_EOL
+			;
+			
 			$e->output($output);
 			
 			mm_createTab(
@@ -405,16 +646,30 @@ switch ($e->name){
 				'rolestemplates',
 				'',
 				'',
-				'<p>These are the IDs for current templates,tvs and roles in your site.</p>' . $output_templates . '&nbsp;' . $output_tvs . '&nbsp;' . $output_roles
+				(
+					'<p>These are the IDs for current templates,tvs and roles in your site.</p>' .
+					$output_templates .
+					'&nbsp;' .
+					$output_tvs .
+					'&nbsp;' .
+					$output_roles
+				)
 			);
 			
 			$e->output('</script>');
-			$e->output('<!-- End ManagerManager output -->' . PHP_EOL);
+			$e->output(
+				'<!-- End ManagerManager output -->' .
+				PHP_EOL
+			);
 		}
 	break;
 	
 	case 'OnDocFormPrerender':
-		$e->output('<!-- Begin ManagerManager output -->' . PHP_EOL);
+		$e->output(
+			'<!-- Begin ManagerManager output -->' .
+			PHP_EOL
+		);
+		
 		// Load the js libraries
 		if(empty($modx->config['mgr_jquery_path'])){
 			$e->output(includeJsCss(
@@ -463,7 +718,10 @@ $j(function(){
 		//Just run widgets
 		ManagerManager_includeRules($e->params['config_chunk']);
 		
-		$e->output('<!-- End ManagerManager output -->' . PHP_EOL);
+		$e->output(
+			'<!-- End ManagerManager output -->' .
+			PHP_EOL
+		);
 	break;
 	
 	// The main document editing form
@@ -540,7 +798,11 @@ $j(function(){
 	
 	case 'OnTVFormRender':
 		// Should we remove deprecated Template variable types from the TV creation list?
-		$removeDeprecatedTvTypes = ($e->params['remove_deprecated_tv_types_pref'] == 'yes') ? true : false;
+		$removeDeprecatedTvTypes =
+			$e->params['remove_deprecated_tv_types_pref'] == 'yes' ?
+			true :
+			false
+		;
 		
 		if ($removeDeprecatedTvTypes){
 			// Load the jquery library
@@ -577,7 +839,7 @@ $j(function(){
 		//Get document template from db
 		$mm_current_page['template'] = $modx->db->getValue($modx->db->select(
 			'template',
-			ddTools::$tables['site_content'],
+			\ddTools::$tables['site_content'],
 			'`id` = ' . $e->params['new_id']
 		));
 		
