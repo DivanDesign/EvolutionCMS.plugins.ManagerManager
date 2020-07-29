@@ -1,7 +1,7 @@
 {
-	"name": "dd/modxevo-library-ddtools",
+	"name": "dd/evolutioncms-libraries-ddtools",
 	"type": "modxevo-library-ddtools",
-	"version": "0.24.1",
+	"version": "0.40.1",
 	"description": "A library with various tools facilitating your work.",
 	"keywords": [
 		"modx",
@@ -9,7 +9,21 @@
 		"modx evolution",
 		"ddtools"
 	],
-	"homepage": "http://code.divandesign.biz/modx/ddtools",
+	"homepage": "https://code.divandesign.biz/modx/ddtools",
+	"authors": [
+		{
+			"name": "DD Group",
+			"email": "code@DivanDesign.biz",
+			"homepage": "https://code.divandesign.biz",
+			"role": "Owner"
+		},
+		{
+			"name": "Ilyas Ronef",
+			"email": "ilyas@DivanDesign.ru",
+			"homepage": "https://ronef.ru",
+			"role": "Developer"
+		}
+	],
 	"license": "MIT",
 	"require": {
 		"php": ">=5.4.0",

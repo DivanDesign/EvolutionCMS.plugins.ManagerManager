@@ -1,18 +1,48 @@
 <?php
 namespace DDTools;
 
-
-class FilesTools
-{
+class FilesTools {
+	/**
+	 * createDir
+	 * @version 1.3.1 (2019-09-03)
+	 * 
+	 * @desc Makes directory using `$modx->config['new_folder_permissions']`. Nested directories will be created too. Doesn't throw an exception if the folder already exists.
+	 * 
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->path {string} — The directory path. @required
+	 * 
+	 * @return {boolean} — Success status.
+	 */
+	public static function createDir($params){
+		$params = (object) $params;
+		
+		//True by default
+		$result = true;
+		
+		//На всякий случай проверим, что необходимой папки ещё нет
+		if (!file_exists($params->path)){
+			$result = mkdir(
+				$params->path,
+				intval(
+					\ddTools::$modx->getConfig('new_folder_permissions'),
+					8
+				),
+				true
+			);
+		}
+		
+		return $result;
+	}
+	
 	/**
 	 * copyDir
-	 * @version 2.0.1 (2019-01-24)
+	 * @version 2.0.3 (2020-06-17)
 	 * 
 	 * @desc Copies a required folder with all contents recursively.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
-	 * @param $params['sourcePath'] {string} — Path to the directory, that should copied. @required
-	 * @param $params['destinationPath'] {string} — The destination path. @required
+	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
+	 * @param $params->sourcePath {string} — Path to the directory, that should copied. @required
+	 * @param $params->destinationPath {string} — The destination path. @required
 	 * 
 	 * @return {boolean} — Returns true on success or false on failure.
 	 */
@@ -20,23 +50,31 @@ class FilesTools
 		$params = (object) $params;
 		
 		//Допишем папкам недостающие '/' при необходимости
-		if (substr(
-			$params->sourcePath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->sourcePath,
+				-1
+			) != '/'
+		){
 			$params->sourcePath .= '/';
 		}
-		if (substr(
-			$params->destinationPath,
-			-1
-		) != '/'){
+		if (
+			substr(
+				$params->destinationPath,
+				-1
+			) != '/'
+		){
 			$params->destinationPath .= '/';
 		}
 		
 		//Проверяем существование
-		if (!file_exists($params->sourcePath)){return false;}
+		if (!file_exists($params->sourcePath)){
+			return false;
+		}
 		//Если папки назначения нет, создадим её
-		if (!file_exists($params->destinationPath)){mkdir($params->destinationPath);}
+		if (!file_exists($params->destinationPath)){
+			mkdir($params->destinationPath);
+		}
 		
 		//Получаем файлы в директории
 		$fileNames = array_diff(
@@ -47,17 +85,20 @@ class FilesTools
 			]
 		);
 		
-		foreach ($fileNames as $fileName){
+		foreach (
+			$fileNames as
+			$fileName
+		){
 			//Если это папка, обработаем её
-			if (is_dir($params->sourcePath.$fileName)){
+			if (is_dir($params->sourcePath . $fileName)){
 				self::copyDir([
-					'sourcePath' => $params->sourcePath.$fileName,
-					'destinationPath' => $params->destinationPath.$fileName
+					'sourcePath' => $params->sourcePath . $fileName,
+					'destinationPath' => $params->destinationPath . $fileName
 				]);
 			}else{
 				copy(
-					$params->sourcePath.$fileName,
-					$params->destinationPath.$fileName
+					$params->sourcePath . $fileName,
+					$params->destinationPath . $fileName
 				);
 			}
 		}
@@ -67,7 +108,7 @@ class FilesTools
 	
 	/**
 	 * removeDir
-	 * @version 1.0.5 (2018-10-01)
+	 * @version 1.0.7 (2020-06-17)
 	 * 
 	 * @desc Removes a required folder with all contents recursively.
 	 * 
@@ -77,7 +118,9 @@ class FilesTools
 	 */
 	public static function removeDir($path){
 		//Если не существует, ок
-		if (!file_exists($path)){return true;}
+		if (!file_exists($path)){
+			return true;
+		}
 		
 		//Получаем файлы в директории
 		$fileNames = array_diff(
@@ -88,12 +131,15 @@ class FilesTools
 			]
 		);
 		
-		foreach ($fileNames as $fileName){
+		foreach (
+			$fileNames as
+			$fileName
+		){
 			//Если это папка, обработаем её
-			if (is_dir($path.'/'.$fileName)){
-				self::removeDir($path.'/'.$fileName);
+			if (is_dir($path . '/' . $fileName)){
+				self::removeDir($path . '/' . $fileName);
 			}else{
-				unlink($path.'/'.$fileName);
+				unlink($path . '/' . $fileName);
 			}
 		}
 		
@@ -102,32 +148,83 @@ class FilesTools
 	
 	/**
 	 * modifyImage
-	 * @version 2.0a (2018-07-16)
+	 * @version 2.6.1 (2020-06-19)
 	 * 
-	 * @desc Делает превьюшку.
-	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
-	 * @param $params['sourceFullPathName'] {string} — Адрес оригинального изображения. @required
-	 * @param $params['outputFullPathName'] {string} — Адрес результирующего изображения. @required
-	 * @param $params['transformMode'] {'resize'|'crop'|'resizeAndCrop'|'resizeAndFill'} — Режим преобразования. @required
-	 * @param $params['width'] {integer} — Ширина результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params['height'] {integer} — Высота результирующего изображения. Если задать один размер — второй будет вычислен автоматически исходя из пропорций оригинального изображения. @required
-	 * @param $params['backgroundColor'] {string} — Фон результирующего изображения (может понадобиться для заливки пустых мест). @required
-	 * @param $params['allowEnlargement'] {0|1} — Разрешить ли увеличение изображения? @required
-	 * @param $params['quality'] {integer} — Output image quality level. @required
+	 * @see README.md
 	 * 
 	 * @return {void}
 	 */
 	public static function modifyImage($params){
-		$params = (object) $params;
+		//Defaults
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				(object) [
+					'transformMode' => 'resize',
+					'allowEnlargement' => false,
+					'backgroundColor' => 'FFFFFF',
+					'quality' => 100
+				],
+				$params
+			]
+		]);
+		
+		if (!\DDTools\ObjectTools::isPropExists([
+			'object' => $params,
+			'propName' => 'outputFullPathName'
+		])){
+			$params->outputFullPathName = $params->sourceFullPathName;
+		}
+		
+		
+		//Include PHP.libraries.phpThumb
+		require_once(
+			'phpThumb' .
+			DIRECTORY_SEPARATOR .
+			'phpthumb.class.php'
+		);
+		
+		//Prepare source image addresses
+		foreach (
+			[
+				'sourceFullPathName',
+				'outputFullPathName',
+				'watermarkImageFullPathName'
+			] as
+			$paramName
+		){
+			if (
+				//If the parameter is set
+				\DDTools\ObjectTools::isPropExists([
+					'object' => $params,
+					'propName' => $paramName
+				]) &&
+				//And set as relative path
+				substr(
+					$params->{$paramName},
+					0,
+					strlen(\ddTools::$modx->getConfig('base_path'))
+				) !=
+				\ddTools::$modx->getConfig('base_path')
+			){
+				//Convert relative path to absolute if needed
+				$params->{$paramName} =
+					\ddTools::$modx->getConfig('base_path') .
+					$params->{$paramName}
+				;
+			}
+		}
+		
+		
+		//If source image is not exists
+		if (!file_exists($params->sourceFullPathName)){
+			return;
+		}
 		
 		$originalImg = (object) [
 			'width' => 0,
 			'height' => 0,
 			'ratio' => 1
 		];
-		
-		require_once('src/FilesTools/phpthumb.class.php');
 		
 		//Вычислим размеры оригинаольного изображения
 		list(
@@ -139,10 +236,15 @@ class FilesTools
 		if (
 			$originalImg->width == 0 ||
 			$originalImg->height == 0
-		){return;}
+		){
+			return;
+		}
 		
 		//Пропрорции реального изображения
-		$originalImg->ratio = $originalImg->width / $originalImg->height;
+		$originalImg->ratio =
+			$originalImg->width /
+			$originalImg->height
+		;
 		
 		//Если по каким-то причинам высота не задана
 		if (
@@ -150,7 +252,10 @@ class FilesTools
 			$params->height == 0
 		){
 			//Вычислим соответственно пропорциям
-			$params->height = $params->width / $originalImg->ratio;
+			$params->height =
+				$params->width /
+				$originalImg->ratio
+			;
 		}
 		//Если по каким-то причинам ширина не задана
 		if (
@@ -158,11 +263,15 @@ class FilesTools
 			$params->width == 0
 		){
 			//Вычислим соответственно пропорциям
-			$params->width = $params->height * $originalImg->ratio;
+			$params->width =
+				$params->height *
+				$originalImg->ratio
+			;
 		}
 		
 		//Если превьюшка уже есть и имеет нужный размер, ничего делать не нужно
-		if ($originalImg->width == $params->width &&
+		if (
+			$originalImg->width == $params->width &&
 			$originalImg->height == $params->height &&
 			file_exists($params->outputFullPathName)
 		){
@@ -185,7 +294,7 @@ class FilesTools
 		//Разрешить ли увеличивать изображение
 		$thumb->setParameter(
 			'aoe',
-			$params->allowEnlargement
+			intval($params->allowEnlargement)
 		);
 		
 		//Если нужно просто обрезать
@@ -206,7 +315,11 @@ class FilesTools
 				//Позиция по оси x оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sx',
-					($originalImg->width - $params->width) / 2
+					(
+						$originalImg->width -
+						$params->width
+					) /
+					2
 				);
 			}
 			
@@ -215,7 +328,11 @@ class FilesTools
 				//Позиция по оси y оригинального изображения (чтобы было по центру)
 				$thumb->setParameter(
 					'sy',
-					($originalImg->height - $params->height) / 2
+					(
+						$originalImg->height -
+						$params->height
+					) /
+					2
 				);
 			}
 		}else{
@@ -254,6 +371,31 @@ class FilesTools
 				);
 			}
 		}
+		
+		
+		//If need to overlay image with watermark
+		if (\DDTools\ObjectTools::isPropExists([
+			'object' => $params,
+			'propName' => 'watermarkImageFullPathName'
+		])){
+			$thumb->setParameter(
+				'fltr',
+				implode(
+					'|',
+					[
+						//WaterMarkImage
+						'wmi',
+						//Src
+						$params->watermarkImageFullPathName,
+						//Alignment — center
+						'C',
+						//Opacity — 100
+						'100'
+					]
+				)
+			);
+		}
+		
 		
 		//Создаём превьюшку
 		$thumb->GenerateThumbnail();
