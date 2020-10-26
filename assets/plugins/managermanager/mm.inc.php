@@ -89,10 +89,26 @@ $jsUrls = [
 	'ddTools' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js'
+			'assets/plugins/managermanager/js/jQuery.ddTools-2.3.1.min.js'
 		,
 		'name' => 'jquery.ddTools',
-		'version' => '1.8.6'
+		'version' => '2.3.1'
+	],
+	'ddUI' => [
+		'url' =>
+			$modx->getConfig('site_url') .
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.js'
+		,
+		'name' => 'jquery.ddUI',
+		'version' => '0.11.1'
+	],
+	'ddUICSS' => [
+		'url' =>
+			$modx->getConfig('site_url') .
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.css'
+		,
+		'name' => 'jquery.ddUI',
+		'version' => '0.11.1'
 	]
 ];
 
@@ -693,6 +709,21 @@ switch ($e->name){
 			$jsUrls['ddTools']['name'],
 			$jsUrls['ddTools']['version']
 		));
+		
+		$e->output(includeJsCss(
+			$jsUrls['ddUI']['url'],
+			'html',
+			$jsUrls['ddUI']['name'],
+			$jsUrls['ddUI']['version']
+		));
+		
+		$e->output(includeJsCss(
+			$jsUrls['ddUICSS']['url'],
+			'html',
+			$jsUrls['ddUICSS']['name'],
+			$jsUrls['ddUICSS']['version']
+		));
+		
 		
 		// Create a mask to cover the page while the fields are being rearranged
 		$e->output(
