@@ -8,8 +8,8 @@ class Core {
 	
 	private static
 		$pluginPath,
-		$pluginJSurls,
-		$pluginCSSurls,
+		$pluginJsUrls,
+		$pluginCssUrls,
 		$pluginEvents = [
 			'OnPluginFormRender',
 			'OnDocFormPrerender',
@@ -28,7 +28,7 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.2 (2020-10-28)
+	 * @version 1.2.1 (2020-10-31)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
@@ -40,10 +40,10 @@ class Core {
 		self::getDocFields();
 		
 		//Init plugin JS urls
-		self::getPluginJSurls();
+		self::getPluginJsUrls();
 		
 		//Init plugin CSS urls
-		self::getPluginCSSurls();
+		self::getPluginCssUrls();
 		
 		//Init current page object
 		$pageType = 'virtual';
@@ -370,14 +370,14 @@ class Core {
 	}
 	
 	/**
-	 * getPluginJSurls
-	 * @version 1.1 (2020-10-28)
+	 * getPluginJsUrls
+	 * @version 2.0 (2020-10-31)
 	 * 
 	 * @return {string}
 	 */
-	public static function getPluginJSurls(){
-		if (!isset(self::$pluginJSurls)){
-			self::$pluginJSurls = (object) [
+	public static function getPluginJsUrls(){
+		if (!isset(self::$pluginJsUrls)){
+			self::$pluginJsUrls = (object) [
 				'jQuery' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
@@ -413,18 +413,18 @@ class Core {
 			];
 		}
 		
-		return self::$pluginJSurls;
+		return self::$pluginJsUrls;
 	}
 	
 	/**
-	 * getPluginCSSurls
-	 * @version 1.0 (2020-10-28)
+	 * getPluginCssUrls
+	 * @version 2.0 (2020-10-31)
 	 * 
 	 * @return {string}
 	 */
-	public static function getPluginCSSurls(){
-		if (!isset(self::$pluginCSSurls)){
-			self::$pluginCSSurls = (object) [
+	public static function getPluginCssUrls(){
+		if (!isset(self::$pluginCssUrls)){
+			self::$pluginCssUrls = (object) [
 				'jQuery.ddUI' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
@@ -436,7 +436,7 @@ class Core {
 			];
 		}
 		
-		return self::$pluginCSSurls;
+		return self::$pluginCssUrls;
 	}
 	
 	/**

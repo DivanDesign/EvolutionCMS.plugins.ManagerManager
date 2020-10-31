@@ -29,9 +29,9 @@ class Page {
 		$injectedHTML = [],
 		
 		/**
-		 * @var $injectedHTML_hasJSInit {boolean} — Is JS init already injected to the page?
+		 * @var $injectedHTML_hasJsInit {boolean} — Is JS init already injected to the page?
 		 */
-		$injectedHTML_hasJSInit = false
+		$injectedHTML_hasJsInit = false
 	;
 	
 	/**
@@ -448,7 +448,7 @@ class Page {
 	
 	/**
 	 * injectedHTML_addJsCssInit
-	 * @version 2.0 (2020-10-31)
+	 * @version 2.0.1 (2020-10-31)
 	 * 
 	 * @desc jQuery.ddMM initialization.
 	 * 
@@ -461,50 +461,50 @@ class Page {
 			//If need to inject some HTML elements on this event
 			isset($this->injectedHTML->{$this->event->name}) &&
 			//And JS init is not injected before
-			!$this->injectedHTML_hasJSInit
+			!$this->injectedHTML_hasJsInit
 		){
 			global
 				$_lang
 			;
 			
-			$injectedScripts = [];
+			$injectedJsCss = [];
 			
 			//All needed JS
-			$pluginJSurls = Core::getPluginJSurls();
+			$pluginJsUrls = Core::getPluginJsUrls();
 			
 			foreach (
-				$pluginJSurls as
-				$pluginJSurls_itemName =>
-				$pluginJSurls_itemData
+				$pluginJsUrls as
+				$pluginJsUrls_itemName =>
+				$pluginJsUrls_itemData
 			){
 				if (
-					$pluginJSurls_itemName != 'jQuery' ||
+					$pluginJsUrls_itemName != 'jQuery' ||
 					//jQuery including depends on CMS config
 					empty(\ddTools::$modx->getConfig('mgr_jquery_path'))
 				){
 					//Inject script
-					$injectedScripts[] = (object) [
+					$injectedJsCss[] = (object) [
 						'name' => 'script',
 						'data' => [
-							'attrs.src' => $pluginJSurls_itemData->source
+							'attrs.src' => $pluginJsUrls_itemData->source
 						]
 					];
 					
 					//Remember including
-					$pluginJSurls_itemData->extension = 'js';
-					$this->includedJsCss_add($pluginJSurls_itemData);
+					$pluginJsUrls_itemData->extension = 'js';
+					$this->includedJsCss_add($pluginJsUrls_itemData);
 				}
 			}
 			
 			//All needed CSS
-			$pluginCssUrls = Core::getPluginCSSurls();
+			$pluginCssUrls = Core::getPluginCssUrls();
 			
 			foreach (
 				$pluginCssUrls as
 				$pluginCssUrls_itemData
 			){
 				//Inject CSS
-				$injectedScripts[] = (object) [
+				$injectedJsCss[] = (object) [
 					'name' => 'link',
 					'data' => [
 						'attrs.href' => $pluginCssUrls_itemData->source
@@ -516,7 +516,7 @@ class Page {
 				$this->includedJsCss_add($pluginCssUrls_itemData);
 			}
 			
-			$injectedScripts[] = (object) [
+			$injectedJsCss[] = (object) [
 				'name' => 'script',
 				'data' => [
 					'content' => '
@@ -548,11 +548,11 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$this->injectedHTML->{$this->event->name},
 				$index,
 				0,
-				$injectedScripts
+				$injectedJsCss
 			);
 			
 			//And remember to avoid duplication
-			$this->injectedHTML_hasJSInit = true;
+			$this->injectedHTML_hasJsInit = true;
 		}
 	}
 	
