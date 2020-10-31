@@ -447,8 +447,8 @@ class Page {
 	}
 	
 	/**
-	 * injectedHTML_addJSInit
-	 * @version 1.2.1 (2020-05-20)
+	 * injectedHTML_addJsCssInit
+	 * @version 2.0 (2020-10-31)
 	 * 
 	 * @desc jQuery.ddMM initialization.
 	 * 
@@ -456,7 +456,7 @@ class Page {
 	 * 
 	 * @return {void}
 	 */
-	private function injectedHTML_addJSInit($index = NULL){
+	private function injectedHTML_addJsCssInit($index = NULL){
 		if (
 			//If need to inject some HTML elements on this event
 			isset($this->injectedHTML->{$this->event->name}) &&
@@ -494,6 +494,26 @@ class Page {
 					$pluginJSurls_itemData->extension = 'js';
 					$this->includedJsCss_add($pluginJSurls_itemData);
 				}
+			}
+			
+			//All needed CSS
+			$pluginCssUrls = Core::getPluginCSSurls();
+			
+			foreach (
+				$pluginCssUrls as
+				$pluginCssUrls_itemData
+			){
+				//Inject CSS
+				$injectedScripts[] = (object) [
+					'name' => 'link',
+					'data' => [
+						'attrs.href' => $pluginCssUrls_itemData->source
+					]
+				];
+				
+				//Remember including
+				$pluginCssUrls_itemData->extension = 'css';
+				$this->includedJsCss_add($pluginCssUrls_itemData);
 			}
 			
 			$injectedScripts[] = (object) [
@@ -587,7 +607,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$elementInfo
 			){
 				if (strtolower($elementInfo->name) == 'script'){
-					$this->injectedHTML_addJSInit($elementIndex);
+					$this->injectedHTML_addJsCssInit($elementIndex);
 					
 					//Just one time
 					break;

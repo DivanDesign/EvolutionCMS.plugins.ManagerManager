@@ -9,6 +9,7 @@ class Core {
 	private static
 		$pluginPath,
 		$pluginJSurls,
+		$pluginCSSurls,
 		$pluginEvents = [
 			'OnPluginFormRender',
 			'OnDocFormPrerender',
@@ -27,7 +28,7 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.1 (2019-02-20)
+	 * @version 1.2 (2020-10-28)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
@@ -40,6 +41,9 @@ class Core {
 		
 		//Init plugin JS urls
 		self::getPluginJSurls();
+		
+		//Init plugin CSS urls
+		self::getPluginCSSurls();
 		
 		//Init current page object
 		$pageType = 'virtual';
@@ -367,7 +371,7 @@ class Core {
 	
 	/**
 	 * getPluginJSurls
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.1 (2020-10-28)
 	 * 
 	 * @return {string}
 	 */
@@ -393,15 +397,46 @@ class Core {
 				'jQuery.ddTools' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
-						'assets/plugins/managermanager/js/jquery.ddTools-1.8.6.min.js'
+						'assets/plugins/managermanager/js/jQuery.ddTools-2.3.1.min.js'
 					,
 					'name' => 'jQuery.ddTools',
-					'version' => '1.8.6'
+					'version' => '2.3.1'
+				],
+				'jQuery.ddUI' => (object) [
+					'source' =>
+						\ddTools::$modx->getConfig('site_url') .
+						'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.js'
+					,
+					'name' => 'jQuery.ddUI',
+					'version' => '0.11.1'
 				]
 			];
 		}
 		
 		return self::$pluginJSurls;
+	}
+	
+	/**
+	 * getPluginCSSurls
+	 * @version 1.0 (2020-10-28)
+	 * 
+	 * @return {string}
+	 */
+	public static function getPluginCSSurls(){
+		if (!isset(self::$pluginCSSurls)){
+			self::$pluginCSSurls = (object) [
+				'jQuery.ddUI' => (object) [
+					'source' =>
+						\ddTools::$modx->getConfig('site_url') .
+						'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.css'
+					,
+					'name' => 'jQuery.ddUI',
+					'version' => '0.11.1'
+				]
+			];
+		}
+		
+		return self::$pluginCSSurls;
 	}
 	
 	/**

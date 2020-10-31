@@ -133,7 +133,7 @@ class Page extends \ManagerManager\Page\Page {
 					]
 				])->render();
 				
-				//Script element is needed for calling “$this->injectedHTML_addJSInit”
+				//Script element is needed for calling `$this->injectedHTML_addJsCssInit`
 				$this->injectedHTML->{$this->event->name} = [
 					(object) [
 						'name' => 'script',
