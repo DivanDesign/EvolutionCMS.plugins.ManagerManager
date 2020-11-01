@@ -181,7 +181,7 @@ class Installer {
 	
 	/**
 	 * copyDir
-	 * @version 2.0.1 (2020-05-20)
+	 * @version 2.0.2 (2020-11-01)
 	 * 
 	 * @desc Copies a required folder with all contents recursively. “ddTools::copyDir” from EvolutionCMS.libraries.ddTools.
 	 * 
@@ -250,8 +250,14 @@ class Installer {
 				]);
 			}else{
 				copy(
-					$params->sourcePath . $fileName,
-					$params->destinationPath . $fileName
+					(
+						$params->sourcePath .
+						$fileName
+					),
+					(
+						$params->destinationPath .
+						$fileName
+					)
 				);
 			}
 		}

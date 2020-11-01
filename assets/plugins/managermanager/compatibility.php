@@ -44,7 +44,8 @@ function useThisRule(
 	$additionalInfo = ''
 ){
 	global
-		$ManagerManagerCore_currentPage;
+		$ManagerManagerCore_currentPage
+	;
 	
 	$result = false;
 	

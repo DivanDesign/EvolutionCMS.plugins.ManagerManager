@@ -7,16 +7,16 @@
  * 
  * @uses PHP >= 5.4.
  * @uses (MODX)EvolutionCMS >= 1.1 {@link https://github.com/evolution-cms/evolution }
- * @uses (MODX)EvolutionCMS.libraries.ddTools >= 0.24.1 (included) {@link http://code.divandesign.biz/modx/ddtools }
+ * @uses (MODX)EvolutionCMS.libraries.ddTools >= 0.24.1 (included) {@link https://code.divandesign.biz/modx/ddtools }
  * 
- * @author DivanDesign studio {@link www.DivanDesign.biz }
- * @author Nick Crossland {@link www.rckt.co.uk }
+ * @author DivanDesign studio {@link DivanDesign.biz }
+ * @author Nick Crossland {@link rckt.co.uk }
  * 
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
  * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
  * 
- * @link http://code.divandesign.biz/modx/managermanager/0.6.2
+ * @link https://code.divandesign.biz/modx/managermanager
  * 
  * @copyright 2012–2016
  */
@@ -45,7 +45,8 @@ if (!Core::isPluginUsed()){
 }
 
 global
-	$ManagerManagerCore;
+	$ManagerManagerCore
+;
 
 if (is_object($ManagerManagerCore)){
 	//Fire event

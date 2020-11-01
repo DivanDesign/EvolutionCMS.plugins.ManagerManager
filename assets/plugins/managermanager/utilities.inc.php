@@ -1,29 +1,29 @@
 <?php
 /**
  * makeArray
- * @version 1.1.1 (2018-11-10)
+ * @version 1.1.2 (2020-11-01)
  * 
  * @desc Makes a commas separated list into an array.
  * 
- * @param $csv {array|string_commaSeparated} — List. @required
+ * @param $csv {array|stringCommaSeparated} — List. @required
  * 
  * @return {array}
  */
 function makeArray($csv){
 	$result = [];
 	
-	// If we've already been supplied an array, just return it
+	//If we've already been supplied an array, just return it
 	if (is_array($csv)){
 		$result = $csv;
 	}else{
-		// Else if we have an not empty string
+		//Else if we have an not empty string
 		if (trim($csv) != ''){
-			// Otherwise, turn it into an array
+			//Otherwise, turn it into an array
 			$result = explode(
 				',',
 				$csv
 			);
-			// Remove any whitespace
+			//Remove any whitespace
 			array_walk(
 				$result,
 				create_function(
@@ -60,14 +60,14 @@ function jsSafe($str){
 
 /**
  * tplUseTvs
- * @version 1.3.1 (2016-11-10)
+ * @version 1.3.2 (2020-11-01)
  * 
  * @desc Does the specified template use the specified TVs?
  * 
  * @param $templateId {integer} — Template ID.
- * @param $tvs {string_commaSeparated|array} — TV names. Default: ''.
- * @param $types {string_commaSeparated|array} — TV types, e.g. image. Default: ''.
- * @param $dbFields {somma separated string} — DB fields which get from 'site_tmplvars' table. Default: 'id'.
+ * @param $tvs {stringCommaSeparated|array} — TV names. Default: ''.
+ * @param $types {stringCommaSeparated|array} — TV types, e.g. image. Default: ''.
+ * @param $dbFields {stringCommaSeparated} — DB fields which get from 'site_tmplvars' table. Default: 'id'.
  * @param $resultKey {string|false} — DB field, which values are keys of result array. Keys of result array will be numbered if the parameter equals false. Default: false.
  * 
  * @return {array|false}
@@ -81,7 +81,7 @@ function tplUseTvs(
 ){
 	$result = false;
 	
-	// If it's a blank template, it can't have TVs
+	//If it's a blank template, it can't have TVs
 	if($templateId != 0){
 		global $modx;
 		
@@ -103,13 +103,28 @@ function tplUseTvs(
 		
 		$where = [];
 		//Are we looking at specific TVs, or all?
-		if (!empty($fields)){$where[] = 'tvs.name IN '.makeSqlList($fields);}
+		if (!empty($fields)){
+			$where[] =
+				'tvs.name IN ' .
+				makeSqlList($fields)
+			;
+		}
 		
 		//Are we looking at specific TV types, or all?
-		if (!empty($types)){$where[] = 'type IN '.makeSqlList($types);}
+		if (!empty($types)){
+			$where[] =
+				'type IN ' .
+				makeSqlList($types)
+			;
+		}
 		
 		//Make the SQL for this template
-		if (!empty($templateId)){$where[] = 'rel.templateid = '.$templateId;}
+		if (!empty($templateId)){
+			$where[] =
+				'rel.templateid = ' .
+				$templateId
+			;
+		}
 		
 		//Execute the SQL query
 		$dbResult = $modx->db->select(
@@ -117,7 +132,12 @@ function tplUseTvs(
 				',',
 				$dbFields
 			),
-			ddTools::$tables['site_tmplvars'].' AS tvs LEFT JOIN '.ddTools::$tables['site_tmplvar_templates'].' AS rel ON rel.tmplvarid = tvs.id',
+			(
+				ddTools::$tables['site_tmplvars'] .
+				' AS tvs LEFT JOIN ' .
+				ddTools::$tables['site_tmplvar_templates'] .
+				' AS rel ON rel.tmplvarid = tvs.id'
+			),
 			implode(
 				' AND ',
 				$where
@@ -126,7 +146,7 @@ function tplUseTvs(
 		
 		$recordCount = $modx->db->getRecordCount($dbResult);
 		
-		// If we have results, return them, otherwise return false
+		//If we have results, return them, otherwise return false
 		if ($recordCount > 0){
 			//If return of an associative array is required
 			if ($resultKey !== false){
@@ -134,10 +154,12 @@ function tplUseTvs(
 				
 				while ($row = $modx->db->getRow($dbResult)){
 					//If result contains the result key
-					if (array_key_exists(
-						$resultKey,
-						$row
-					)){
+					if (
+						array_key_exists(
+							$resultKey,
+							$row
+						)
+					){
 						$rsArray[$row[$resultKey]] = $row;
 					}else{
 						$rsArray[] = $row;
@@ -156,12 +178,12 @@ function tplUseTvs(
 
 /**
  * getTplMatchedFields
- * @version 1.1.1 (2016-11-10)
+ * @version 1.1.2 (2020-11-01)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
- * @param $fields {string_commaSeparated|array} — Document fields or TVs names. @required
- * @param $tvTypes {string_commaSeparated|array} — TVs types, e.g. image, text. Default: ''.
+ * @param $fields {stringCommaSeparated|array} — Document fields or TVs names. @required
+ * @param $tvTypes {stringCommaSeparated|array} — TVs types, e.g. image, text. Default: ''.
  * @param $tempaleId {integer} — Template ID. Default: $mm_current_page['template'].
  * 
  * @return {array|false}
@@ -189,7 +211,10 @@ function getTplMatchedFields(
 		$docFields = [];
 		
 		//Only document fields
-		foreach ($fields as $field){
+		foreach (
+			$fields as
+			$field
+		){
 			if (
 				isset($mm_fields[$field]) &&
 				!$mm_fields[$field]['tv']
@@ -230,11 +255,11 @@ function getTplMatchedFields(
 
 /**
  * makeSqlList
- * @version 1.0.4 (2016-11-10)
+ * @version 1.0.5 (2020-11-01)
  * 
  * @desc Create a MySQL-safe list from an array.
  * 
- * @param $fieldsArray {array_associative|string_commaSeparated} — Values, key — name, value — value. @required
+ * @param $fieldsArray {arrayAssociative|stringCommaSeparated} — Values, key — name, value — value. @required
  * 
  * @return {string}
  */
@@ -245,56 +270,70 @@ function makeSqlList($fieldsArray){
 	
 	foreach(
 		$fieldsArray as
-		$name => $value
+		$name =>
+		$value
 	){
 		//if (substr($value, 0, 2) == 'tv'){$value = substr($value, 2);}
-		// Escape them for MySQL
-		$fieldsArray[$name] = "'".$modx->db->escape($value)."'";
+		//Escape them for MySQL
+		$fieldsArray[$name] =
+			"'" .
+			$modx->db->escape($value) .
+			"'"
+		;
 	}
 	
-	return " (".implode(
-		',',
-		$fieldsArray
-	).") ";
+	return
+		" (" .
+		implode(
+			',',
+			$fieldsArray
+		) .
+		") "
+	;
 }
 
 /**
  * prepareTabId
- * @version 1.0.1 (2016-11-10)
+ * @version 1.0.2 (2020-11-01)
  * 
  * @desc Prepare id of a tab.
  * 
- * @param $id {string} — Tab id. Default: 'general'.
+ * @param $id {string} — Tab ID. Default: 'general'.
  * 
- * @return {string} — Tab id.
+ * @return {string} — Tab ID.
  */
 function prepareTabId($id){
 	//General tab by default
-	if ($id == ''){$id = 'general';}
+	if ($id == ''){
+		$id = 'general';
+	}
 	
 	//If it's one of the default tabs, we need to get the capitalisation right
 	switch ($id){
 		case 'general':
 		case 'settings':
 		case 'access':
-		// version 1.0.0 only, removed in 1.0.1
+		//version 1.0.0 only, removed in 1.0.1
 		case 'meta':
 			$id = ucfirst($id);
 		break;
 	}
 	
-	return 'tab'.$id;
+	return
+		'tab' .
+		$id
+	;
 }
 
 /**
  * prepareSectionId
- * @version 1.1 (2014-05-25)
+ * @version 1.1.1 (2020-11-01)
  * 
  * @desc Prepare id of a section.
  * 
- * @param $id {string} — Section id.
+ * @param $id {string} — Section ID.
  * 
- * @return {string} — Section id.
+ * @return {string} — Section ID.
  */
 function prepareSectionId($id){
 	switch ($id){
@@ -307,7 +346,10 @@ function prepareSectionId($id){
 		break;
 		
 		default:
-			$id = 'ddSection'.$id;
+			$id =
+				'ddSection' .
+				$id
+			;
 		break;
 	}
 	
