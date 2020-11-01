@@ -282,18 +282,18 @@ function tplUseTvs(
 
 /**
  * getTplMatchedFields
- * @version 1.1.2 (2020-11-01)
+ * @version 1.2 (2020-11-01)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
- * @param $fields {stringCommaSeparated|array} — Document fields or TVs names. @required
+ * @param $fields {stringCommaSeparated|array} — Document fields or TVs names. Default: ''.
  * @param $tvTypes {stringCommaSeparated|array} — TVs types, e.g. image, text. Default: ''.
  * @param $tempaleId {integer} — Template ID. Default: $mm_current_page['template'].
  * 
  * @return {array|false}
  */
 function getTplMatchedFields(
-	$fields,
+	$fields = '',
 	$tvTypes = '',
 	$tempaleId = ''
 ){
@@ -301,56 +301,57 @@ function getTplMatchedFields(
 	
 	$fields = makeArray($fields);
 	
-	//$fields is required
-	if (!empty($fields)){
-		global $mm_fields;
+	global $mm_fields;
+	
+	//Template of current document by default
+	if (empty($tempaleId)){
+		global $mm_current_page;
 		
-		//Template of current document by default
-		if (empty($tempaleId)){
-			global $mm_current_page;
-			
-			$tempaleId = $mm_current_page['template'];
-		}
-		
-		$docFields = [];
-		
-		//Only document fields
-		foreach (
-			$fields as
-			$field
+		$tempaleId = $mm_current_page['template'];
+	}
+	
+	$docFields = [];
+	
+	//Only document fields
+	foreach (
+		$fields as
+		$field
+	){
+		if (
+			isset($mm_fields[$field]) &&
+			!$mm_fields[$field]['tv']
 		){
-			if (
-				isset($mm_fields[$field]) &&
-				!$mm_fields[$field]['tv']
-			){
-				$docFields[] = $field;
-			}
+			$docFields[] = $field;
 		}
-		
+	}
+	
+	if (
+		//If $fields set as an empty string, we need to get only TVs 
+		!empty($fields) &&
 		//If $fields contains no TVs
-		if (count($docFields) == count($fields)){
-			$result = $docFields;
-		}else{
-			//Get specified TVs for this template
-			$fields = tplUseTvs(
-				$tempaleId,
-				$fields,
-				$tvTypes,
-				'name',
-				'name'
-			);
-			
-			//If there are no appropriate TVs
-			if ($fields == false){
-				if (!empty($docFields)){
-					$result = $docFields;
-				}
-			}else{
-				$result = array_merge(
-					array_keys($fields),
-					$docFields
-				);
+		count($docFields) == count($fields)
+	){
+		$result = $docFields;
+	}else{
+		//Get specified TVs for this template
+		$fields = tplUseTvs(
+			$tempaleId,
+			$fields,
+			$tvTypes,
+			'name',
+			'name'
+		);
+		
+		//If there are no appropriate TVs
+		if ($fields == false){
+			if (!empty($docFields)){
+				$result = $docFields;
 			}
+		}else{
+			$result = array_merge(
+				array_keys($fields),
+				$docFields
+			);
 		}
 	}
 	
