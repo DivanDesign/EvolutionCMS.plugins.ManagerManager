@@ -6,7 +6,7 @@
 ## Использует
 
 * PHP >= 5.4
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager) >= 0.7
 
 
 ## Документация
@@ -18,8 +18,8 @@
 
 
 Смотрите также документацию:
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager).
-* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.biz/modx/ddmmeditor).
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager).
+* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.ru/modx/ddmmeditor).
 
 
 ### Описание параметров
@@ -51,7 +51,7 @@
 	* Описание: Роли пользователей CMS, для которых необходимо применить виждет.
 	* Допустимые значения:
 		* `stringCommaSeparated`
-		* `''` — применяется для всех ролей при пустом значении.
+		* `''` — применяется для всех ролей при пустом значении
 	* Значение по умолчанию: `''`
 	
 * `$params->roles[i]`
@@ -93,7 +93,7 @@ mm_ddMaxLength([
 
 ## Links
 
-* [Home page](https://code.divandesign.biz/modx/mm_ddmaxlength)
+* [Home page](https://code.divandesign.ru/modx/mm_ddmaxlength)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddmaxlength)
 

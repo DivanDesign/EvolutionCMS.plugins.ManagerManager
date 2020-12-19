@@ -1,7 +1,7 @@
 <?php
 /**
  * (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMaxLength
- * @version 1.3 (2020-10-28)
+ * @version 1.3.1 (2020-12-19)
  * 
  * @see README.md
  * 
@@ -105,7 +105,7 @@ $j.ddMM
 				'type' => 'stringJsonArray'
 			]) .
 		'
-	}).
+	})
 	.addClass("ddMaxLengthField")
 	.each(function(){
 		$j(this)

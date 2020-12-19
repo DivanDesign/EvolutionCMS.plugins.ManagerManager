@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMaxLength changelog
 
 
+## Version 1.3.1 (2020-12-19)
+* \* Critical JS misprint was fixed.
+* \+ README_ru: Small improvements.
+
+
 ## Version 1.3 (2020-10-28)
 * \+ Parameters → `$params->allowTypingOverLimit`: The new parameter. It allows to disable typing over limit.
 * \* Refactoring:
