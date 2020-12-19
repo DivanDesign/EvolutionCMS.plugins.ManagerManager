@@ -54,12 +54,30 @@ if ($_SESSION['mgrValidated']){
 		$richtextIncludeDirectory .
 		'includes/document.parser.class.inc.php'
 	);
+	//For TinyMCE
+	require_once(
+		$richtextIncludeDirectory .
+		'includes/extenders/manager.api.class.inc.php'
+	);
+	
+	global
+		$modx,
+		$settings
+	;
+	
 	$modx = new DocumentParser;
 	
 	//Provide the MODx DBAPI
 	$modx->db->connect();
 	//Provide the $modx->documentMap and user settings
 	$modx->getSettings();
+	
+	//For TinyMCE
+	$settings = $modx->config;
+	//For TinyMCE
+	$modx->getManagerApi();
+	//For TinyMCE
+	$modx->manager->action = 27;
 	
 	$mmDir = 'assets/plugins/managermanager/';
 	$windowDir =
