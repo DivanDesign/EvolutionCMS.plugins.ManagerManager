@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_ddMultipleFields
- * @version 4.8.2 (2020-05-26)
+ * @version 4.8.3 (2020-12-19)
  * 
  * @link https://code.divandesign.biz/modx/mm_ddmultiplefields
  * 
