@@ -14,7 +14,7 @@
 ## Использует
 
 * PHP >= 5.4
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager) >= 0.7
 
 
 ## Документация
@@ -26,9 +26,9 @@
 
 
 Смотрите также документацию:
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager).
-* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.biz/modx/ddmmeditor).
-* [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.biz/modx/ddgetmultiplefield).
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager).
+* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.ru/modx/ddmmeditor).
+* [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.ru/modx/ddgetmultiplefield).
 
 
 Тип TV, к которой применяется виджет, должен быть `textarea`.
@@ -177,7 +177,7 @@
 Объекты строк с пустыми значениями колонок не будут сохранены.
 Если все строки и все колонки пустые, будет сохранена пустая строка (`''`) вместо пустого JSON объекта (`'{}'`).
 
-Настоятельно рекомендуется использовать [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.biz/modx/ddgetmultiplefield) >= 3.5 для вывода TV на сайте.
+Настоятельно рекомендуется использовать [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.ru/modx/ddgetmultiplefield) >= 3.5 для вывода TV на сайте.
 
 
 ### Примеры
@@ -296,7 +296,8 @@ mm_ddMultipleFields([
 ## Ссылки
 
 * [Home page](https://code.divandesign.ru/modx/mm_ddmultiplefields)
-* [Telegram chat](https://tele.click/dd_code)
+* [Telegram chat](https://t.me/dd_code)
+* [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddmultiplefields)
 
 
 <link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />

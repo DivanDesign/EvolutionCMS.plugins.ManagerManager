@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.8.4 (2021-01-15)
+* \* `jQuery.ddMM.mm_ddMultipleFields.init`: Missing table header was fixed.
+* \+ README → Links → Packagist.
+
+
 ## Version 4.8.3 (2020-12-19)
 * \* Richtext column: TinyMCE uses CMS config.
 * \* The repository structure was changed.
