@@ -1,7 +1,7 @@
 <?php
 /**
- * mm_ddMultipleFields
- * @version 4.8.3 (2020-12-19)
+ * (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields
+ * @version 4.8.4 (2021-01-15)
  * 
  * @link https://code.divandesign.biz/modx/mm_ddmultiplefields
  * 
@@ -103,7 +103,7 @@ function mm_ddMultipleFields($params){
 			),
 			'html',
 			'jQuery.ddMM.mm_ddMultipleFields',
-			'2.5.6'
+			'2.5.7'
 		);
 		
 		$e->output($output);

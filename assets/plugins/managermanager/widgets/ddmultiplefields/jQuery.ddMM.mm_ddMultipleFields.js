@@ -1,6 +1,6 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.5.6 (2020-05-25)
+ * @version 2.5.7 (2021-01-15)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
@@ -189,7 +189,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init
-	 * @version 4.3.3 (2020-05-25)
+	 * @version 4.3.4 (2021-01-15)
 	 * 
 	 * @desc Инициализация.
 	 * 
@@ -249,6 +249,12 @@ $.ddMM.mm_ddMultipleFields = {
 				}else{
 					isTableHeaderDisplayed = true;
 				}
+				tableHeaderHtml +=
+					'<th>' +
+					columnObject.title +
+					'</th>'
+				;
+				
 				//Prepare width
 				if (!columnObject.width){
 					if (columnIndex > 0){
@@ -259,6 +265,7 @@ $.ddMM.mm_ddMultipleFields = {
 						instance.columns[columnIndex].width = 180;
 					}
 				}
+				
 				//Prepare data
 				if (!columnObject.data){
 					instance.columns[columnIndex].data = '';
