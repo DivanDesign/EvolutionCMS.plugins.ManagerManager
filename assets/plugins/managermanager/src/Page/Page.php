@@ -144,7 +144,7 @@ class Page {
 	
 	/**
 	 * includedJsCss_prepareNameVersionExtension
-	 * @version 1.0a (2019-01-31)
+	 * @version 1.0.1a (2021-03-09)
 	 * 
 	 * @param $params {array_associative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
@@ -179,7 +179,7 @@ class Page {
 			empty($result->version)
 		){
 			$result = (object) \ddTools::parseFileNameVersion($params->source);
-		}else if (empty($result->extension)){
+		}elseif (empty($result->extension)){
 			$temp = pathinfo($params->source);
 			
 			$result->extension =
@@ -684,7 +684,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$rulesChunkName
 			;
 		//If there's no chunk output, read in the file.
-		}else if (is_readable($rulesFilePath)){
+		}elseif (is_readable($rulesFilePath)){
 			include($rulesFilePath);
 			
 			$result =

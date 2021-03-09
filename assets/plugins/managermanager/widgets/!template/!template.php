@@ -1,7 +1,7 @@
 <?php
 /**
  * mm_widget_template
- * @version 1.0 (2016-01-01)
+ * @version 1.0.1 (2021-03-09)
  * 
  * @desc A template for creating new widgets.
  * 
@@ -46,7 +46,7 @@ function mm_widget_template($params){
 		$output .= includeJsCss($modx->getConfig('base_url').'assets/plugins/managermanager/widgets/template/styles.css', 'html');
 		
 		$e->output($output);
-	}else if ($e->name == 'OnDocFormRender'){
+	}elseif ($e->name == 'OnDocFormRender'){
 		$params->fields = getTplMatchedFields($params->fields);
 		if ($params->fields == false){return;}
 		

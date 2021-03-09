@@ -125,7 +125,7 @@ $j(document).ready(function(){
 	
 	/**
 	 * fillCurrentTemplate
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-09)
 	 * 
 	 * @return {void}
 	 */
@@ -139,11 +139,11 @@ $j(document).ready(function(){
 		//Get page template
 		if (isset($this->event->params['template'])){
 			$this->template = $this->event->params['template'];
-		}else if (isset($_POST['template'])){
+		}elseif (isset($_POST['template'])){
 			$this->template = $_POST['template'];
-		}else if (isset($content['template'])){
+		}elseif (isset($content['template'])){
 			$this->template = $content['template'];
-		}else if (isset($template)){
+		}elseif (isset($template)){
 			$this->template = $template;
 		}else{
 			$this->template = $default_template;
