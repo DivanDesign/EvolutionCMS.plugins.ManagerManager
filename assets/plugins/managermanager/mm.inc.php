@@ -57,11 +57,11 @@ $mm_current_page = [];
 //Get page template
 if (isset($e->params['template'])){
 	$mm_current_page['template'] = $e->params['template'];
-}else if (isset($_POST['template'])){
+}elseif (isset($_POST['template'])){
 	$mm_current_page['template'] = $_POST['template'];
-}else if (isset($content['template'])){
+}elseif (isset($content['template'])){
 	$mm_current_page['template'] = $content['template'];
-}else if (isset($template)){
+}elseif (isset($template)){
 	$mm_current_page['template'] = $template;
 }else{
 	$mm_current_page['template'] = $default_template;
@@ -453,7 +453,7 @@ if (!function_exists('ManagerManager_includeRules')){
 				$chunkName
 			;
 		//If there's no chunk output, read in the file.
-		}else if (is_readable($configFilePath)){
+		}elseif (is_readable($configFilePath)){
 			include($configFilePath);
 			
 			$result =
