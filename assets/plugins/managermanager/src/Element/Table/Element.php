@@ -66,7 +66,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_header
-	 * @version 1.0.1 (2021-03-30)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -74,7 +74,7 @@ class Element extends \ManagerManager\Element\Element {
 		$result = '';
 		
 		foreach (
-			$headerCellsContent as
+			$this->headerCellsContent as
 			$cell
 		){
 			$result .= parent::createChildInstance([
