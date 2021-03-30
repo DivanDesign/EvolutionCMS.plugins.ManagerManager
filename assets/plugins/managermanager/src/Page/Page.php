@@ -184,7 +184,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0.3a (2021-03-30)
+	 * @version 2.0.4a (2021-03-30)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -196,7 +196,7 @@ class Page extends \DDTools\BaseClass {
 	 * @param $params->name {string} — Script name. Default: ''.
 	 * @param $params->version {string} — Script version. Default: ''.
 	 * @param $params->isPlaintext {boolean} — Is this plaintext? Default: false.
-	 * @param $params->extension {''|'js'|'css'} — Type of source (required if $params->isPlaintext == true). Default: ''.
+	 * @param $params->extension {''|'js'|'css'} — Script extension. Default: ''.
 	 * 
 	 * @return {string} — Code.
 	 */
@@ -210,7 +210,7 @@ class Page extends \DDTools\BaseClass {
 					'name' => '',
 					'version' => '',
 					'isPlaintext' => false,
-					'type' => ''
+					'extension' => ''
 				],
 				$params
 			],
