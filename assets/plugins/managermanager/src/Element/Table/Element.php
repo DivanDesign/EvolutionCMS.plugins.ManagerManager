@@ -66,7 +66,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_header
-	 * @version 1.0 (2019-02-02)
+	 * @version 1.0.1 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -77,8 +77,17 @@ class Element extends \ManagerManager\Element\Element {
 			$headerCellsContent as
 			$cell
 		){
-			$result .= parent::create([
+			$result .= parent::createChildInstance([
 				'name' => 'th',
+				'parentDir' =>
+					//Path to `src`
+					dirname(
+						__DIR__,
+						2
+					) .
+					DIRECTORY_SEPARATOR .
+					'Element'
+				,
 				'params' => [
 					'data' => array_merge(
 						$this->childElementsData->th,
@@ -92,8 +101,17 @@ class Element extends \ManagerManager\Element\Element {
 		
 		if ($result != ''){
 			//Create row
-			$result .= parent::create([
+			$result .= parent::createChildInstance([
 				'name' => 'tr',
+				'parentDir' =>
+					//Path to `src`
+					dirname(
+						__DIR__,
+						2
+					) .
+					DIRECTORY_SEPARATOR .
+					'Element'
+				,
 				'params' => [
 					'data' => array_merge(
 						$this->childElementsData->tr,
@@ -110,7 +128,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_body
-	 * @version 1.0 (2019-02-01)
+	 * @version 1.0.1 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -127,8 +145,17 @@ class Element extends \ManagerManager\Element\Element {
 				$row as
 				$cell
 			){
-				$rowContent .= parent::create([
+				$rowContent .= parent::createChildInstance([
 					'name' => 'td',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => array_merge(
 							$this->childElementsData->td,
@@ -141,8 +168,17 @@ class Element extends \ManagerManager\Element\Element {
 			}
 			
 			//Create row
-			$result .= parent::create([
+			$result .= parent::createChildInstance([
 				'name' => 'tr',
+				'parentDir' =>
+					//Path to `src`
+					dirname(
+						__DIR__,
+						2
+					) .
+					DIRECTORY_SEPARATOR .
+					'Element'
+				,
 				'params' => [
 					'data' => array_merge(
 						$this->childElementsData->tr,

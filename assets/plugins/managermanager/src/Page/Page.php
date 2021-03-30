@@ -3,7 +3,7 @@ namespace ManagerManager\Page;
 
 use ManagerManager\Core;
 
-class Page {
+class Page extends \DDTools\BaseClass {
 	public
 		$role,
 		$event
@@ -33,77 +33,6 @@ class Page {
 		 */
 		$injectedHTML_hasJsInit = false
 	;
-	
-	/**
-	 * create
-	 * @version 1.0.1 (2020-05-20)
-	 * 
-	 * @todo Move it somewhere to avoid code duplucation.
-	 * 
-	 * @param $className {string} — Class name. @required
-	 * 
-	 * @throws \Exception
-	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {arrayAssociative|stdClass} — Params to be passed to object constructor. Default: [].
-	 * 
-	 * @return {ManagerManager\Page\Page}
-	 */
-	public final static function create($params){
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'params' => []
-			],
-			(array) $params
-		);
-		
-		//Current classname without namespace
-		$thisClassName = substr(
-			__CLASS__,
-			strrpos(
-				__CLASS__,
-				'\\'
-			) + 1
-		);
-		
-		$params->name = ucfirst(strtolower($params->name));
-		$filePath =
-			$params->name .
-			DIRECTORY_SEPARATOR .
-			$thisClassName .
-			'.php'
-		;
-		
-		if(is_file(
-			__DIR__ .
-			DIRECTORY_SEPARATOR .
-			$filePath
-		)){
-			require_once($filePath);
-			
-			$objectClass =
-				__NAMESPACE__ .
-				'\\' .
-				$params->name .
-				'\\' .
-				$thisClassName
-			;
-			
-			return new $objectClass($params->params);
-		}else{
-			throw new \Exception(
-				(
-					$thisClassName .
-					' “' .
-					$params->name .
-					'” not found.'
-				),
-				500
-			);
-		}
-	}
 	
 	/**
 	 * __construct
@@ -251,7 +180,7 @@ class Page {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0.1a (2020-05-20)
+	 * @version 2.0.2a (2021-03-30)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -345,8 +274,17 @@ class Page {
 				}
 			}
 			
-			$result = \ManagerManager\Element\Element::create([
+			$result = \ManagerManager\Element\Element::createChildInstance([
 				'name' => $elementName,
+				'parentDir' =>
+					//Path to `src`
+					dirname(
+						__DIR__,
+						1
+					) .
+					DIRECTORY_SEPARATOR .
+					'Element'
+				,
 				'params' => [
 					'data' => $elementData
 				]
@@ -558,7 +496,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.2 (2020-05-20)
+	 * @version 1.0.3 (2021-03-30)
 	 * 
 	 * @return {void}
 	 */
@@ -622,8 +560,17 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$element
 			){
 				//Get element code
-				$htmlToOutput[] = \ManagerManager\Element\Element::create([
+				$htmlToOutput[] = \ManagerManager\Element\Element::createChildInstance([
 					'name' => $element->name,
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							1
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => $element->data
 					]

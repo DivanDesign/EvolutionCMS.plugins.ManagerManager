@@ -12,7 +12,7 @@ class Page extends \ManagerManager\Page\Page {
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2021-03-30)
 	 * 
 	 * @return {void}
 	 */
@@ -44,8 +44,17 @@ class Page extends \ManagerManager\Page\Page {
 					]
 				];
 				
-				$output_resourceTablesTab = \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab = \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'p',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => [
 							'content' => 'These are the IDs for current templates, tvs and roles in your site.'
@@ -54,16 +63,34 @@ class Page extends \ManagerManager\Page\Page {
 				])->render();
 				
 				//Render templates table
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => [
 							'content' => 'Templates'
 						]
 					]
 				])->render();
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'headerCellsContent' => [
 							'Template name',
@@ -82,16 +109,34 @@ class Page extends \ManagerManager\Page\Page {
 				])->render();
 				
 				//Render tvs table
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => [
 							'content' => 'TVs'
 						]
 					]
 				])->render();
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'headerCellsContent' => [
 							'TV name',
@@ -110,16 +155,34 @@ class Page extends \ManagerManager\Page\Page {
 				])->render();
 				
 				//Render roles table
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'data' => [
 							'content' => 'Roles'
 						]
 					]
 				])->render();
-				$output_resourceTablesTab .= \ManagerManager\Element\Element::create([
+				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
+					'parentDir' =>
+						//Path to `src`
+						dirname(
+							__DIR__,
+							2
+						) .
+						DIRECTORY_SEPARATOR .
+						'Element'
+					,
 					'params' => [
 						'headerCellsContent' => [
 							'Role name',

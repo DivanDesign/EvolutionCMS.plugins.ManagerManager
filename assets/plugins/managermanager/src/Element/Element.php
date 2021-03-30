@@ -3,7 +3,7 @@ namespace ManagerManager\Element;
 
 use ManagerManager\Core;
 
-class Element {
+class Element extends \DDTools\BaseClass {
 	protected
 		$template = '',
 		/**
@@ -24,79 +24,6 @@ class Element {
 			'attrs.extraString' => ''
 		]
 	;
-	
-	/**
-	 * create
-	 * @version 1.0.2 (2021-03-30)
-	 * 
-	 * @todo Move it somewhere to avoid code duplucation.
-	 * 
-	 * @param $className {string} — Class name. @required
-	 * 
-	 * @throws \Exception
-	 * 
-	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
-	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {arrayAssociative|stdClass} — Params to be passed to object constructor. Default: [].
-	 * 
-	 * @return {ManagerManager\Element\Element}
-	 */
-	public final static function create($params){
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'params' => []
-			],
-			(array) $params
-		);
-		
-		//Current classname without namespace
-		$thisClassName = substr(
-			__CLASS__,
-			strrpos(
-				__CLASS__,
-				'\\'
-			) + 1
-		);
-		
-		$params->name = ucfirst(strtolower($params->name));
-		$filePath =
-			$params->name .
-			DIRECTORY_SEPARATOR .
-			$thisClassName .
-			'.php'
-		;
-		
-		if(
-			is_file(
-				__DIR__ .
-				DIRECTORY_SEPARATOR .
-				$filePath
-			)
-		){
-			require_once($filePath);
-			
-			$objectClass =
-				__NAMESPACE__ .
-				'\\' .
-				$params->name .
-				'\\' .
-				$thisClassName
-			;
-			
-			return new $objectClass($params->params);
-		}else{
-			throw new \Exception(
-				(
-					$thisClassName .
-					' “' .
-					$params->name .
-					'” not found.'
-				),
-				500
-			);
-		}
-	}
 	
 	/**
 	 * __construct
