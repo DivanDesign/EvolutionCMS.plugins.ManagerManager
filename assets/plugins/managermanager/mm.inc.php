@@ -5,7 +5,7 @@
  * 
  * @desc Used to manipulate the display of document fields in the manager.
  * 
- * @uses PHP >= 5.4.
+ * @uses PHP >= 5.4
  * @uses (MODX)EvolutionCMS >= 1.1 {@link https://github.com/evolution-cms/evolution }
  * @uses (MODX)EvolutionCMS.libraries.ddTools >= 0.24.1 (included) {@link https://code.divandesign.biz/modx/ddtools }
  * 
@@ -14,7 +14,7 @@
  * 
  * @inspiration HideEditor plugin by Timon Reinhard and Gildas; HideManagerFields by Brett @ The Man Can!
  * 
- * @license Released under the GNU General Public License: http://creativecommons.org/licenses/GPL/2.0/
+ * @license Released under the GNU General Public License {@link https://creativecommons.org/licenses/GPL/2.0/ }
  * 
  * @link https://code.divandesign.biz/modx/managermanager
  * 

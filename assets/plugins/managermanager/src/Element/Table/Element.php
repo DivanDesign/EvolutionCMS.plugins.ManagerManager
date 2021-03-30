@@ -21,7 +21,7 @@ class Element extends \ManagerManager\Element\Element {
 		
 		/**
 		 * @var $childElementsData {stdClass}
-		 * @var $childElementsData->{elementName} {array_associative}
+		 * @var $childElementsData->{elementName} {arrayAssociative}
 		 * @var $childElementsData->{elementName}[placeholderName] {string}
 		 */
 		$childElementsData = [
@@ -35,16 +35,16 @@ class Element extends \ManagerManager\Element\Element {
 	 * __construct
 	 * @version 1.0 (2019-01-24)
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. See parent class.
+	 * @param $params {arrayAssociative|stdClass} — The object of params. See parent class.
 	 * @param $params->bodyCellsContent {array} — Table rows data. Default: —.
 	 * @param $params->bodyCellsContent[i] {array} — Row.
 	 * @param $params->bodyCellsContent[i][i] {string} — Cell.
 	 * @param $params->headerCellsContent {array} — Table column headers. Default: —.
 	 * @param $params->headerCellsContent[i] {string} — Content. Default: —.
-	 * @param $params->childElementsData {array_associative|stdClass} — Elements data for tr, th and td. Default: —.
-	 * @param $params->childElementsData->tr {array_associative} — . Default: [].
-	 * @param $params->childElementsData->th {array_associative} — . Default: [].
-	 * @param $params->childElementsData->td {array_associative} — . Default: [].
+	 * @param $params->childElementsData {arrayAssociative|stdClass} — Elements data for tr, th and td. Default: —.
+	 * @param $params->childElementsData->tr {arrayAssociative} — . Default: [].
+	 * @param $params->childElementsData->th {arrayAssociative} — . Default: [].
+	 * @param $params->childElementsData->td {arrayAssociative} — . Default: [].
 	 */
 	public function __construct($params = []){
 		parent::__construct($params);

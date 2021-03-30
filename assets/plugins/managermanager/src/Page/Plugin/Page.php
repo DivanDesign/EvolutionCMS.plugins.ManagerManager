@@ -12,7 +12,7 @@ class Page extends \ManagerManager\Page\Page {
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @return {void}
 	 */
@@ -22,9 +22,12 @@ class Page extends \ManagerManager\Page\Page {
 			isset($this->injectedHTML->{$this->event->name})
 		){
 			$editingPluginName = \ddTools::$modx->db->getValue(\ddTools::$modx->db->select(
+				//Fields
 				'name',
+				//From
 				\ddTools::$tables['site_plugins'],
-				// The ID of the plugin we're editing
+				//Where
+				//The ID of the plugin we're editing
 				'id=' . $this->event->params['id']
 			));
 			

@@ -15,8 +15,8 @@ class Element extends \ManagerManager\Element\Element {
 	 * __construct
 	 * @version 1.0 (2019-01-26)
 	 * 
-	 * @param $params {array_associative|stdClass} — See parent class.
-	 * @param $params->data {array_associative} — See parent class.
+	 * @param $params {arrayAssociative|stdClass} — See parent class.
+	 * @param $params->data {arrayAssociative} — See parent class.
 	 * @param $params->data['attrs.charset'] {string} — Script charset. Default: \ddTools::$modx->getConfig('modx_charset').
 	 * @param $params->data['attrs.src'] {string} — Script URL (if content is not used. Default —.
 	 * @param $params->data['content'] {string} — Script content. Default: ''.

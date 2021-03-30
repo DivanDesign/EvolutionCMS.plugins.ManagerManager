@@ -23,7 +23,7 @@ class Page {
 		 * @var $injectedHTML->{eventName} {array} — Elements that must be injected to the page on the appropriate event.
 		 * @var $injectedHTML->{eventName}[i] {stdClass} — Element info.
 		 * @var $injectedHTML->{eventName}[i]->name {string} — Element name.
-		 * @var $injectedHTML->{eventName}[i]->data {array_associative} — Element data (placeholders).
+		 * @var $injectedHTML->{eventName}[i]->data {arrayAssociative} — Element data (placeholders).
 		 * @var $injectedHTML->{eventName}[i]->data[placeholderName] {string} — Element data item.
 		 */
 		$injectedHTML = [],
@@ -44,9 +44,9 @@ class Page {
 	 * 
 	 * @throws \Exception
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {array_associative|stdClass} — Params to be passed to object constructor. Default: [].
+	 * @param $params->params {arrayAssociative|stdClass} — Params to be passed to object constructor. Default: [].
 	 * 
 	 * @return {ManagerManager\Page\Page}
 	 */
@@ -146,7 +146,7 @@ class Page {
 	 * includedJsCss_prepareNameVersionExtension
 	 * @version 1.0.1a (2021-03-09)
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
 	 * @param $params->name {string} — Script name. Default: ''.
 	 * @param $params->version {string} — Script version. Default: ''.
@@ -196,7 +196,7 @@ class Page {
 	 * includedJsCss_add
 	 * @version 1.0a (2019-02-01)
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->name {string} — Script name. @required
 	 * @param $params->version {string} — Script version. @required
 	 * @param $params->extension {'js'|'css'} — Type of source (required if $params->isPlaintext == true). @required
@@ -257,7 +257,7 @@ class Page {
 	 * 
 	 * @todo I don't like the method wich return the code, i think the code must be saved to $this->injectedHTML only.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
 	 * @param $params->outputType {'js'|'html'} — Either js or html - depending on where the output is appearing. Default: 'js'.
 	 * @param $params->name {string} — Script name. Default: ''.
@@ -380,8 +380,8 @@ class Page {
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params.
-	 * @param $params->role {array|string_commaSeparated} — Roles. Default: ''.
+	 * @param $params {arrayAssociative|stdClass} — The object of params.
+	 * @param $params->role {array|stringCommaSeparated} — Roles. Default: ''.
 	 * 
 	 * @return {boolean}
 	 */
@@ -643,7 +643,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * applyRules
-	 * @version 1.0.5 (2020-05-20)
+	 * @version 1.0.6 (2021-03-30)
 	 * 
 	 * @desc Apply the rules.
 	 * 
@@ -676,7 +676,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 		$chunkContent = \ddTools::$modx->getChunk($rulesChunkName);
 		
 		if (!empty($chunkContent)){
-			// If there is, run it.
+			//If there is, run it.
 			eval($chunkContent);
 			
 			$result =
@@ -706,7 +706,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	 * toArray
 	 * @version 1.0 (2019-01-25)
 	 * 
-	 * @return $result {array_associative} @required
+	 * @return $result {arrayAssociative} @required
 	 * @return $result['role'] {integer} @required
 	 */
 	public function toArray(){

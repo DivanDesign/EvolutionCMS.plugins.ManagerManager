@@ -7,7 +7,7 @@ class Element {
 	protected
 		$template = '',
 		/**
-		 * @var $data {array_associative}
+		 * @var $data {arrayAssociative}
 		 * @var $data[placeholderName] {string}
 		 */
 		$data = []
@@ -15,7 +15,7 @@ class Element {
 	
 	protected static
 		/**
-		 * @var $dataDefault {array_associative} — Default data value for all elements.
+		 * @var $dataDefault {arrayAssociative} — Default data value for all elements.
 		 */
 		$dataDefault = [
 			'content' => '',
@@ -27,7 +27,7 @@ class Element {
 	
 	/**
 	 * create
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @todo Move it somewhere to avoid code duplucation.
 	 * 
@@ -35,11 +35,11 @@ class Element {
 	 * 
 	 * @throws \Exception
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->name {string} — Class name. @required
-	 * @param $params->params {array_associative|stdClass} — Params to be passed to object constructor. Default: [].
+	 * @param $params->params {arrayAssociative|stdClass} — Params to be passed to object constructor. Default: [].
 	 * 
-	 * @return {ManagerManager\Page\Page}
+	 * @return {ManagerManager\Element\Element}
 	 */
 	public final static function create($params){
 		//Defaults
@@ -67,11 +67,13 @@ class Element {
 			'.php'
 		;
 		
-		if(is_file(
-			__DIR__ .
-			DIRECTORY_SEPARATOR .
-			$filePath
-		)){
+		if(
+			is_file(
+				__DIR__ .
+				DIRECTORY_SEPARATOR .
+				$filePath
+			)
+		){
 			require_once($filePath);
 			
 			$objectClass =
@@ -98,11 +100,11 @@ class Element {
 	
 	/**
 	 * __construct
-	 * @version 1.0.2 (2020-05-20)
+	 * @version 1.0.3 (2021-03-30)
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params.
-	 * @param $params->data {array_associative} — Multidimensional data is supported too. Default: —.
-	 * @param $params->data[placeholderName] {string|array_associative} — @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params.
+	 * @param $params->data {arrayAssociative} — Multidimensional data is supported too. Default: —.
+	 * @param $params->data[placeholderName] {string|arrayAssociative} — @required
 	 * @param $params->data['attrs.extraString'] {string} — Additional attributes string. Default: ''.
 	 */
 	public function __construct($params = []){
@@ -115,7 +117,12 @@ class Element {
 		);
 		
 		//Child class name
-		$templatePath = strtolower($templatePath[count($templatePath) - 2]);
+		$templatePath = strtolower(
+			$templatePath[
+				count($templatePath) -
+				2
+			]
+		);
 		
 		$templatePath =
 			Core::getPluginPath() .

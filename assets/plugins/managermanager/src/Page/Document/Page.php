@@ -84,7 +84,7 @@ $j(document).ready(function(){
 	if ($j("div.tmplvars :input").length == 0){
 		//Still contains an empty table and some dividers
 		$j("div.tmplvars").hide();
-		// Still contains an empty table and some dividers
+		//Still contains an empty table and some dividers
 		$j("div.tmplvars").prev("div").hide();
 		//$j("#sectionTVsHeader").hide();
 	}
@@ -156,9 +156,9 @@ $j(document).ready(function(){
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params.
-	 * @param $params->role {array|string_commaSeparated} — Roles. Default: ''.
-	 * @param $params->template {array|string_commaSeparated} — Templates. Default: ''.
+	 * @param $params {arrayAssociative|stdClass} — The object of params.
+	 * @param $params->role {array|stringCommaSeparated} — Roles. Default: ''.
+	 * @param $params->template {array|stringCommaSeparated} — Templates. Default: ''.
 	 * 
 	 * @return {boolean}
 	 */
@@ -264,7 +264,7 @@ $j(document).ready(function(){
 	 * toArray
 	 * @version 1.0 (2019-01-25)
 	 * 
-	 * @return $result {array_associative} See parent class.
+	 * @return $result {arrayAssociative} See parent class.
 	 * @return $result['template'] {integer} @required
 	 */
 	public function toArray(){

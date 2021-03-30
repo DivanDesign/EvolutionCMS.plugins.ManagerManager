@@ -84,7 +84,7 @@ class Installer {
 	 * installResource
 	 * @version 1.0.2 (2020-05-20)
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->resourceType {'libs'} — Resource type. @required
 	 * @param $params->resourceDistrPath {string} — Resource install dir. @required
 	 * 
@@ -185,7 +185,7 @@ class Installer {
 	 * 
 	 * @desc Copies a required folder with all contents recursively. “ddTools::copyDir” from EvolutionCMS.libraries.ddTools.
 	 * 
-	 * @param $params {array_associative|stdClass} — The object of params. @required
+	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params['sourcePath'] {string} — Path to the directory, that should copied. @required
 	 * @param $params['destinationPath'] {string} — The destination path. @required
 	 * 

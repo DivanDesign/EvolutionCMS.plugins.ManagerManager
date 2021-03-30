@@ -109,7 +109,7 @@ class Core {
 	
 	/**
 	 * getDocFields
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -177,7 +177,7 @@ class Core {
 					'dbname' => 'hidemenu',
 					'tv' => false
 				],
-				// synonym for show_in_menu
+				//synonym for show_in_menu
 				'hide_menu' => [
 					'fieldtype' => 'input',
 					'fieldname' => 'hidemenucheck',
@@ -302,9 +302,13 @@ class Core {
 			
 			//Add in TVs to the list of available fields
 			$allTvs = \ddTools::$modx->db->makeArray(\ddTools::$modx->db->select(
+				//Fields
 				'name,type,id',
+				//From
 				\ddTools::$tables['site_tmplvars'],
+				//Where
 				'',
+				//Order by
 				'name ASC'
 			));
 			
@@ -326,6 +330,7 @@ class Core {
 					':',
 					$allTvs_item['type']
 				)[0];
+				
 				switch ($allTvs_itemType){
 					case 'textarea':
 					case 'rawtextarea':
@@ -454,7 +459,7 @@ class Core {
 	
 	/**
 	 * includeWidgets
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @todo Remove it, don't use “widgets” concept.
 	 * 
@@ -468,16 +473,22 @@ class Core {
 			'!'
 		];
 		
-		// Include widgets
-		// We look for a PHP file with the same name as the directory - e.g.
-		// /widgets/widgetname/widgetname.php
+		//Include widgets
+		//We look for a PHP file with the same name as the directory - e.g.
+		///widgets/widgetname/widgetname.php
 		$widgetDir =
 			self::$pluginPath .
 			'widgets'
 		;
 		
 		if ($handle = opendir($widgetDir)){
-			while (($file = readdir($handle)) !== false){
+			while (
+				(
+					$file =
+					readdir($handle)
+				) !==
+				false
+			){
 				if (
 					!in_array(
 						substr(
