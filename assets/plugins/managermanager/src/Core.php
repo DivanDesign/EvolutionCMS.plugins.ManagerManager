@@ -37,7 +37,7 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.2.3 (2021-03-30)
+	 * @version 1.2.4 (2021-03-30)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
@@ -78,8 +78,7 @@ class Core {
 		$this->currentPage = \ManagerManager\Page\Page::createChildInstance([
 			'name' => $pageType,
 			'parentDir' =>
-				__DIR__ .
-				DIRECTORY_SEPARATOR .
+				self::$paths->src .
 				'Page'
 		]);
 		

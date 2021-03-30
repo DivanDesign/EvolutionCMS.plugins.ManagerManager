@@ -12,7 +12,7 @@ class Page extends \ManagerManager\Page\Page {
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.3 (2021-03-30)
+	 * @version 1.0.4 (2021-03-30)
 	 * 
 	 * @return {void}
 	 */
@@ -47,12 +47,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab = \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'p',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -66,12 +61,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -83,12 +73,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -112,12 +97,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -129,12 +109,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -158,12 +133,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'h3',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -175,12 +145,7 @@ class Page extends \ManagerManager\Page\Page {
 				$output_resourceTablesTab .= \ManagerManager\Element\Element::createChildInstance([
 					'name' => 'table',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [

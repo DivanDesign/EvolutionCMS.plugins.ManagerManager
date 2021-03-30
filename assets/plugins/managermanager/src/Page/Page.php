@@ -184,7 +184,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0.4a (2021-03-30)
+	 * @version 2.0.5a (2021-03-30)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -286,12 +286,7 @@ class Page extends \DDTools\BaseClass {
 			$result = \ManagerManager\Element\Element::createChildInstance([
 				'name' => $elementName,
 				'parentDir' =>
-					//Path to `src`
-					dirname(
-						__DIR__,
-						1
-					) .
-					DIRECTORY_SEPARATOR .
+					Core::getPluginPaths()->src .
 					'Element'
 				,
 				'params' => [
@@ -510,7 +505,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.3 (2021-03-30)
+	 * @version 1.0.4 (2021-03-30)
 	 * 
 	 * @return {void}
 	 */
@@ -577,12 +572,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$htmlToOutput[] = \ManagerManager\Element\Element::createChildInstance([
 					'name' => $element->name,
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							1
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [

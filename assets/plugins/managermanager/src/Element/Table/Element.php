@@ -66,7 +66,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_header
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -80,12 +80,7 @@ class Element extends \ManagerManager\Element\Element {
 			$result .= parent::createChildInstance([
 				'name' => 'th',
 				'parentDir' =>
-					//Path to `src`
-					dirname(
-						__DIR__,
-						2
-					) .
-					DIRECTORY_SEPARATOR .
+					Core::getPluginPaths()->src .
 					'Element'
 				,
 				'params' => [
@@ -104,12 +99,7 @@ class Element extends \ManagerManager\Element\Element {
 			$result .= parent::createChildInstance([
 				'name' => 'tr',
 				'parentDir' =>
-					//Path to `src`
-					dirname(
-						__DIR__,
-						2
-					) .
-					DIRECTORY_SEPARATOR .
+					Core::getPluginPaths()->src .
 					'Element'
 				,
 				'params' => [
@@ -128,7 +118,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_body
-	 * @version 1.0.1 (2021-03-30)
+	 * @version 1.0.2 (2021-03-30)
 	 * 
 	 * @return {string}
 	 */
@@ -148,12 +138,7 @@ class Element extends \ManagerManager\Element\Element {
 				$rowContent .= parent::createChildInstance([
 					'name' => 'td',
 					'parentDir' =>
-						//Path to `src`
-						dirname(
-							__DIR__,
-							2
-						) .
-						DIRECTORY_SEPARATOR .
+						Core::getPluginPaths()->src .
 						'Element'
 					,
 					'params' => [
@@ -171,12 +156,7 @@ class Element extends \ManagerManager\Element\Element {
 			$result .= parent::createChildInstance([
 				'name' => 'tr',
 				'parentDir' =>
-					//Path to `src`
-					dirname(
-						__DIR__,
-						2
-					) .
-					DIRECTORY_SEPARATOR .
+					Core::getPluginPaths()->src .
 					'Element'
 				,
 				'params' => [
