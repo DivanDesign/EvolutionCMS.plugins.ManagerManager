@@ -5,9 +5,10 @@ A library with various tools facilitating your work.
 
 ## Requires
 
-* PHP >= 5.4
+* PHP >= 5.6
 * [(MODX)EvolutionCMS](https://github.com/evolution-cms/evolution) >= 1.1
 * [PHP.libraries.phpThumb](http://phpthumb.sourceforge.net) 1.7.15-202004301145 (included)
+* [PHP.libraries.hjson](https://github.com/hjson/hjson-php) 2.1 (included)
 
 
 ## Documentation
@@ -86,9 +87,11 @@ You can use the `exctract` function to turn the array into variables of the curr
 ##### Returns
 
 * `$result`
-	* Desctription: An array, in which the correct parameter names are the keys and the parameter values are the values.  
+	* Desctription: An array or object, in which the correct parameter names are the keys and the parameter values are the values.  
 		Can contains all parameters or only corrected (see `$params->returnCorrectedOnly`).
-	* Valid values: `arrayAssociative`
+	* Valid values:
+		* `arrayAssociative` — if `$params->params` set as an array
+		* `stdClass` — if `$params->params` set as an object
 	
 * `$result[$newName]`
 	* Desctription: A parameter value, in which the correct parameter name is the key and the parameter value is the value.
@@ -256,8 +259,10 @@ Arrays, [JSON](https://en.wikipedia.org/wiki/JSON) and [Query string](https://en
 	* Valid values:
 		* `stdClass`
 		* `array`
-		* `stringJsonObject`
-		* `stringJsonArray`
+		* `stringJsonObject` — [JSON](https://en.wikipedia.org/wiki/JSON) object
+		* `stringJsonArray` — [JSON](https://en.wikipedia.org/wiki/JSON) array
+		* `stringHjsonObject` — [HJSON](https://hjson.github.io/) object
+		* `stringHjsonArray` — [HJSON](https://hjson.github.io/) array
 		* `stringQueryFormated`
 	* **Required**
 	
@@ -437,6 +442,134 @@ The same as `\DDTools\BaseClass::toJSON()`.
 	* Valid values: `object`
 
 
+#### `\DDTools\Snippet`
+
+Abstract class for snippets.
+
+
+##### Properties
+
+* `\DDTools\Snippet::$name`
+	* Desctription: Snippet name (e. g. `ddGetDocuments`).  
+		Will be set from namespace in `\DDTools\Snippet::__construct($params)`.  
+		You can use it inside child classes: `$this->name`.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$version`
+	* Desctription: Snippet version.  
+		You **must** define it in your child class declaration.
+	* Valid values: `string`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths`
+	* Desctription: Snippet paths.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paths->snippet`
+	* Desctription: Full path to the snippet folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$paths->src`
+	* Desctription: Ful path to the `src` folder.
+	* Valid values: `string`
+	
+* `\DDTools\Snippet::$params`
+	* Desctription: Snippet params.  
+		Will be set in `\DDTools\Snippet::__construct($params)`.  
+		You can define default values of parameters as associative array in this field of your child class (e. g. `protected $params = ['someParameter' => 'valueByDefault'];`);.
+	* Valid values: `stdClass`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	
+* `\DDTools\Snippet::$paramsTypes`
+	* Desctription: Overwrite in child classes if you want to convert some parameters types.  
+		Parameters types will be converted respectively with this field in `\DDTools\Snippet::prepareParams`.
+	* Valid values: `arrayAssociative`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$paramsTypes[$paramName]`
+	* Desctription: The parameter type.  
+		Values are case insensitive (the following names are equal: `'stringjsonauto'`, `'stringJsonAuto'`, `'STRINGJSONAUTO'`, etc).
+	* Valid values:
+		* `'integer'`
+		* `'boolean'`
+		* `'objectAuto'`
+		* `'objectStdClass'`
+		* `'objectArray'`
+		* `'stringJsonAuto'`
+		* `'stringJsonObject'`
+		* `'stringJsonArray'`
+	* Visibility: `protected`
+	
+* `\DDTools\Snippet::$renamedParamsCompliance`
+	* Desctription: Overwrite in child classes if you want to rename some parameters with backward compatibility (see `$params->compliance` of `\ddTools::verifyRenamedParams`).
+	* Valid values: `arrayAssociative`
+	* Visibility: `protected`
+
+
+##### `\DDTools\Snippet::__construct($params)`
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: `[]`
+	
+* `$params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
+
+
+##### `\DDTools\Snippet::run()`
+
+Abstract method for main snippet action.
+
+You **must** define it in your child class declaration.
+
+
+##### `\DDTools\Snippet::runSnippet($params)`
+
+Static method for easy running needed snippet using only it's name and parameters (if needed).
+
+* `$params`
+	* Desctription: Snippet parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* **Required**
+	
+* `$params->name`
+	* Desctription: The name of the snippet you want to run (e. g. `ddGetDocuments`).
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->params`
+	* Desctription: Parameters that will be passed to the snippet constructor.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+		* `stringJsonObject`
+		* `stringQueryFormated`
+	* Default value: —
+	
+* `$params->params->{$paramName}`
+	* Desctription: Key is parameter name, value is value.
+	* Valid values: `mixed`
+	* **Required**
+
+
 ### Examples
 
 
@@ -564,6 +697,36 @@ Returns:
 	"Ramin",
 	"Djawadi"
 ]
+```
+
+
+##### Convert a HJSON encoded string to an object
+
+```php
+\DDTools\ObjectTools::convertType([
+	'object' => "{
+		//This is HJSON, not JSON, so we can use comments insides
+		keys: and values can be specified without quotes,
+		multilineValues:
+			'''
+			Write multiline strings with proper whitespace handling.
+			Starts and ends with triple quotes.
+			A simple syntax and easy to read.
+			'''
+	}",
+	'type' => 'objectStdClass'
+]);
+```
+
+Returns:
+
+```php
+stdClass::__set_state(array(
+   'keys' => 'and values can be specified without quotes,',
+   'multilineValues' => 'Write multiline strings with proper whitespace handling.
+Starts and ends with triple quotes.
+A simple syntax and easy to read.',
+))
 ```
 
 
@@ -810,6 +973,7 @@ Both calls return `'Floyd'`.
 
 * [Home page](https://code.divandesign.biz/modx/ddtools)
 * [Telegram chat](https://t.me/dd_code)
+* [Packagist](https://packagist.org/packages/dd/evolutioncms-libraries-ddtools)
 
 
 <link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />

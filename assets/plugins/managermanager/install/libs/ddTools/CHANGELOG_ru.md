@@ -1,9 +1,72 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.48.1 (2021-03-29)
+* \* `\DDTools\Snippet::prepareParams`: Тип только существующих параметров будет преобразован.
+
+
+## Версия 0.48 (2021-03-25)
+* \+ `\DDTools\Snippet`:
+	* \+ `$paramsTypes`: Новое свойство. Перекройте в дочерних классах если вы хотите сконвертировать типы параметров.
+	* \+ `prepareParams`: Типы параметров будут сконвертированы соответственно с `$this->paramsTypes`.
+
+
+## Версия 0.47 (2021-03-20)
+* \+ `\DDTools\ObjectTools::convertType`:
+	* \+ Добавлена поддержка [HJSON](https://hjson.github.io/) (closes #7).
+	* \+ Улучшено обнаружение неудачной попытки `json_decode`.
+
+
+## Версия 0.46 (2021-03-15)
+* \+ `\ddTools::updateDocument`: Добавлены значения по умолчанию для следующих параметров:
+	* \+ `$docData->editedon`: Если не задан — будет равен текущей дате-времени (`time()`).
+	* \+ `$docData->editedby`: Если не задан — будет равен `1`.
+
+
+## Версия 0.45.1 (2021-03-12)
+* \* `\DDTools\ObjectTools::extend`:
+	* \* Рекурсия вызывается только в том случае, если исходным значением является объект или массив.
+	* \* Оптимизация.
+
+
+## Версия 0.45 (2021-03-11)
+* \+ `\DDTools\Response::isSuccess`: Новый публичный метод.
+
+
+## Версия 0.44 (2021-03-10)
+* \+ `\DDTools\Snippet::prepareParams`: Новый метод.
+
+
+## Версия 0.43 (2021-03-10)
+* \* Внимание! Требуется PHP >= 5.6.
+* \* `\DDTools\Response`:
+	* \- Дочерние версионные классы больше не используются.
+	* \+ `$requiredMetaKeys`: Новое поле.
+	* \+ `$requiredMetaMessageKeys`: Новое поле.
+	* \+ `validateMetaMessage`: Новый метод.
+	* \+ `setMetaMessage`: Новый метод.
+	* \+ `validateMeta`: Может принимать любой тип параметра и просто вернёт `false`, если это не массив.
+	* \* `toJSON`: Рефакторинг, `\DDTools\ObjectTools::convertType` используется вместо `json_encode`.
+* \* `\DDTools\BaseClass::toJSON`: Рефакторинг, `\DDTools\ObjectTools::convertType` используется вместо `json_encode`.
+* \+ Composer.json → `authors`: Добавлены недостающие авторы.
+
+
+## Версия 0.42 (2021-02-24)
+* \* `\ddTools::verifyRenamedParams`:
+	* \+ Если `$params->params` задан, как объект — метод вернёт экземпляр stdClass.
+	* \* `\DDTools\ObjectTools::extend` исползуется вместо `array_merge`.
+* \+ `\DDTools\Snippet`: Новый абстрактный класс для сниппетов.
+* \* `\ddTools::getTemplateVars`, `\ddTools::getTemplateVarOutput` → Параметры → `$idnames`: Менее хрупко работают, когда параметр является строкой.
+* \+ README → Ссылки → Packagist.
+
+
+## Версия 0.41 (2020-12-15)
+* \+ `\ddTools::getDocumentIdByUrl`: Поддерживает домены в формате IDNA ASCII.
+
+
 ## Версия 0.40.1 (2020-06-22)
-* `\ddTools::createDocument`, `\ddTools::updateDocument`: Значения полей документов перед записью обрабатываются `$modx->db->escape()`.
-+ `\ddTools::createDocument` → Параметры → `$docData->pagetitle`: Не может быть равен `''`, так что будет равен `'New resource'` в этом случае.
+* \* `\ddTools::createDocument`, `\ddTools::updateDocument`: Значения полей документов перед записью обрабатываются `$modx->db->escape()`.
+* \+ `\ddTools::createDocument` → Параметры → `$docData->pagetitle`: Не может быть равен `''`, так что будет равен `'New resource'` в этом случае.
 
 
 ## Версия 0.40 (2020-06-19)

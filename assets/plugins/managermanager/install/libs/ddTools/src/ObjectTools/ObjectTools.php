@@ -71,7 +71,7 @@ class ObjectTools {
 	
 	/**
 	 * convertType
-	 * @version 1.0.1 (2020-06-02)
+	 * @version 1.1 (2021-03-20)
 	 * 
 	 * @see README.md
 	 */
@@ -110,14 +110,42 @@ class ObjectTools {
 				;
 				
 				if ($isObjectJson){
-					try {
-						$result = json_decode(
-							$params->object,
-							$params->type == 'objectarray'
+					$result = json_decode(
+						$params->object,
+						$params->type == 'objectarray'
+					);
+					
+					if (is_null($result)){
+						//Include PHP.libraries.hjson
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONException.php'
 						);
-					}catch (\Exception $e){
-						//Flag
-						$isObjectJson = false;
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONUtils.php'
+						);
+						require_once(
+							'hjson' .
+							DIRECTORY_SEPARATOR .
+							'HJSONParser.php'
+						);
+						
+						try {
+							$hjsonParser = new \HJSON\HJSONParser();
+							
+							$result = $hjsonParser->parse(
+								$params->object,
+								[
+									'assoc' => $params->type == 'objectarray'
+								]
+							);
+						}catch (\Exception $e){
+							//Flag
+							$isObjectJson = false;
+						}
 					}
 				}
 				
@@ -136,10 +164,10 @@ class ObjectTools {
 		if ($params->type == 'objectstdclass'){
 			$result = (object) $result;
 		//array
-		}else if ($params->type == 'objectarray'){
+		}elseif ($params->type == 'objectarray'){
 			$result = (array) $result;
 		//stringJson
-		}else if(
+		}elseif(
 			substr(
 				$params->type,
 				0,
@@ -148,7 +176,7 @@ class ObjectTools {
 		){
 			if ($params->type == 'stringjsonobject'){
 				$result = (object) $result;
-			}else if ($params->type == 'stringjsonarray'){
+			}elseif ($params->type == 'stringjsonarray'){
 				$result = array_values((array) $result);
 			}
 			
@@ -164,7 +192,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3 (2020-04-30)
+	 * @version 1.3.7 (2021-03-12)
 	 * 
 	 * @see README.md
 	 * 
@@ -200,41 +228,53 @@ class ObjectTools {
 					$additionalPropName =>
 					$additionalPropValue
 				){
-					//Is the original property exists
-					$isOriginalPropExists = self::isPropExists([
-						'object' => $result,
-						'propName' => $additionalPropName
-					]);
-					//Original property value
-					$originalPropValue = self::getPropValue([
+					//Is the source property exists
+					$isSourcePropExists = self::isPropExists([
 						'object' => $result,
 						'propName' => $additionalPropName
 					]);
 					
+					if ($isSourcePropExists){
+						//Source property value
+						$sourcePropValue = self::getPropValue([
+							'object' => $result,
+							'propName' => $additionalPropName
+						]);
+						
+						//Is the source property object or array
+						$isSourcePropObjectOrArray = self::isObjectOrArray($sourcePropValue);
+					}else{
+						$sourcePropValue = null;
+						$isSourcePropObjectOrArray = false;
+					}
+					
+					//Is the additional property object or array
+					$isAdditionalPropObjectOrArray = self::isObjectOrArray($additionalPropValue);
+					
 					//The additional property value will be used by default
-					$isAdditionalUsed = true;
+					$isAdditionalPropUsed = true;
 					
 					if (
 						//Overwriting with empty value is disabled
 						!$params->overwriteWithEmpty &&
-						//And original property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
-						$isOriginalPropExists
+						//And source property exists. Because if not exists we must set it in anyway (an empty value is better than nothing, right?)
+						$isSourcePropExists
 					){
 						//Check if additional property value is empty
-						$isAdditionalUsed =
+						$isAdditionalPropUsed =
 							(
+								//Empty object or array
+								(
+									$isAdditionalPropObjectOrArray &&
+									count((array) $additionalPropValue) == 0
+								) ||
 								//Empty string
 								(
 									is_string($additionalPropValue) &&
 									$additionalPropValue == ''
 								) ||
 								//NULL
-								is_null($additionalPropValue) ||
-								//Empty object or array
-								(
-									self::isObjectOrArray($additionalPropValue) &&
-									count((array) $additionalPropValue) == 0
-								)
+								is_null($additionalPropValue)
 							) ?
 							//Additional is empty — don't use it
 							false:
@@ -244,51 +284,44 @@ class ObjectTools {
 						
 						if (
 							//Additional property value is empty
-							!$isAdditionalUsed &&
-							//And original property value is empty too
+							!$isAdditionalPropUsed &&
+							//And source property value is empty too
 							(
-								//Empty string
-								(
-									is_string($originalPropValue) &&
-									$originalPropValue == ''
-								) ||
-								//NULL
-								is_null($originalPropValue) ||
 								//Empty object or array
 								(
-									self::isObjectOrArray($originalPropValue) &&
-									count((array) $originalPropValue) == 0
-								)
+									$isSourcePropObjectOrArray &&
+									count((array) $sourcePropValue) == 0
+								) ||
+								//Empty string
+								(
+									is_string($sourcePropValue) &&
+									$sourcePropValue == ''
+								) ||
+								//NULL
+								is_null($sourcePropValue)
 							) &&
 							//But they have different types
-							$originalPropValue !== $additionalPropValue
+							$sourcePropValue !== $additionalPropValue
 						){
-							//Okay, overwrite original in this case
-							$isAdditionalUsed = true;
+							//Okay, overwrite source in this case
+							$isAdditionalPropUsed = true;
 						}
 					}
 					
 					//If additional value must be used
-					if ($isAdditionalUsed){
+					if ($isAdditionalPropUsed){
 						if (
 							//If recursive merging is needed
 							$params->deep &&
+							//And we can extend source value
+							$isSourcePropObjectOrArray &&
 							//And the value is an object or array
-							self::isObjectOrArray($additionalPropValue)
+							$isAdditionalPropObjectOrArray
 						){
-							//Init initial property value to extend
-							if (!$isOriginalPropExists){
-								$originalPropValue =
-									gettype($additionalPropValue) == 'object' ?
-									new \stdClass() :
-									[]
-								;
-							}
-							
 							//Start recursion
 							$additionalPropValue = self::extend([
 								'objects' => [
-									$originalPropValue,
+									$sourcePropValue,
 									$additionalPropValue
 								],
 								'deep' => true,

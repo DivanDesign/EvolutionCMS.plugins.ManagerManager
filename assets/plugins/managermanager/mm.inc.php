@@ -7,7 +7,7 @@
  * 
  * @uses PHP >= 5.4
  * @uses (MODX)EvolutionCMS >= 1.1 {@link https://github.com/evolution-cms/evolution }
- * @uses (MODX)EvolutionCMS.libraries.ddTools >= 0.24.1 (included) {@link https://code.divandesign.biz/modx/ddtools }
+ * @uses (MODX)EvolutionCMS.libraries.ddTools >= 0.48.1 (included) {@link https://code.divandesign.biz/modx/ddtools }
  * 
  * @author DivanDesign studio {@link DivanDesign.biz }
  * @author Nick Crossland {@link rckt.co.uk }

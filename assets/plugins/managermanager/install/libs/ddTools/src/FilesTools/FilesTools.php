@@ -148,7 +148,7 @@ class FilesTools {
 	
 	/**
 	 * modifyImage
-	 * @version 2.6.1 (2020-06-19)
+	 * @version 2.6.2 (2021-03-09)
 	 * 
 	 * @see README.md
 	 * 
@@ -354,7 +354,7 @@ class FilesTools {
 					'1'
 				);
 			//Если нужно пропорционально уменьшить, заполнив поля цветом
-			}else if($params->transformMode == 'resizeAndFill'){
+			}elseif($params->transformMode == 'resizeAndFill'){
 				//Устанавливаем фон (без решётки)
 				$thumb->setParameter(
 					'bg',

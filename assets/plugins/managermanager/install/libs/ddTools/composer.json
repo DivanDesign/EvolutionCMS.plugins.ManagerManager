@@ -1,7 +1,7 @@
 {
 	"name": "dd/evolutioncms-libraries-ddtools",
 	"type": "modxevo-library-ddtools",
-	"version": "0.40.1",
+	"version": "0.48.1",
 	"description": "A library with various tools facilitating your work.",
 	"keywords": [
 		"modx",
@@ -22,11 +22,37 @@
 			"email": "ilyas@DivanDesign.ru",
 			"homepage": "https://ronef.ru",
 			"role": "Developer"
+		},
+		{
+			"name": "Alexey Davydov",
+			"email": "davalemic@DivanDesign.ru",
+			"homepage": "https://github.com/davalemic",
+			"role": "Developer"
+		},
+		{
+			"name": "Vladislav Lavrov",
+			"homepage": "https://github.com/Tornek",
+			"role": "Developer"
+		},
+		{
+			"name": "Andrey Demchenko",
+			"homepage": "https://github.com/deversjkee",
+			"role": "Developer"
+		},
+		{
+			"name": "Pavel Unzhakov",
+			"homepage": "https://github.com/psthmn",
+			"role": "Developer"
+		},
+		{
+			"name": "Sergey Kuzminykh",
+			"homepage": "https://github.com/Aranen",
+			"role": "Developer"
 		}
 	],
 	"license": "MIT",
 	"require": {
-		"php": ">=5.4.0",
+		"php": ">=5.6.0",
 		"dd/composer-plugin-modxevo-library-ddtools-installer": "1.0.5"
 	},
 	"autoload": {

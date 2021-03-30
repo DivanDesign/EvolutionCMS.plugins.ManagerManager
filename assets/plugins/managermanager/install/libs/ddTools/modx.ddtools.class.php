@@ -1,11 +1,11 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.40.1 (2020-06-22)
+ * @version 0.48.1 (2021-03-29)
  * 
  * @see README.md
  * 
- * @copyright 2012–2020 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2021 DD Group {@link https://DivanDesign.biz }
  */
 
 global $modx;
@@ -348,7 +348,7 @@ class ddTools {
 	
 	/**
 	 * sort2dArray
-	 * @version 1.2 (2020-05-24)
+	 * @version 1.2.1 (2021-03-09)
 	 * 
 	 * @desc Sorts 2-dimensional array by multiple columns (like in SQL) using Hoare's method, also referred to as quicksort. The sorting is stable.
 	 * 
@@ -415,7 +415,7 @@ class ddTools {
 			if ($cmpRes * $sortDir < 0){
 				$resultArray = &$resultArrayLeft;
 			//Если больше — в массив больших
-			}else if ($cmpRes * $sortDir > 0){
+			}elseif ($cmpRes * $sortDir > 0){
 				$resultArray = &$resultArrayRight;
 			//Если равно — в центральный
 			}else{
@@ -1398,7 +1398,7 @@ class ddTools {
 	
 	/**
 	 * updateDocument
-	 * @version 1.4.1 (2020-06-20)
+	 * @version 1.5 (2021-03-15)
 	 * 
 	 * @desc Update document(s). Cache of the updated docs and their parents will be cleared.
 	 * 
@@ -1423,6 +1423,20 @@ class ddTools {
 			return false;
 		}
 		
+		$docData = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					//Если не передана дата изменения документа, ставим текущую
+					'editedon' => time(),
+					//Если не передано, кем документ изменён, ставим 1
+					'editedby' => 1
+				],
+				$docData
+			],
+			'overwriteWithEmpty' => false
+		]);
+		
 		$whereSql = '';
 		
 		if (
@@ -1438,7 +1452,7 @@ class ddTools {
 				) .
 				'")'
 			;
-		}else if (
+		}elseif (
 			is_numeric($docId) &&
 			$docId != 0
 		){
@@ -1470,8 +1484,6 @@ class ddTools {
 			while ($doc = self::$modx->db->getRow($docIdsToUpdate_dbRes)){
 				$docIdsToUpdate[] = $doc['id'];
 			}
-			
-			$docData = (object) $docData;
 			
 			foreach (
 				$docData as
@@ -1798,7 +1810,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVars
-	 * @version 1.3.9 (2020-02-11)
+	 * @version 1.3.10 (2021-02-24)
 	 * 
 	 * @desc Returns the TV and fields array of a document. 
 	 * 
@@ -1833,11 +1845,11 @@ class ddTools {
 		}
 		
 		if (
+			empty($idnames) ||
 			(
-				$idnames != '*' &&
-				!is_array($idnames)
-			) ||
-			count($idnames) == 0
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
 		){
 			return false;
 		}else{
@@ -1973,7 +1985,7 @@ class ddTools {
 	
 	/**
 	 * getTemplateVarOutput
-	 * @version 1.1.8 (2020-02-11)
+	 * @version 1.1.9 (2021-02-24)
 	 * 
 	 * @desc Returns the associative array of fields and TVs of a document.
 	 * 
@@ -2003,7 +2015,13 @@ class ddTools {
 			]);
 		}
 		
-		if (count($idnames) == 0){
+		if (
+			empty($idnames) ||
+			(
+				!is_array($idnames) &&
+				$idnames != '*'
+			)
+		){
 			return false;
 		}else{
 			$output = [];
@@ -2233,7 +2251,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentChildrenTVarOutput
-	 * @version 1.3.4 (2018-06-17)
+	 * @version 1.3.5 (2021-03-09)
 	 * 
 	 * @desc Get necessary children of document.
 	 * 
@@ -2294,7 +2312,7 @@ class ddTools {
 						$tvidnames[] = $resultKey;
 						$unsetResultKey = true;
 					}
-				}else if (
+				}elseif (
 					$tvidnames != '*' &&
 					$tvidnames != $resultKey
 				){
@@ -2483,7 +2501,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentParentIds
-	 * @version 1.0 (2020-02-11)
+	 * @version 1.0.1 (2021-03-09)
 	 * 
 	 * @desc Gets the parent ID(s) of the required level.
 	 * 
@@ -2526,7 +2544,7 @@ class ddTools {
 			if ($params->totalResults == 'all'){
 				//All parents
 				$params->totalResults = $resultLen;
-			}else if (isset($params->totalResults)){
+			}elseif (isset($params->totalResults)){
 				//Needed number
 				$params->totalResults = intval($params->totalResults);
 			}else{
@@ -2551,7 +2569,7 @@ class ddTools {
 	
 	/**
 	 * getDocumentIdByUrl
-	 * @version 1.1.3 (2019-06-22)
+	 * @version 1.2.1 (2021-03-09)
 	 * 
 	 * @desc Gets id of a document by its url.
 	 * 
@@ -2567,6 +2585,13 @@ class ddTools {
 		if (empty($url['host'])){
 			//Получаем хост из конфига
 			$siteHost = parse_url(self::$modx->getConfig('site_url'));
+			
+			//For domains in IDNA ASCII-compatible format
+			$siteHost['host'] =
+				function_exists('idn_to_utf8') ?
+				idn_to_utf8($siteHost['host']) :
+				$siteHost['host']
+			;
 			
 			//На всякий случай вышережем host из адреса (а то вдруг url просто без http:// передали) + лишние слэши по краям
 			$path = trim(
@@ -2585,7 +2610,7 @@ class ddTools {
 		if ($path == ''){
 			return self::$modx->getConfig('site_start');
 		//Если документ с таким путём есть
-		}else if (!empty(self::$modx->documentListing[$path])){
+		}elseif (!empty(self::$modx->documentListing[$path])){
 			//Возвращаем его id
 			return self::$modx->documentListing[$path];
 		//В противном случае возвращаем 0
@@ -2596,7 +2621,7 @@ class ddTools {
 	
 	/**
 	 * verifyRenamedParams
-	 * @version 1.6 (2020-04-24)
+	 * @version 1.7.1 (2021-03-09)
 	 * 
 	 * @see README.md
 	 */
@@ -2613,14 +2638,18 @@ class ddTools {
 			]);
 		}
 		
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'returnCorrectedOnly' => true,
-				'writeToLog' => true
-			],
-			(array) $params
-		);
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'returnCorrectedOnly' => true,
+					'writeToLog' => true
+				],
+				$params
+			]
+		]);
+		
+		$isParamsObject = is_object($params->params);
 		
 		$params->params = (array) $params->params;
 		
@@ -2667,7 +2696,7 @@ class ddTools {
 					}
 				}
 			//If we must return all parameters
-			}else if (!$params->returnCorrectedOnly){
+			}elseif (!$params->returnCorrectedOnly){
 				$result[$newName] = $params->params[$newName];
 			}
 		}
@@ -2695,6 +2724,10 @@ class ddTools {
 					) .
 					'</ul>'
 			]);
+		}
+		
+		if ($isParamsObject){
+			$result = (object) $result;
 		}
 		
 		return $result;
@@ -2837,20 +2870,14 @@ class ddTools {
 	
 	/**
 	 * getResponse
-	 * @version 1.0.5 (2018-06-26)
+	 * @version 2.0 (2021-03-09)
 	 * 
 	 * @desc Returns a proper instance of the “Response” class recommended to be used as response to an HTTP request.
 	 * 
-	 * @param $version {string} — The required version of Response. Default: '0.2'.
-	 * 
 	 * @return {DDTools\Response}
 	 */
-	public static function getResponse($version = '0.2'){
-		$responseClass = \DDTools\Response::includeResponseByVersion($version);
-		
-		$result = new $responseClass;
-		
-		return $result;
+	public static function getResponse(){
+		return new \DDTools\Response();
 	}
 	
 	/**
