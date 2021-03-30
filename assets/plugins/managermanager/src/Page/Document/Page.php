@@ -152,7 +152,7 @@ $j(document).ready(function(){
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0.1 (2019-02-21)
+	 * @version 2.0.2 (2021-03-30)
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
@@ -163,14 +163,18 @@ $j(document).ready(function(){
 	 * @return {boolean}
 	 */
 	public function isRuleMatched($params = []){
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'role' => '',
-				'template' => ''
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'role' => '',
+					'template' => ''
+				],
+				$params
 			],
-			(array) $params
-		);
+			'overwriteWithEmpty' => false
+		]);
+		
 		
 		return parent::isRuleMatched($params);
 	}

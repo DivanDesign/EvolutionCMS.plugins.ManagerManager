@@ -73,7 +73,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includedJsCss_prepareNameVersionExtension
-	 * @version 1.0.1a (2021-03-09)
+	 * @version 1.0.2a (2021-03-30)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
@@ -87,15 +87,19 @@ class Page extends \DDTools\BaseClass {
 	 * @return $result->extension {stdClass}
 	 */
 	private function includedJsCss_prepareNameVersionExtension($params){
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'name' => '',
-				'version' => '',
-				'type' => ''
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'name' => '',
+					'version' => '',
+					'type' => ''
+				],
+				$params
 			],
-			(array) $params
-		);
+			'overwriteWithEmpty' => false
+		]);
+		
 		
 		$result = (object) [
 			'name' => $params->name,
@@ -180,7 +184,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0.2a (2021-03-30)
+	 * @version 2.0.3a (2021-03-30)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -198,16 +202,21 @@ class Page extends \DDTools\BaseClass {
 	 */
 	public function includeJsCss($params){
 		//Defaults
-		$params = (object) array_merge(
-			[
-				'outputType' => 'js',
-				'name' => '',
-				'version' => '',
-				'isPlaintext' => false,
-				'type' => ''
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'outputType' => 'js',
+					'name' => '',
+					'version' => '',
+					'isPlaintext' => false,
+					'type' => ''
+				],
+				$params
 			],
-			(array) $params
-		);
+			'overwriteWithEmpty' => false
+		]);
+		
 		
 		$result = '';
 		
@@ -314,7 +323,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0.1 (2020-05-20)
+	 * @version 2.0.2 (2021-03-30)
 	 * 
 	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
@@ -325,12 +334,17 @@ class Page extends \DDTools\BaseClass {
 	 */
 	public function isRuleMatched($params = []){
 		//Defaults
-		$params = (object) array_merge(
-			[
-				'role' => ''
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'role' => ''
+				],
+				$params
 			],
-			(array) $params
-		);
+			'overwriteWithEmpty' => false
+		]);
+		
 		
 		$result = true;
 		
