@@ -73,18 +73,18 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includedJsCss_prepareNameVersionExtension
-	 * @version 1.0.2a (2021-03-30)
+	 * @version 1.0.3a (2021-03-30)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
 	 * @param $params->name {string} — Script name. Default: ''.
 	 * @param $params->version {string} — Script version. Default: ''.
-	 * @param $params->extension {''|'js'|'css'} — Type of source (required if $params->isPlaintext == true). Default: ''.
+	 * @param $params->extension {''|'js'|'css'} — Script extension. Default: ''.
 	 * 
 	 * @return $result {stdClass}
-	 * @return $result->name {stdClass}
-	 * @return $result->version {stdClass}
-	 * @return $result->extension {stdClass}
+	 * @return $result->name {string}
+	 * @return $result->version {string}
+	 * @return $result->extension {string}
 	 */
 	private function includedJsCss_prepareNameVersionExtension($params){
 		$params = \DDTools\ObjectTools::extend([
@@ -93,7 +93,7 @@ class Page extends \DDTools\BaseClass {
 				(object) [
 					'name' => '',
 					'version' => '',
-					'type' => ''
+					'extension' => ''
 				],
 				$params
 			],
