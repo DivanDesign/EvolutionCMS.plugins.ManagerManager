@@ -604,7 +604,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * applyRules
-	 * @version 1.0.6 (2021-03-30)
+	 * @version 1.0.7 (2021-03-30)
 	 * 
 	 * @desc Apply the rules.
 	 * 
@@ -629,7 +629,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 		}
 		
 		$rulesFilePath =
-			Core::getPluginPath() .
+			Core::getPluginPaths()->resource .
 			'mm_rules.inc.php'
 		;
 		

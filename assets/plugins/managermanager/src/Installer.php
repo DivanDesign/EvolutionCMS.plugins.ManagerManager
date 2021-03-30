@@ -13,12 +13,12 @@ class Installer {
 	
 	/**
 	 * __construct
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2021-03-30)
 	 */
 	public function __construct(){
 		//Install dir
 		$this->installPath =
-			Core::getPluginPath() .
+			Core::getPluginPaths()->resource .
 			'install' .
 			DIRECTORY_SEPARATOR
 		;

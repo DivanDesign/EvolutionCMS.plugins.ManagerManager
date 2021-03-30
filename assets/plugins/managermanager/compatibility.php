@@ -16,7 +16,7 @@ function mm_compatibility_init($params){
 	$ManagerManagerCore_currentPage = $params->currentPage;
 	
 	$mm_version = \ManagerManager\Core::$pluginVersion;
-	$mm_pluginDir = \ManagerManager\Core::getPluginPath();
+	$mm_pluginDir = \ManagerManager\Core::getPluginPaths()->resource;
 	$mm_fields = \ManagerManager\Core::getDocFields();
 	
 	

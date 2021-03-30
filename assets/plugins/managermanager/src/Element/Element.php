@@ -27,7 +27,7 @@ class Element extends \DDTools\BaseClass {
 	
 	/**
 	 * __construct
-	 * @version 1.0.3 (2021-03-30)
+	 * @version 1.0.4 (2021-03-30)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params.
 	 * @param $params->data {arrayAssociative} — Multidimensional data is supported too. Default: —.
@@ -52,9 +52,7 @@ class Element extends \DDTools\BaseClass {
 		);
 		
 		$templatePath =
-			Core::getPluginPath() .
-			'src' .
-			DIRECTORY_SEPARATOR .
+			Core::getPluginPaths()->src .
 			'ElementTemplates' .
 			DIRECTORY_SEPARATOR .
 			$templatePath .

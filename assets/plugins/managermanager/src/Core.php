@@ -7,7 +7,16 @@ class Core {
 	;
 	
 	private static
-		$pluginPath,
+		/**
+		 * @property $paths {stdClass}
+		 * @property $paths->resource {string} — Full path to the plugin folder.
+		 * @property $paths->src {string} — Ful path to `src`.
+		 */
+		$paths = [
+			'resource' => '',
+			'src' => ''
+		],
+		
 		$pluginJsUrls,
 		$pluginCssUrls,
 		$pluginEvents = [
@@ -28,13 +37,13 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.2.2 (2021-03-30)
+	 * @version 1.2.3 (2021-03-30)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
 		
 		//Init plugin path
-		self::getPluginPath();
+		self::getPluginPaths();
 		
 		//Init document fields
 		self::getDocFields();
@@ -95,20 +104,31 @@ class Core {
 	}
 	
 	/**
-	 * getPluginPath
-	 * @version 1.0.1 (2020-05-20)
+	 * getPluginPaths
+	 * @version 2.0 (2021-03-30)
 	 * 
-	 * @return {string}
+	 * @return {stdClass}
 	 */
-	public static function getPluginPath(){
-		if (!isset(self::$pluginPath)){
-			self::$pluginPath =
-				MODX_BASE_PATH .
-				'assets/plugins/managermanager/'
+	public static function getPluginPaths(){
+		//If paths is not inited before
+		if (!is_object(self::$paths)){
+			self::$paths = (object) self::$paths;
+			
+			self::$paths->resource =
+				dirname(
+					__DIR__,
+					1
+				) .
+				DIRECTORY_SEPARATOR
+			;
+			
+			self::$paths->src =
+				__DIR__ .
+				DIRECTORY_SEPARATOR
 			;
 		}
 		
-		return self::$pluginPath;
+		return self::$paths;
 	}
 	
 	/**
