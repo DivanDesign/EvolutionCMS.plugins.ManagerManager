@@ -399,7 +399,7 @@ class Core {
 	
 	/**
 	 * getPluginJsUrls
-	 * @version 2.0 (2020-10-31)
+	 * @version 2.0.1 (2020-04-06)
 	 * 
 	 * @return {string}
 	 */
@@ -433,10 +433,10 @@ class Core {
 				'jQuery.ddUI' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
-						'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.js'
+						'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.js'
 					,
 					'name' => 'jQuery.ddUI',
-					'version' => '0.11.1'
+					'version' => '0.16.0'
 				]
 			];
 		}
@@ -446,7 +446,7 @@ class Core {
 	
 	/**
 	 * getPluginCssUrls
-	 * @version 2.0 (2020-10-31)
+	 * @version 2.0.1 (2021-04-06)
 	 * 
 	 * @return {string}
 	 */
@@ -456,10 +456,10 @@ class Core {
 				'jQuery.ddUI' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
-						'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.css'
+						'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.css'
 					,
 					'name' => 'jQuery.ddUI',
-					'version' => '0.11.1'
+					'version' => '0.16.0'
 				]
 			];
 		}
