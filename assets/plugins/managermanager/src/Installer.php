@@ -13,7 +13,7 @@ class Installer {
 	
 	/**
 	 * __construct
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2021-03-30)
 	 */
 	public function __construct(){
 		//Install dir
@@ -33,7 +33,7 @@ class Installer {
 				]
 			);
 			
-			//Foreach all types
+			//Foreach all types (e. g. `libs`, `snippets`)
 			foreach (
 				$typeDirs as
 				$typeDirs_item
@@ -44,6 +44,7 @@ class Installer {
 					DIRECTORY_SEPARATOR
 				;
 				
+				//TODO: Is it checking needed?
 				if (is_dir($typePath)){
 					//Get resources dirs
 					$resourceDirs = array_diff(
