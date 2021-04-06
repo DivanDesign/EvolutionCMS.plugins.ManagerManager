@@ -97,18 +97,18 @@ $jsUrls = [
 	'ddUI' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.js'
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.js'
 		,
 		'name' => 'jquery.ddUI',
-		'version' => '0.11.1'
+		'version' => '0.16.0'
 	],
 	'ddUICSS' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddUI-0.11.1.min.css'
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.css'
 		,
 		'name' => 'jquery.ddUI',
-		'version' => '0.11.1'
+		'version' => '0.16.0'
 	]
 ];
 
