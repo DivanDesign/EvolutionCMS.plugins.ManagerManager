@@ -1,9 +1,99 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Version 0.50 (2021-05-11)
+* \+ `\DDTools\Response`:
+	* \+ `setMetaData`: The new public method. Setter for `$this->meta` and `$this->data`.
+	* \+ `setMeta` → Parameters:
+		* \+ `$meta['success']`: Is not required anymore and by default will be equal to `true`.
+		* \+ `$meta['code']`: Is not required anymore and by default will be equal to `200` or `400` depending on `$meta['success']`.
+		* \+ `$meta`:
+		 	* \+ Can also be set as stdClass, stringJsonObject, stringHjsonObject, stringQueryFormated.
+			* \+ Is not required anymore and by default will be equal to `['success' => true, 'code' => 200]`.
+	* \+ `setMetaMessage`: If `$this->meta` is not set, it will be set with default values of `success` and `code`.
+
+
+## Version 0.49.1 (2021-04-27)
+* \* `\DDTools\ObjectTools::extend`: Improved deep cloning objects to arrays.
+
+
+## Version 0.49 (2021-04-25)
+* \* `\ddTools::parseText`:
+	* \+ Parameters → `$params->data`: Can also be set as JSON, HJSON or Query string.
+	* \* `\DDTools\ObjectTools::extend` is used instead of `array_merge`.
+* \+ README → Documentation → Parameters description → `\ddTools::parseText($params)`.
+
+
+## Version 0.48.2 (2021-03-31)
+* \* `\DDTools\ObjectTools::extend`: Added deep object cloning to prevent references.
+
+
+## Version 0.48.1 (2021-03-29)
+* \* `\DDTools\Snippet::prepareParams`: Type of only existing params will be converted.
+
+
+## Version 0.48 (2021-03-25)
+* \+ `\DDTools\Snippet`:
+	* \+ `$paramsTypes`: The new property. Overwrite in child classes if you want to convert some parameters types.
+	* \+ `prepareParams`: The parameter types will be converted respectively with `$this->paramsTypes`.
+
+
+## Version 0.47 (2021-03-20)
+* \+ `\DDTools\ObjectTools::convertType`:
+	* \+ Added [HJSON](https://hjson.github.io/) support (closes #7).
+	* \+ Improved detection of failed `json_decode` attempt.
+
+
+## Version 0.46 (2021-03-15)
+* \+ `\ddTools::updateDocument`: Added default values for the following parameters:
+	* \+ `$docData->editedon`: If it isn't set, it will be equal to current date-time (`time()`).
+	* \+ `$docData->editedby`: If it isn't set, it will be equal to `1`.
+
+
+## Version 0.45.1 (2021-03-12)
+* \* `\DDTools\ObjectTools::extend`:
+	* \* Recursion is called only if source value is an object or array.
+	* \* Optimization.
+
+
+## Version 0.45 (2021-03-11)
+* \+ `\DDTools\Response::isSuccess`: The new public method.
+
+
+## Version 0.44 (2021-03-10)
+* \+ `\DDTools\Snippet::prepareParams`: The new method.
+
+
+## Version 0.43 (2021-03-10)
+* \* Attention! PHP >= 5.6 is required.
+* \* `\DDTools\Response`:
+	* \- Child version classes are not used anymore.
+	* \+ `$requiredMetaKeys`: The new field.
+	* \+ `$requiredMetaMessageKeys`: The new field.
+	* \+ `validateMetaMessage`: The new method.
+	* \+ `setMetaMessage`: The new method.
+	* \+ `validateMeta`: Can take any type of parameter and just returns `false` if it is not an array.
+	* \* `toJSON`: Refactoring, `\DDTools\ObjectTools::convertType` is used instead of `json_encode`.
+* \* `\DDTools\BaseClass::toJSON`: Refactoring, `\DDTools\ObjectTools::convertType` is used instead of `json_encode`.
+* \+ Composer.json → `authors`: Added missing authors.
+
+
+## Version 0.42 (2021-02-24)
+* \* `\ddTools::verifyRenamedParams`:
+	* \+ If `$params->params` set as an object, the method will return an instance of stdClass.
+	* \* `\DDTools\ObjectTools::extend` is used instead of `array_merge`.
+* \+ `\DDTools\Snippet`: The new abstract class for snippets.
+* \* `\ddTools::getTemplateVars`, `\ddTools::getTemplateVarOutput` → Parameters → `$idnames`: Less fragile working when the parameter is a string.
+* \+ README → Links → Packagist.
+
+
+## Version 0.41 (2020-12-15)
+* \+ `\ddTools::getDocumentIdByUrl`: Supports domains in IDNA ASCII-compatible format.
+
+
 ## Version 0.40.1 (2020-06-22)
-* `\ddTools::createDocument`, `\ddTools::updateDocument`: Document field values will be prepared by `$modx->db->escape()`.
-+ `\ddTools::createDocument` → Parameters → `$docData->pagetitle`: Can't be equal to `''`, so will be equal to `'New resource'` in this case.
+* \* `\ddTools::createDocument`, `\ddTools::updateDocument`: Document field values will be prepared by `$modx->db->escape()`.
+* \+ `\ddTools::createDocument` → Parameters → `$docData->pagetitle`: Can't be equal to `''`, so will be equal to `'New resource'` in this case.
 
 
 ## Version 0.40 (2020-06-19)

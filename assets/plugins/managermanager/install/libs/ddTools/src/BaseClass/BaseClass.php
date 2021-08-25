@@ -211,14 +211,17 @@ class BaseClass {
 	
 	/**
 	 * toJSON
-	 * @version 1.0 (2020-05-06)
+	 * @version 1.0.1 (2021-03-10)
 	 * 
 	 * @see README.md
 	 * 
 	 * @return {stringJsonObject}
 	 */
 	public function toJSON(){
-		return json_encode($this->toArray());
+		return \DDTools\ObjectTools::convertType([
+			'object' => $this->toArray(),
+			'type' => 'stringJsonObject'
+		]);
 	}
 	
 	/**
