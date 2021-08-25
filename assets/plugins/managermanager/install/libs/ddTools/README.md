@@ -33,6 +33,73 @@ _ddTools version must be 0.14 or higher to use this method. If you use it, the c
 ### Parameters description
 
 
+#### `\ddTools::parseText($params)`
+
+Replaces placeholders in a text with required values.
+Like `$modx->parseChunk`, but takes a text and has some features.
+
+* `$params`
+	* Desctription: Parameters, the pass-by-name style is used.
+	* Valid values:
+		* `stdClass`
+		* `arrayAssociative`
+	* **Required**
+	
+* `$params->text`
+	* Desctription: String to parse.
+	* Valid values: `string`
+	* **Required**
+	
+* `$params->data`
+	* Desctription:
+		The array of additional data has to be replaced in `$params->text`.  
+		Nested objects and arrays are supported too:
+		* `{"someOne": "1", "someTwo": "test" }` => `[+someOne+], [+someTwo+]`.
+		* `{"some": {"a": "one", "b": "two"} }` => `[+some.a+]`, `[+some.b+]`.
+		* `{"some": ["one", "two"] }` => `[+some.0+]`, `[+some.1+]`.
+	* Valid values:
+		* `arrayAssociative`
+		* `stdClass`
+		* `stringJsonObject` — as [JSON](https://en.wikipedia.org/wiki/JSON)
+		* `stringHjsonObject` — as [HJSON](https://hjson.github.io/)
+		* `stringQueryFormated` — as [Query string](https://en.wikipedia.org/wiki/Query_string)
+	* Default value: `[]`
+	
+* `$params->data->{$key}`
+	* Valid values: Key is placeholder name, value is value.
+		* `string`
+		* `array`
+		* `object`
+	* **Required**
+	
+* `$params->placeholderPrefix`
+	* Desctription: Placeholders prefix.
+	* Valid values: `string`
+	* Default value: `'[+'`
+	
+* `$params->placeholderSuffix`
+	* Desctription: Placeholders suffix.
+	* Valid values: `string`
+	* Default value: `'+]'`
+	
+* `$params->removeEmptyPlaceholders`
+	* Desctription: Do you need to remove empty placeholders?
+	* Valid values: `boolean`
+	* Default value: `false`
+	
+* `$params->mergeAll`
+	* Desctription: Additional parsing of document fields, settings, chunks.
+	* Valid values: `boolean`
+	* Default value: `true`
+
+
+##### Returns
+
+* `$result`
+	* Desctription: Parsed text.
+	* Valid values: `string`
+
+
 #### `\ddTools::verifyRenamedParams($params)`
 
 The method checks an array for deprecated parameters and writes warning messages into the MODX event log.

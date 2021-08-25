@@ -192,7 +192,7 @@ class ObjectTools {
 	
 	/**
 	 * extend
-	 * @version 1.3.7 (2021-03-12)
+	 * @version 1.3.9 (2021-04-27)
 	 * 
 	 * @see README.md
 	 * 
@@ -249,7 +249,11 @@ class ObjectTools {
 					}
 					
 					//Is the additional property object or array
-					$isAdditionalPropObjectOrArray = self::isObjectOrArray($additionalPropValue);
+					$isAdditionalPropObject = is_object($additionalPropValue);
+					$isAdditionalPropObjectOrArray =
+						$isAdditionalPropObject ||
+						is_array($additionalPropValue)
+					;
 					
 					//The additional property value will be used by default
 					$isAdditionalPropUsed = true;
@@ -313,20 +317,32 @@ class ObjectTools {
 						if (
 							//If recursive merging is needed
 							$params->deep &&
-							//And we can extend source value
-							$isSourcePropObjectOrArray &&
 							//And the value is an object or array
 							$isAdditionalPropObjectOrArray
 						){
-							//Start recursion
+							//Start recursion (`clone` must be called for all nested additional props, so recursion must be called even if `$sourcePropValue` is not an object or array)
 							$additionalPropValue = self::extend([
 								'objects' => [
-									$sourcePropValue,
+									(
+										$isSourcePropObjectOrArray ?
+										$sourcePropValue :
+										//If `$sourcePropValue` is not an array or object it isn't be used
+										(
+											//Type of resulting prop depends on `$additionalPropValue` type
+											$isAdditionalPropObject ?
+											new \stdClass() :
+											[]
+										)
+									),
 									$additionalPropValue
 								],
 								'deep' => true,
 								'overwriteWithEmpty' => $params->overwriteWithEmpty
 							]);
+						}
+						
+						if (is_object($additionalPropValue)){
+							$additionalPropValue = clone $additionalPropValue;
 						}
 						
 						//Save the new value (replace preverious or create the new property)

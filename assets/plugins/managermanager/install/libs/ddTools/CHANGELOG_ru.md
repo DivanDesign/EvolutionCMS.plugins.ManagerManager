@@ -1,6 +1,33 @@
 # (MODX)EvolutionCMS.libraries.ddTools changelog
 
 
+## Версия 0.50 (2021-05-11)
+* \+ `\DDTools\Response`:
+	* \+ `setMetaData`: Новый публичный метод. Сеттер для `$this->meta` и `$this->data`.
+	* \+ `setMeta` → Параметры:
+		* \+ `$meta['success']`: Больше не обязателен и по умолчанию будет равен `true`.
+		* \+ `$meta['code']`: Больше не обязателен и по умолчанию будет равен `200` или `400` в зависимости от `$meta['success']`.
+		* \+ `$meta`:
+		 	* \+ Также может быть задан как stdClass, stringJsonObject, stringHjsonObject, stringQueryFormated.
+			* \+ Больше не обязателен и по умолчанию будет равен `['success' => true, 'code' => 200]`.
+	* \+ `setMetaMessage`: Если `$this->meta` не задано, будет задано со значениями по умолчанию `success` и `code`.
+
+
+## Версия 0.49.1 (2021-04-27)
+* \* `\DDTools\ObjectTools::extend`: Улучшено глубокое клонирование объектов в массивы.
+
+
+## Версия 0.49 (2021-04-25)
+* \* `\ddTools::parseText`:
+	* \+ Параметры → `$params->data`: Также может быть задан как JSON, HJSON или Query string.
+	* \* `\DDTools\ObjectTools::extend` исползуется вместо `array_merge`.
+* \+ README → Документация → Описание параметров → `\ddTools::parseText($params)`.
+
+
+## Версия 0.48.2 (2021-03-31)
+* \* `\DDTools\ObjectTools::extend`: Добавлено глубокое клонирование объектов для предотвращения ссылок.
+
+
 ## Версия 0.48.1 (2021-03-29)
 * \* `\DDTools\Snippet::prepareParams`: Тип только существующих параметров будет преобразован.
 

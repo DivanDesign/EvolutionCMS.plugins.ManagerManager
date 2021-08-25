@@ -1,7 +1,7 @@
 <?php
 /**
  * EvolutionCMS.libraries.ddTools
- * @version 0.48.1 (2021-03-29)
+ * @version 0.50 (2021-05-11)
  * 
  * @see README.md
  * 
@@ -897,20 +897,9 @@ class ddTools {
 	
 	/**
 	 * parseText
-	 * @version 1.5.2 (2019-06-22)
+	 * @version 1.6 (2021-04-25)
 	 * 
-	 * @desc Similar to $modx->parseChunk, but takes a text.
-	 * 
-	 * @param $params {stdClass|arrayAssociative} — Parameters, the pass-by-name style is used. @required
-	 * @param $params->text {string} — String to parse. @required
-	 * @param $params->data {stdClass|arrayAssociative} — Array of values. Nested arrays are supported too: “['stringPlaceholder' = > 'one', 'arrayPlaceholder' => ['a' => 'one', 'b' => 'two']]” => “[+stringPlaceholder+]”, “[+arrayPlaceholder.a+]”, “[+arrayPlaceholder.b+]”. Default: [].
-	 * @param $params->data->{$key} {string|stdClass|arrayAssociative} — Key — placeholder name, value — value.
-	 * @param $params->placeholderPrefix {string} — Placeholders prefix. Default: '[+'.
-	 * @param $params->placeholderSuffix {string} — Placeholders suffix. Default: '+]'.
-	 * @param $params->removeEmptyPlaceholders {boolean} — Do you need to remove empty placeholders? Default: false.
-	 * @param $params->mergeAll {boolean} — Additional parsing the document fields, settings, chunks. Default: true.
-	 * 
-	 * @return {string}
+	 * @see README.md
 	 */
 	public static function parseText($params = []){
 		//For backward compatibility
@@ -928,25 +917,28 @@ class ddTools {
 			]);
 		}
 		
-		//Defaults
-		$params = (object) array_merge(
-			[
-				'text' => '',
-				'data' => [],
-				'placeholderPrefix' => '[+',
-				'placeholderSuffix' => '+]',
-				'removeEmptyPlaceholders' => false,
-				'mergeAll' => true
-			],
-			(array) $params
-		);
+		$params = \DDTools\ObjectTools::extend([
+			'objects' => [
+				//Defaults
+				(object) [
+					'text' => '',
+					'data' => [],
+					'placeholderPrefix' => '[+',
+					'placeholderSuffix' => '+]',
+					'removeEmptyPlaceholders' => false,
+					'mergeAll' => true
+				],
+				$params
+			]
+		]);
+		
+		$params->data = \DDTools\ObjectTools::convertType([
+			'object' => $params->data,
+			'type' => 'objectArray'
+		]);
+		
 		
 		$result = $params->text;
-		
-		//Convert stdClass to array
-		if (!is_array($params->data)){
-			$params->data = (array) $params->data;
-		}
 		
 		//Если значения для парсинга переданы
 		if (!empty($params->data)){

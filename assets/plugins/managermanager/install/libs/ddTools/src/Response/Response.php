@@ -143,7 +143,7 @@ class Response {
 	
 	/**
 	 * setMeta
-	 * @version 1.0.1 (2021-03-10)
+	 * @version 1.4 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta.
 	 * 
@@ -151,7 +151,42 @@ class Response {
 	 * 
 	 * @return {boolean}
 	 */
-	public function setMeta($meta){
+	public function setMeta($meta = []){
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		if (!is_array($meta)){
+			$meta = \DDTools\ObjectTools::convertType([
+				'object' => $meta,
+				'type' => 'objectArray'
+			]);
+		}
+		
+		//If success is not set
+		if (
+			!\DDTools\ObjectTools::isPropExists([
+				'object' => $meta,
+				'propName' => 'success'
+			])
+		){
+			//true by default
+			$meta['success'] = true;
+		}
+		
+		//If code is not set
+		if (
+			!\DDTools\ObjectTools::isPropExists([
+				'object' => $meta,
+				'propName' => 'code'
+			])
+		){
+			//Depends on success by default
+			$meta['code'] =
+				$meta['success'] ?
+				200 :
+				400
+			;
+		}
+		
+		
 		$result = false;
 		
 		if($this->validateMeta($meta)){
@@ -164,7 +199,7 @@ class Response {
 	
 	/**
 	 * setMetaMessage
-	 * @version 1.0 (2021-03-10)
+	 * @version 1.1 (2021-05-11)
 	 * 
 	 * @desc Setter for $this->meta['message'].
 	 * 
@@ -175,13 +210,15 @@ class Response {
 	public function setMetaMessage($message){
 		$result = false;
 		
-		if(
-			//This meta is set
-			is_array($this->meta) &&
-			//Parameter is valid
-			$this->validateMetaMessage($message)
-		){
+		//If parameter is valid
+		if ($this->validateMetaMessage($message)){
+			//Set default meta if it is not set
+			if (!is_array($this->meta)){
+				$this->setMeta();
+			}
+			
 			$this->meta['message'] = $message;
+			
 			$result = true;
 		}
 		
@@ -197,6 +234,44 @@ class Response {
 	 */
 	public function setData($data){
 		$this->data = $data;
+	}
+	
+	/**
+	 * setMetaData
+	 * @version 1.0 (2021-05-11)
+	 * 
+	 * @desc Setter for $this->meta and $this->data.
+	 * 
+	 * @param $params
+	 * 
+	 * @return {void}
+	 */
+	public function setMetaData($params){
+		//If $meta is set as stdClass, stringJsonObject, stringHjsonObject or stringQueryFormated
+		if (!is_array($params)){
+			$params = \DDTools\ObjectTools::convertType([
+				'object' => $params,
+				'type' => 'objectArray'
+			]);
+		}
+		
+		if (
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'meta'
+			])
+		){
+			$this->setMeta($params['meta']);
+		}
+		
+		if (
+			\DDTools\ObjectTools::isPropExists([
+				'object' => $params,
+				'propName' => 'data'
+			])
+		){
+			$this->setData($params['data']);
+		}
 	}
 	
 	/**s
