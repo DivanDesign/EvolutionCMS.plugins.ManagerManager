@@ -88,8 +88,7 @@ if ($_SESSION['mgrValidated']){
 	//Include the ddTools library
 	require_once(
 		$modx->getConfig('base_path') .
-		$mmDir .
-		'install/libs/ddTools/modx.ddtools.class.php'
+		'assets/libs/ddTools/modx.ddtools.class.php'
 	);
 	
 	$temp = $modx->invokeEvent(

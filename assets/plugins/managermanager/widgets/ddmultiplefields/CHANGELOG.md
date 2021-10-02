@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.8.5 (2021-10-03)
+* \* (MODX)EvolutionsCMS.libraries.ddTools is including from `assets/libs/ddTools/`, because ManagerManager does not contain the library files anymore.
+
+
 ## Version 4.8.4 (2021-01-15)
 * \* `jQuery.ddMM.mm_ddMultipleFields.init`: Missing table header was fixed.
 * \+ README → Links → Packagist.
