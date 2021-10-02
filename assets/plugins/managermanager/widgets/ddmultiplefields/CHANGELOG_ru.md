@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Версия 4.8.5 (2021-10-03)
+* \* (MODX)EvolutionsCMS.libraries.ddTools подключается из `assets/libs/ddTools/`, потому что ManagerManager больше не содержит файлов библиотеки.
+
+
 ## Версия 4.8.4 (2021-01-15)
 * \* `jQuery.ddMM.mm_ddMultipleFields.init`: Отсутствующий заголовок таблицы исправлен.
 * \+ README → Ссылки → Packagist.
