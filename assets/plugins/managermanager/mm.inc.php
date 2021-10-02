@@ -112,10 +112,14 @@ $jsUrls = [
 	]
 ];
 
-//Include ddTools (needed for some widgets)
-include_once(
-	$mm_pluginDir .
-	'install/libs/ddTools/modx.ddtools.class.php'
+//Include (MODX)EvolutionCMS.libraries.ddTools (needed for some widgets)
+require_once(
+	//path to `assets`
+	dirname(
+		__DIR__,
+		2
+	) .
+	'/libs/ddTools/modx.ddtools.class.php'
 );
 //Include Utilites
 include_once(
