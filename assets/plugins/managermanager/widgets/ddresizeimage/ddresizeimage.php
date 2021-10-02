@@ -1,13 +1,13 @@
 <?php
 /**
  * mm_ddResizeImage
- * @version 1.6 (2020-07-29)
+ * @version 1.6.1 (2021-10-02)
  * 
  * @see README.md
  * 
  * @link https://code.divandesign.biz/modx/mm_ddresizeimage
  * 
- * @copyright 2012–2020 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2012–2021 DD Group {@link https://DivanDesign.biz }
  */
 
 function mm_ddResizeImage($params){
@@ -163,9 +163,9 @@ function mm_ddResizeImage($params){
 					//Если это множественное поле
 					if ($params->ddMultipleField_isUsed){
 						//Получим массив изображений
-						$images = $modx->runSnippet(
-							'ddGetMultipleField',
-							[
+						$images = \DDTools\Snippet::runSnippet([
+							'name' => 'ddGetMultipleField',
+							'params' => [
 								'inputString' => $image,
 								'rowDelimiter' => $params->ddMultipleField_rowDelimiter,
 								'colDelimiter' => $params->ddMultipleField_colDelimiter,
@@ -200,12 +200,12 @@ function mm_ddResizeImage($params){
 								'format' => 'JSON',
 								'colNum' => $params->ddMultipleField_columnNumber
 							]
-						);
+						]);
 						
 						//Если пришла пустота (ни одного изображения заполнено не было)
 						if (trim($images) == ''){
 							$images = [];
-						}else if ($params->ddMultipleField_rowNumber == 'all'){
+						}elseif ($params->ddMultipleField_rowNumber == 'all'){
 							$images = json_decode(
 								$images,
 								true
