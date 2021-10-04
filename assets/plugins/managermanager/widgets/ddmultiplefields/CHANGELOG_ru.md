@@ -1,6 +1,11 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Версия 4.8.6 (2021-10-04)
+* \* Улучшена работа с устаревшими колонками типа `id`.
+* \* Улучшена работа с невалидным JSON в значении полей.
+
+
 ## Версия 4.8.5 (2021-10-03)
 * \* (MODX)EvolutionsCMS.libraries.ddTools подключается из `assets/libs/ddTools/`, потому что ManagerManager больше не содержит файлов библиотеки.
 
