@@ -1,12 +1,12 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.5.7 (2021-01-15)
+ * @version 2.5.9 (2021-10-04)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
  * @uses jQuery.ddMM 1.1.2
  * 
- * @copyright 2013–2020 [DD Group]{@link https://DivanDesign.biz }
+ * @copyright 2013–2021 [DD Group]{@link https://DivanDesign.biz }
  */
 
 (function($){
@@ -189,7 +189,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init
-	 * @version 4.3.4 (2021-01-15)
+	 * @version 4.3.5 (2021-10-04)
 	 * 
 	 * @desc Инициализация.
 	 * 
@@ -236,9 +236,6 @@ $.ddMM.mm_ddMultipleFields = {
 				if (columnObject.type == 'id'){
 					columnIdIndex = columnIndex;
 					
-					//Remove deprecated column
-					delete instance.columns[columnIndex];
-					
 					//Continue
 					return true;
 				}
@@ -257,7 +254,11 @@ $.ddMM.mm_ddMultipleFields = {
 				
 				//Prepare width
 				if (!columnObject.width){
-					if (columnIndex > 0){
+					if (
+						//Preverious column exist
+						$.isPlainObject(instance.columns[columnIndex - 1]) &&
+						instance.columns[columnIndex - 1].width
+					){
 						//Take from preverious column
 						instance.columns[columnIndex].width = instance.columns[columnIndex - 1].width;
 					}else{
@@ -272,6 +273,15 @@ $.ddMM.mm_ddMultipleFields = {
 				}
 			}
 		);
+		
+		//If deprecated ID column exists
+		if (columnIdIndex != -1){
+			//Remove it
+			instance.columns.splice(
+				columnIdIndex,
+				1
+			);
+		}
 		
 		var
 			//Объект значения поля
@@ -359,7 +369,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init_prepareFieldValueObject
-	 * @version 1.0.2 (2020-05-25)
+	 * @version 1.1 (2021-10-04)
 	 * 
 	 * @desc Инициализация → Подготовка объекта значений поля.
 	 * 
@@ -390,7 +400,11 @@ $.ddMM.mm_ddMultipleFields = {
 			) ==
 			'{'
 		){
-			fieldValueObject = $.parseJSON(params.value);
+			try {
+				fieldValueObject = $.parseJSON(params.value);
+			}catch{
+				fieldValueObject = {};
+			}
 		//Bacward compatibility
 		}else{
 			var
@@ -411,8 +425,12 @@ $.ddMM.mm_ddMultipleFields = {
 						rowId = _this.generateRowId()
 					;
 					
-					//If deprecated ID column exists
-					if (params.columnIdIndex != -1){
+					if (
+						//If deprecated ID column exists
+						params.columnIdIndex != -1 &&
+						//And not empty
+						columnValuesArray[params.columnIdIndex] != ''
+					){
 						rowId = columnValuesArray[params.columnIdIndex];
 					}
 					
