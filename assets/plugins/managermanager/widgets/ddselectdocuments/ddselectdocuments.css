@@ -11,7 +11,9 @@
 	background: #FFFFFF;
 }
 
-.ui-autocomplete li {list-style: none;}
+.ui-autocomplete li {
+	list-style: none;
+}
 
 .ui-autocomplete a {
 	display: block;
@@ -20,7 +22,8 @@
 	cursor: pointer;
 }
 
-.ui-autocomplete a:hover, .ui-autocomplete .ui-state-focus {
+.ui-autocomplete a:hover,
+.ui-autocomplete .ui-state-focus {
 	background: #007CC3;
 	color: #FFFFFF;
 }
