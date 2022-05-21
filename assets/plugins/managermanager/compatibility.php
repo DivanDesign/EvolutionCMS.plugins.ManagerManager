@@ -51,8 +51,8 @@ function useThisRule(
 	
 	if (is_object($ManagerManagerCore_currentPage)){
 		$result = $ManagerManagerCore_currentPage->isRuleMatched([
-			'roles' => $roles,
-			'templates' => $templates
+			'role' => $roles,
+			'template' => $templates
 		]);
 	}
 	
