@@ -1,12 +1,12 @@
 <?php
 /**
  * useThisRule
- * @version 1.1.2 (2020-11-01)
+ * @version 1.1.3 (2022-05-22)
  * 
  * @desc Pass useThisRule a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
  * 
- * @param $roles {array|stringCommaSeparated} — Roles. Default: ''.
- * @param $templates {array|stringCommaSeparated} — Templates. Default: ''.
+ * @param $roles {array|stringCommaSeparated} — Roles. You can also set the '!' prefix to exclude values (e. g. '!1,3'). Default: ''.
+ * @param $templates {array|stringCommaSeparated} — Templates. You can also set the '!' prefix to exclude values (e. g. '!1,3'). Default: ''.
  * 
  * @return {boolean}
  */
@@ -28,6 +28,7 @@ function useThisRule(
 	
 	//Are they negative roles?
 	if (
+		is_string($roles) &&
 		substr(
 			$roles,
 			0,
@@ -43,6 +44,7 @@ function useThisRule(
 	
 	//Are they negative templates?
 	if (
+		is_string($templates) &&
 		substr(
 			$templates,
 			0,
