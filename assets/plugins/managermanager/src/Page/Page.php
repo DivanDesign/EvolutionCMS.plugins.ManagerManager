@@ -318,11 +318,12 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0.2 (2021-03-30)
+	 * @version 2.0.3 (2022-05-22)
 	 * 
-	 * @desc Pass isRuleMatched a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
+	 * @desc Pass list of allowed page fields (e. g. roles and templates), and the method will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params.
+	 * @param $params->{$pageFieldName} {array|stringCommaSeparated} — List of allowed values to compare with the page field. You can also set the '!' prefix to exclude values (e. g. '!1,3'). Default: ''.
 	 * @param $params->role {array|stringCommaSeparated} — Roles. Default: ''.
 	 * 
 	 * @return {boolean}
@@ -352,6 +353,7 @@ class Page extends \DDTools\BaseClass {
 			
 			//Are they negative values?
 			if (
+				is_string($values) &&
 				substr(
 					$values,
 					0,
