@@ -20,7 +20,6 @@ class Core {
 		$pluginJsUrls,
 		$pluginCssUrls,
 		$pluginEvents = [
-			'OnPluginFormRender',
 			'OnDocFormPrerender',
 			'OnDocFormRender',
 			'OnDocDuplicate',
@@ -37,7 +36,7 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.2.4 (2021-03-30)
+	 * @version 1.2.5 (2022-05-23)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
@@ -58,10 +57,6 @@ class Core {
 		$pageType = 'virtual';
 		
 		switch (\ddTools::$modx->Event->name){
-			case 'OnPluginFormRender':
-				$pageType = 'plugin';
-			break;
-			
 			case 'OnDocFormPrerender':
 			case 'OnDocFormRender':
 			case 'OnDocDuplicate':

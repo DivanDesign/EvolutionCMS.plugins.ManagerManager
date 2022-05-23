@@ -9,7 +9,7 @@
  * @license https://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * 
  * @internal @properties &remove_deprecated_tv_types_pref=Remove deprecated TV types;list;yes,no;yes &config_chunk=Configuration Chunk;text;
- * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnPluginFormRender,OnTVFormRender
+ * @internal @events OnDocFormRender,OnDocFormPrerender,OnBeforeDocFormSave,OnDocFormSave,OnDocDuplicate,OnTVFormRender
  * @internal @modx_category Manager and Admin
  * 
  * @link https://code.divandesign.biz/modx/managermanager
