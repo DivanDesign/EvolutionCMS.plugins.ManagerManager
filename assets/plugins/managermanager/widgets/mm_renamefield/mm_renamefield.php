@@ -1,36 +1,68 @@
 <?php
 /**
  * mm_renameField
- * @version 1.2.2 (2016-10-31)
+ * @version 1.3 (2022-05-24)
  * 
- * @desc A widget for ManagerManager plugin that allows one of the default document fields or template variables to be renamed within the manager.
+ * @see README.md
  * 
- * @uses MODXEvo >= 1.1.
- * @uses ManagerManager plugin 0.7.
+ * @link https://code.divandesign.biz/modx/mm_renamefield
  * 
- * @param $fields {string_commaSeparated} — The name(s) of the document fields (or TVs) this should apply to. @required
- * @param $newLabel {string} — The new text for the label. @required
- * @param $roles {string_commaSeparated} — The roles that the widget is applied to (when this parameter is empty then widget is applied to the all roles).
- * @param $templates {string_commaSeparated} — Id of the templates to which this widget is applied (when this parameter is empty then widget is applied to the all templates).
- * @param $newHelp {string} — New text for the help icon with this field or for comment with TV. The same restriction apply as when using mm_changeFieldHelp directly.
- * 
- * @link http://code.divandesign.biz/modx/mm_renamefield/1.2.2
- * 
- * @copyright 2011–2016
+ * @copyright 2011–2022
  */
 
-function mm_renameField($fields, $newLabel, $roles = '', $templates = '', $newHelp = ''){
+function mm_renameField($params){
+	//For backward compatibility
+	if (
+		!is_array($params) &&
+		!is_object($params)
+	){
+		//Convert ordered list of params to named
+		$params = ddTools::orderedParamsToNamed([
+			'paramsList' => func_get_args(),
+			'compliance' => [
+				'fields',
+				'newLabel',
+				'roles',
+				'templates',
+				'newHelp'
+			]
+		]);
+	}
+	
+	$params = \DDTools\ObjectTools::extend([
+		'objects' => [
+			//Defaults
+			(object) [
+				'roles' => '',
+				'templates' => '',
+				'newHelp' => ''
+			],
+			$params
+		]
+	]);
+	
 	global $modx;
 	$e = &$modx->Event;
 	
 	// if the current page is being edited by someone in the list of roles, and uses a template in the list of templates
-	if ($e->name == 'OnDocFormRender' && useThisRule($roles, $templates)){
-		$fields = makeArray($fields);
-		if (count($fields) == 0){return;}
+	if (
+		$e->name == 'OnDocFormRender' &&
+		useThisRule(
+			$params->roles,
+			$params->templates
+		)
+	){
+		$params->fields = makeArray($params->fields);
+		if (count($params->fields) == 0){
+			return;
+		}
 		
-		$output = '//---------- mm_renameField :: Begin -----'.PHP_EOL;
+		$output = '//---------- mm_renameField :: Begin -----' . PHP_EOL;
 		
-		foreach ($fields as $field){
+		foreach (
+			$params->fields as
+			$field
+		){
 			$element = '';
 			
 			switch ($field){
@@ -48,22 +80,27 @@ function mm_renameField($fields, $newLabel, $roles = '', $templates = '', $newHe
 					global $mm_fields;
 					
 					if (isset($mm_fields[$field])){
-						$element = '$j.ddMM.fields.'.$field.'.$elem.parents("td:first").prev("td").children("span.warning")';
+						$element = '$j.ddMM.fields.' . $field . '.$elem.parents("td:first").prev("td").children("span.warning")';
 					}
 				break;
 			}
 			
 			if ($element != ''){
-				$output .= $element.'.contents().filter(function(){return this.nodeType === 3;}).replaceWith("'.jsSafe($newLabel).'");'."\n";
+				$output .= $element . '.contents().filter(function(){return this.nodeType === 3;}).replaceWith("' . \ddTools::escapeForJS($params->newLabel) . '");' . PHP_EOL;
 			}
 			
 			// If new help has been supplied, do that too
-			if ($newHelp != ''){
-				mm_changeFieldHelp($field, $newHelp, $roles, $templates);
+			if ($params->newHelp != ''){
+				mm_changeFieldHelp([
+					'fields' => $field,
+					'helpText' => $params->newHelp,
+					'roles' => $params->roles,
+					'templates' => $params->templates
+				]);
 			}
 		}
 		
-		$output .= '//---------- mm_renameField :: End -----'.PHP_EOL;
+		$output .= '//---------- mm_renameField :: End -----' . PHP_EOL;
 		
 		$e->output($output);
 	}
