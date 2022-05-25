@@ -17,10 +17,7 @@ Capabilities:
 * [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
 
 
-## Documentation
-
-
-### Installation
+## Installation
 
 To install you must unzip the archive to `/assets/plungins/managermanager/widgets/ddmultiplefields/`.
 
@@ -34,7 +31,7 @@ You may also read this documentation:
 Type of TV must be `textarea`.
 
 
-### Parameters description
+## Parameters description
 
 * `$params`
 	* Desctription: Parameters, the pass-by-name style is used.
@@ -74,6 +71,11 @@ Type of TV must be `textarea`.
 	* Desctription: Column title.
 	* Valid values: `string`
 	* Default value: `''`
+	
+* `$params->columns[i]['alias']`
+	* Desctription: An unique column alias. If empty, just numeric index will be used.
+	* Valid values: `string`
+	* Default value: —
 	
 * `$params->columns[i]['width']`
 	* Desctription: Column width, px.
@@ -147,13 +149,13 @@ Type of TV must be `textarea`.
 	* **Required**
 
 
-### CMS events
+## CMS events
 
 * `OnDocFormPrerender`
 * `OnDocFormRender`
 
 
-### Output format
+## Output format
 
 The widget saves value to a TV as JSON object with the following structure:
 
@@ -161,18 +163,18 @@ The widget saves value to a TV as JSON object with the following structure:
 {
 	"1590412453247": {
 		"0": "First row, first column value",
-		"1": "First row, second column value"
+		"customAlias": "First row, second column value"
 	},
 	"1590412497589": {
 		"0": "Second row, first column value",
-		"1": "Second row, Second column value"
+		"customAlias": "Second row, Second column value"
 	}
 }
 ```
 
 Where:
 * `1590412453247`, `1590412497589` — the unique auto generated row IDs (JS `(new Date).getTime()` is used while creating rows).
-* `0`, `1` — column numbers.
+* `0`, `customAlias` — column index or alias (if set).
 
 Rows objects with empty column values will not be saved.
 If all columns and all rows are empty, an empty string (`''`) will be saved instead of an empty JSON ojbect (`'{}'`).
@@ -180,10 +182,10 @@ If all columns and all rows are empty, an empty string (`''`) will be saved inst
 It is strongly recommend to use [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.biz/modx/ddgetmultiplefield) >= 3.5 for rendering TVs on site.
 
 
-### Examples
+## Examples
 
 
-#### Make the TV `someImages` available for adding several number of images
+### Make the TV `someImages` available for adding several number of images
 
 Create the TV `someImages`, set it's type equal to `textarea`.
 
@@ -200,7 +202,7 @@ mm_ddMultipleFields([
 ```
 
 
-#### Create 2 columns: images with titles
+### Create 2 columns: images with titles
 
 ```php
 mm_ddMultipleFields([
@@ -219,7 +221,50 @@ mm_ddMultipleFields([
 ```
 
 
-#### Table of employees contacts
+### Using column aliases (`$params->columns[i]['alias']`)
+
+```php
+mm_ddMultipleFields([
+	'fields' => 'photos',
+	'columns' => [
+		[
+			'type' => 'image',
+			'title' => 'Photo',
+			'alias' => 'src'
+		],
+		[
+			'type' => 'text',
+			'title' => 'Title'
+			'alias' => 'alt'
+		],
+		//In the same time we can use columns without aliases, numeric index will be used in this case
+		[
+			'type' => 'textarea'
+			'title' => 'Notes'
+		]
+	]
+]);
+```
+
+Will be save something like this:
+
+```json
+{
+	"1590412453247": {
+		"src": "assets/images/ElonMusk.jpg",
+		"alt": "Elon Reeve Musk",
+		"2": "Business magnate and investor"
+	},
+	"1590412497589": {
+		"src": "assets/images/YuryDud.jpg",
+		"alt": "Yury Aleksandrovich Dud",
+		"2": "Russian journalist and YouTuber"
+	}
+}
+```
+
+
+### Table of employees contacts
 
 Create the TV `employees`, set it's type equal to `textarea`.
 
@@ -251,7 +296,7 @@ mm_ddMultipleFields([
 ```
 
 
-#### `<select>` column type
+### `<select>` column type
 
 ```php
 mm_ddMultipleFields([

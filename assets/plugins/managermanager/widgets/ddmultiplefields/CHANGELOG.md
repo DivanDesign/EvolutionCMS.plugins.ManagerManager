@@ -1,6 +1,16 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.9 (2022-05-26)
+* \+ Parameters → `$params->columns[i]['alias']`:
+	* \+ The new optional parameter. Provides the ability to set a custom result key for each column instead of simple numeric index.
+	* \+ The widget also supports changing indexes to aliases for TVs already filled with existing values.
+* \* Missed icon in the “add” button has been fixed. Many thanks to @byscrimm.
+* \+ Composer.json:
+	* \+ `support` → `chat`.
+	* \+ `authors` → author → `homepage`.
+
+
 ## Version 4.8.6 (2021-10-04)
 * \* Improved working with deprecated `id` columns.
 * \* Improved working with invalid JSON field values.
