@@ -66,6 +66,9 @@
 	vertical-align: middle;
 	text-align: center;
 }
+.ddMultipleField tr td.ddMultipleField_row_col:last-child button.fa-plus {
+	font-weight: 900;
+}
 
 .ddMultipleField tr td.ddSortHandle {
 	border-right: none;

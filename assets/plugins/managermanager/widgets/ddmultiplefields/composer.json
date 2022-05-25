@@ -1,6 +1,6 @@
 {
 	"name": "dd/evolutioncms-plugins-managermanager-mm_ddmultiplefields",
-	"version": "4.8.6",
+	"version": "4.9.0",
 	"description": "Widget for plugin ManagerManager that allows you to add any number of fields values (TV) in one document (values are written in field as a JSON object). For example: a few images.",
 	"keywords": [
 		"modx",
@@ -20,6 +20,9 @@
 		"multiple field"
 	],
 	"homepage": "https://code.divandesign.biz/modx/mm_ddmultiplefields",
+	"support": {
+		"chat": "https://t.me/dd_code"
+	},
 	"authors": [
 		{
 			"name": "DD Group",
@@ -36,22 +39,27 @@
 		{
 			"name": "Alexey Davydov",
 			"email": "davalemic@DivanDesign.ru",
+			"homepage": "https://github.com/davalemic",
 			"role": "Developer"
 		},
 		{
 			"name": "Vladislav Lavrov",
+			"homepage": "https://github.com/Tornek",
 			"role": "Developer"
 		},
 		{
 			"name": "Andrey Demchenko",
+			"homepage": "https://github.com/deversjkee",
 			"role": "Developer"
 		},
 		{
 			"name": "Andrey Dunaev",
+			"homepage": "https://github.com/svolochev",
 			"role": "Developer"
 		},
 		{
 			"name": "Pavel Unzhakov",
+			"homepage": "https://github.com/psthmn",
 			"role": "Developer"
 		}
 	],
