@@ -9,17 +9,28 @@ body {
 	flex-direction: column;
 }
 
-textarea {
+body > .mce-container,
+#ddMultipleFields_richtext {
+	flex-grow: 1;
 	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
+	border: none !important;
+}
+
+body > .mce-container > .mce-container-body {
+	display: flex !important;
+	flex-direction: column;
+	height: 100% !important;
+}
+
+body > .mce-container > .mce-container-body > .mce-edit-area {
+	flex-grow: 1;
+}
+
+.mce-edit-area iframe {
+	height: 100% !important;
 }
 
 .buttons {
 	padding: 10px;
 	text-align: right;
-}
-
-body > .mce-container {
-	box-sizing: border-box;
 }

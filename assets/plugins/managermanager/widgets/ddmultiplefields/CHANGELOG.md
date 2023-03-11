@@ -1,8 +1,15 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.11 (2023-03-11)
+* \* Richtext editor window:
+	* \+ Widget version has been added to included CSS and JS to prevent browser cache after updates.
+	* \* Style has been improved.
+* \+ README → Links → GitHub.
+
+
 ## Version 4.10 (2023-03-11)
-* \* Richtext column: Style of text editor window has been improved.
+* \* Richtext editor window: Style has been improved.
 
 
 ## Version 4.9 (2022-05-26)
