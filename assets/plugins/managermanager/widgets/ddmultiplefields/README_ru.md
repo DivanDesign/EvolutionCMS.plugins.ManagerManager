@@ -343,6 +343,7 @@ mm_ddMultipleFields([
 * [Home page](https://code.divandesign.ru/modx/mm_ddmultiplefields)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddmultiplefields)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields)
 
 
 <link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
