@@ -1,11 +1,11 @@
 <?php
 /**
  * (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields
- * @version 4.9 (2022-05-26)
+ * @version 4.10 (2023-03-11)
  * 
  * @link https://code.divandesign.biz/modx/mm_ddmultiplefields
  * 
- * @copyright 2012–2022 DD Group {@link http://DivanDesign.biz }
+ * @copyright 2012–2023 DD Group {@link http://DivanDesign.biz }
  */
 
 function mm_ddMultipleFields($params){

@@ -118,7 +118,7 @@ if ($_SESSION['mgrValidated']){
 				MODX_MANAGER_URL .
 				'media/style/' .
 				$modx->getConfig('manager_theme') .
-				'/style.css'
+				'/css/styles.min.css'
 			,
 			'tinyMCE' => $temp[0]
 		],
