@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.10 (2023-03-11)
+* \* Richtext column: Style of text editor window has been improved.
+
+
 ## Version 4.9 (2022-05-26)
 * \+ Parameters → `$params->columns[i]['alias']`:
 	* \+ The new optional parameter. Provides the ability to set a custom result key for each column instead of simple numeric index.
