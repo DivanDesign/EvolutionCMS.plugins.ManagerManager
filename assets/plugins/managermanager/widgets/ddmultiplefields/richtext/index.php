@@ -120,7 +120,7 @@ if ($_SESSION['mgrValidated']){
 				$modx->getConfig('manager_theme') .
 				'/css/styles.min.css'
 			,
-			'widgetVersion' => '4.11',
+			'widgetVersion' => '4.12',
 			'tinyMCE' => $temp[0]
 		],
 		'mergeAll' => false

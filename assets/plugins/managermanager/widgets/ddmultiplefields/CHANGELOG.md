@@ -1,6 +1,10 @@
 # (MODX)EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields changelog
 
 
+## Version 4.12 (2023-04-16)
+* \+ Parameters → `$params->columns[i]['defaultValue']`: The new optional parameter. Provides the ability to set a custom value that will be used to check when deleting empty rows.
+
+
 ## Version 4.11 (2023-03-11)
 * \* Richtext editor window:
 	* \+ Widget version has been added to included CSS and JS to prevent browser cache after updates.
