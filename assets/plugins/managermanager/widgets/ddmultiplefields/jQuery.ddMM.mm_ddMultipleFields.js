@@ -1,12 +1,12 @@
 /**
  * jQuery.ddMM.mm_ddMultipleFields
- * @version 2.7 (2022-05-26)
+ * @version 2.8 (2023-04-16)
  * 
  * @uses jQuery 1.9.1
  * @uses jQuery.ddTools 1.8.1
  * @uses jQuery.ddMM 1.1.2
  * 
- * @copyright 2013–2022 [DD Group]{@link https://DivanDesign.biz }
+ * @copyright 2013–2023 [DD Group]{@link https://DivanDesign.ru }
  */
 
 (function($){
@@ -87,7 +87,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method updateTv
-	 * @version 4.4 (2022-05-25)
+	 * @version 4.5 (2023-04-16)
 	 * 
 	 * @desc Обновляет оригинальное поле TV, собирая данные по мульти-полям.
 	 * 
@@ -140,8 +140,8 @@ $.ddMM.mm_ddMultipleFields = {
 						if (isRowEmpty){
 							//Depends on this column value length
 							isRowEmpty =
-								columnValuesObject[columnParams.alias].length ==
-								0
+								columnValuesObject[columnParams.alias] ==
+								columnParams.defaultValue
 							;
 						}
 					})
@@ -186,7 +186,7 @@ $.ddMM.mm_ddMultipleFields = {
 	
 	/**
 	 * @method init
-	 * @version 4.4.2 (2022-05-26)
+	 * @version 4.5 (2023-04-16)
 	 * 
 	 * @desc Инициализация.
 	 * 
@@ -239,9 +239,14 @@ $.ddMM.mm_ddMultipleFields = {
 					return true;
 				}
 				
-				//Prepare width
+				//Prepare alias
 				if (typeof columnObject.alias == 'undefined'){
 					columnObject.alias = columnIndex;
+				}
+				
+				//Prepare default value
+				if (typeof columnObject.defaultValue == 'undefined'){
+					columnObject.defaultValue = '';
 				}
 				
 				//Prepare title
@@ -1241,7 +1246,7 @@ $.ddMM.mm_ddMultipleFields = {
  * @param [params.rowDelimiter='||'] {string} — Разделитель строк.
  * @param [params.colDelimiter='::'] {string} — Разделитель колонок.
  * 
- * @copyright 2013–2020 [DD Group]{@link https://DivanDesign.biz }
+ * @copyright 2013–2020 [DD Group]{@link https://DivanDesign.ru }
  */
 $.fn.mm_ddMultipleFields = function(params){
 	var _this = $.ddMM.mm_ddMultipleFields;

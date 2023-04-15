@@ -14,7 +14,7 @@ Capabilities:
 ## Requires
 
 * PHP >= 5.4
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager) >= 0.7
 
 
 ## Installation
@@ -23,9 +23,9 @@ To install you must unzip the archive to `/assets/plungins/managermanager/widget
 
 
 You may also read this documentation:
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager).
-* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.biz/modx/ddmmeditor).
-* [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.biz/modx/ddgetmultiplefield).
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager).
+* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.ru/modx/ddmmeditor).
+* [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.ru/modx/ddgetmultiplefield).
 
 
 Type of TV must be `textarea`.
@@ -101,6 +101,12 @@ Type of TV must be `textarea`.
 	* Desctription: Item title.
 	* Valid values: `string`
 	* Default value: == `$params->columns[i]['data'][i]['value']`
+	
+* `$params->columns[i]['defaultValue']`
+	* Desctription: Column default value.  
+		For now it is used only to check when deleting empty rows.
+	* Valid values: `string`
+	* Default value: `''`
 	
 * `$params->minRowsNumber`
 	* Desctription: Minimum number of rows.
@@ -179,7 +185,7 @@ Where:
 Rows objects with empty column values will not be saved.
 If all columns and all rows are empty, an empty string (`''`) will be saved instead of an empty JSON ojbect (`'{}'`).
 
-It is strongly recommend to use [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.biz/modx/ddgetmultiplefield) >= 3.5 for rendering TVs on site.
+It is strongly recommend to use [(MODX)EvolutionCMS.snippets.ddGetMultipleField](https://code.divandesign.ru/modx/ddgetmultiplefield) >= 3.5 for rendering TVs on site.
 
 
 ## Examples
@@ -340,7 +346,7 @@ mm_ddMultipleFields([
 
 ## Links
 
-* [Home page](https://code.divandesign.biz/modx/mm_ddmultiplefields)
+* [Home page](https://code.divandesign.ru/modx/mm_ddmultiplefields)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddmultiplefields)
 * [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_ddMultipleFields)
