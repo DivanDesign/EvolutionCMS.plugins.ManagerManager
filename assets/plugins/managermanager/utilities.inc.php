@@ -132,10 +132,9 @@ function makeArray($csv){
 			//Remove any whitespace
 			array_walk(
 				$result,
-				create_function(
-					'$v, $k',
-					'return trim($v);'
-				)
+				function($v){
+					return trim($v);
+				}
 			);
 		}
 	}
@@ -638,4 +637,3 @@ function prepareSectionId($id){
 	
 	return $id;
 }
-?>
