@@ -6,7 +6,7 @@ A widget for ManagerManager plugin that allows to hide all empty sections and ta
 ## Requires
 
 * PHP >= 5.4
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager) >= 0.7
 
 
 ## Installation
@@ -15,8 +15,8 @@ To install you must unzip the archive to `/assets/plungins/managermanager/widget
 
 
 You may also read this documentation:
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager).
-* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.biz/modx/ddmmeditor).
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager).
+* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.ru/modx/ddmmeditor).
 
 
 ## Parameters description
@@ -73,9 +73,10 @@ mm_hideEmpty();
 
 ## Links
 
-* [Home page](https://code.divandesign.biz/modx/mm_hideempty)
+* [Home page](https://code.divandesign.ru/modx/mm_hideempty)
 * [Telegram chat](https://t.me/dd_code)
-* [Packagist](https://packagist.org/packages/dd/mm_hideempty)
+* [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_hideempty)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_hideEmpty)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
