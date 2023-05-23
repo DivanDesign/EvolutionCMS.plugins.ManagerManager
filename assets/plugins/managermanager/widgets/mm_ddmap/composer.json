@@ -1,0 +1,39 @@
+{
+	"name": "dd/evolutioncms-plugins-managermanager-mm_ddmap",
+	"version": "1.7.0",
+	"description": "A widget for ManagerManager plugin allowing Yandex Maps integration.",
+	"keywords": [
+		"modx",
+		"modx evo",
+		"modx evolution",
+		"evo",
+		"evo cms",
+		"evolutioncms",
+		"evolution cms",
+		"dd group",
+		"dd studio",
+		"divandesign",
+		"managermanager",
+		"mm",
+		"mm widget",
+		"mm_ddmap",
+		"map",
+		"yandex map"
+	],
+	"homepage": "https://code.divandesign.ru/modx/mm_ddmap",
+	"support": {
+		"chat": "https://t.me/dd_code"
+	},
+	"authors": [
+		{
+			"name": "Ilyas Ronef",
+			"email": "ilyas@DivanDesign.ru",
+			"homepage": "https://ronef.ru",
+			"role": "Owner"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"dd/evolutioncms-plugins-managermanager": ">=0.7.0"
+	}
+}
