@@ -75,7 +75,8 @@ mm_hideEmpty();
 
 * [Home page](https://code.divandesign.ru/modx/mm_hideempty)
 * [Telegram chat](https://t.me/dd_code)
-* [Packagist](https://packagist.org/packages/dd/mm_hideempty)
+* [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_hideempty)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_hideEmpty)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />

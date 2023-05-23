@@ -1,8 +1,8 @@
 /**
  * jQuery.ddMM.mm_hideEmpty
- * @version 1.2 (2022-05-23)
+ * @version 1.2.1 (2022-05-24)
  * 
- * @copyright 2016–2022
+ * @copyright 2016–2023
  */
 
 (function($){
@@ -66,7 +66,7 @@ $.ddMM.mm_hideEmpty = {
 	
 	/**
 	 * @method getEmptyElements
-	 * @version 1.1 (2022-05-23)
+	 * @version 1.1.1 (2023-05-24)
 	 * 
 	 * @desc Get parents that has no visible children.
 	 * 
@@ -85,7 +85,7 @@ $.ddMM.mm_hideEmpty = {
 			//First, get empty visible elements
 			$elementsVisible
 				//That has no visible inputs
-				.not(':has([name]:visible)')
+				.not(':has(:input:visible)')
 				//And has no visible iframes
 				.not(':has(iframe:visible)')
 				
@@ -93,7 +93,7 @@ $.ddMM.mm_hideEmpty = {
 				.add(
 					$elementsInvisible
 						//That has no inputs
-						.not(':has([name])')
+						.not(':has(:input)')
 						//And has no iframes
 						.not(':has(iframe)')
 				)
