@@ -1,0 +1,47 @@
+{
+	"name": "dd/evolutioncms-plugins-managermanager-mm_minimizablesections",
+	"version": "1.0.0",
+	"description": "A widget for ManagerManager plugin that allows sections to be minimizable on the document edit page.",
+	"keywords": [
+		"modx",
+		"modx evo",
+		"modx evolution",
+		"evo",
+		"evo cms",
+		"evolutioncms",
+		"evolution cms",
+		"dd group",
+		"dd studio",
+		"divandesign",
+		"managermanager",
+		"mm",
+		"mm widget",
+		"mm_minimizablesections",
+		"minimizable sections",
+		"minimize section",
+		"collapse section",
+		"close section"
+	],
+	"homepage": "https://code.divandesign.ru/modx/mm_minimizablesections",
+	"support": {
+		"chat": "https://t.me/dd_code"
+	},
+	"authors": [
+		{
+			"name": "Ilyas Ronef",
+			"homepage": "https://ronef.ru",
+			"email": "ilyas@DivanDesign.ru",
+			"role": "Developer"
+		},
+		{
+			"name": "Sergey Davydov",
+			"homepage": "https://github.com/MrSwed",
+			"email": "webmaster@sdcollection.com",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"dd/evolutioncms-plugins-managermanager": ">=0.7.0"
+	}
+}

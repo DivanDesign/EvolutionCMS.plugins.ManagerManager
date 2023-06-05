@@ -2,30 +2,32 @@
 	cursor: pointer;
 	position: relative;
 }
-.mm_minimizableSections_header:after {
-	content: "";
+
+.mm_minimizableSections_header_icon {
+	width: 15px;
+	height: 15px;
+	font-size: 15px;
+	line-height: 15px;
 	position: absolute;
-	right: 1em;
-	border: 0.5em solid;
-	border-right-color: transparent;
-	border-left-color: transparent;
-	border-top-color: transparent;
-	border-bottom-color: initial;
+	left: -4px;
 	top: 50%;
-	margin-top: -0.8em;
-	-webkit-transition: opacity 0.3s ease-out;
-	-moz-transition: opacity 0.3s ease-out;
-	-ms-transition: opacity 0.3s ease-out;
-	-o-transition: opacity 0.3s ease-out;
+	transform: translateY(-50%);
 	transition: opacity 0.3s ease-out;
 	opacity: 0.6;
 }
-.mm_minimizableSections_header:hover:after {
+
+.mm_minimizableSections_header_icon .fa-plus-square {
+	display: none;
+}
+
+.mm_minimizableSections_header:hover .mm_minimizableSections_header_icon {
 	opacity: 1;
 }
 
-.mm_minimizableSections_header.mm_minimizableSections_minimized:after {
-	border-top-color: initial;
-	border-bottom-color: transparent;
-	margin-top: -0.3em;
+.mm_minimizableSections_header.mm_minimizableSections_minimized .mm_minimizableSections_header_icon .fa-plus-square {
+	display: inline-block;
+}
+
+.mm_minimizableSections_header.mm_minimizableSections_minimized .mm_minimizableSections_header_icon .fa-minus-square {
+	display: none;
 }
