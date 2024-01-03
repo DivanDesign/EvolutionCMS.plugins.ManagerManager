@@ -84,7 +84,7 @@ $jsUrls = [
 			'assets/plugins/managermanager/js/jquery.ddMM.js'
 		,
 		'name' => 'ddMM',
-		'version' => '1.3'
+		'version' => '1.4'
 	],
 	'ddTools' => [
 		'url' =>

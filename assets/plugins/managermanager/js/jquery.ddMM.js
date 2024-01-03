@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM Plugin
- * @version 1.3 (2024-01-03)
+ * @version 1.4 (2024-01-03)
  * 
  * @uses jQuery 1.9.1
  * 
@@ -28,6 +28,7 @@ $.ddMM = {
 	 * fields[item].dbname {string} — Field db name.
 	 * fields[item].tv {boolean} — Is the field a tv?
 	 * fields[item].$elem {jQuery} — Field jQuery element.
+	 * fields[item].getValue {function} — Returns the field value.
 	 */
 	fields: {},
 	
@@ -382,6 +383,20 @@ $(function(){
 			$.ddMM.fields[field].fieldname +
 			'"]'
 		);
+		
+		if (field == 'published'){
+			$.ddMM.fields[field].getValue = function(){
+				return (
+					this.$elem.prop('checked') ?
+					'1' :
+					'0'
+				);
+			};
+		}else{
+			$.ddMM.fields[field].getValue = function(){
+				return this.$elem.val();
+			};
+		}
 	}
 });
 })(jQuery);
