@@ -89,10 +89,10 @@ $jsUrls = [
 	'ddTools' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddTools-2.3.1.min.js'
+			'assets/plugins/managermanager/js/jQuery.ddTools-2.7.1.min.js'
 		,
 		'name' => 'jquery.ddTools',
-		'version' => '2.3.1'
+		'version' => '2.7.1'
 	],
 	'ddUI' => [
 		'url' =>
