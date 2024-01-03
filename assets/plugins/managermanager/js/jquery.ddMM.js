@@ -1,10 +1,10 @@
 /**
  * jQuery ddMM Plugin
- * @version 1.2.2 (2020-10-28)
+ * @version 1.3 (2024-01-03)
  * 
  * @uses jQuery 1.9.1
  * 
- * @copyright 2013–2020 [DD Group]{@link https://DivanDesign.biz }
+ * @copyright 2013–2024 [DD Group]{@link https://DivanDesign.biz }
  */
 
 (function($){
@@ -139,8 +139,131 @@ $.ddMM = {
 	},
 	
 	/**
+	 * @method getFieldParentWithSplElements
+	 * @version 1.0 (2024-01-03)
+	 * 
+	 * @desс Returns DOM elements of field parent and its splitter.
+	 * 
+	 * @param params {objectPlain} — The parameters.
+	 * @param params.fieldName {string} — The name of the document field (or TV).
+	 * 
+	 * @returns result {objectPlain}
+	 * @returns result.$parent {jQuery}
+	 * @returns result.$splitter {jQuery}
+	 * @returns result.$both {jQuery}
+	 */
+	getFieldParentWithSplElements: function(params){
+		var
+			_this = this,
+			result = {
+				//Field parent
+				$parent: $(),
+				//Splitter after parent
+				$splitter: $(),
+				$both: $(),
+			}
+		;
+		
+		//If field exist
+		if ($.isPlainObject(_this.fields[params.fieldName])){
+			result.$parent =
+				_this.fields[params.fieldName]
+					.$elem
+					.parents('tr:first')
+			;
+			
+			result.$splitter =
+				result.$parent
+					.next('tr')
+					.find('td[colspan=2]')
+					.parent('tr')
+			;
+		}
+		
+		//Exceptions
+		if (
+			params.fieldName == 'keywords' ||
+			params.fieldName == 'metatags'
+		){
+			result.$parent = $('select[name*="' + params.fieldName + '"]').parent('td');
+		}else if (params.fieldName == 'which_editor'){
+			result.$parent = $('select#which_editor').prev('span.warning');
+			result.$parent = result.$parent.add($('select#which_editor'));
+		}else if (params.fieldName == 'content'){
+			//For new MODX versions
+			if (result.$parent.length > 0){
+				//We don't need all in one TD
+				result.$parent
+					.find('td[colspan]')
+					.removeAttr('colspan')
+				;
+				
+				//Richtext editor must be placed below title
+				result.$parent
+					.find('.float-right')
+					.removeClass('float-right')
+				;
+				
+				//Move field to standalone TD
+				if (result.$parent.find('td').length < 2){
+					var $newTd = $('<td></td>')
+					
+					$newTd.appendTo(result.$parent);
+					
+					$newTd.append($('#content_body'));
+				}
+			//For old MODX versions
+			}else{
+				//Create a new standard parent
+				result.$parent = $('<tr><td valign="top"><span class="warning"></span></td><td></td></tr>');
+				
+				var $parent_title = result.$parent.find('td:first .warning');
+				
+				//Move title
+				$parent_title
+					.append(
+						$('#content_header').find('> *')
+					)
+				;
+				
+				//Move field
+				result.$parent
+					.find('td:last')
+					.append(
+						$('#content_body').find('> *')
+					)
+				;
+				
+				//Move standard parent to a content section in any case
+				$('#content_body').append(result.$parent);
+				
+				//We don't like this section in any case
+				$('#content_header').hide();
+			}
+			
+			//Always remove excessive line
+			result.$parent.find('hr').remove();
+		}else if (
+			params.fieldName == 'pub_date' ||
+			params.fieldName == 'unpub_date'
+		){
+			result.$splitter = result.$parent.next('tr');
+		}
+		
+		//Create splitter if not exist (just for less fragility)
+		if (result.$splitter.length == 0){
+			result.$splitter = $('<tr><td colspan="2"><div class="split"></div></td></tr>');
+			result.$splitter.insertAfter(result.$parent);
+		}
+		
+		result.$both = result.$parent.add(result.$splitter);
+		
+		return result;
+	},
+	
+	/**
 	 * @method moveFields
-	 * @version 1.1.3 (2020-10-28)
+	 * @version 1.1.4 (2024-01-03)
 	 * 
 	 * @desс Move a fields to some target (e.g. tab or section).
 	 * 
@@ -165,104 +288,47 @@ $.ddMM = {
 			$target.length > 0 &&
 			fields.length > 0
 		){
-			var ruleHtml = '<tr style="height: 10px"><td colspan="2"><div class="split"></div></td></tr>';
-			
-			$('select[id$=_prefix]').each(function(){
-				$(this)
-					.parents('tr:first')
-					.addClass('urltv')
-				;
-			});
-			
 			$.each(
 				fields,
 				function(){
-					if (this == 'content'){
-						//Если перемещаем в секцию
-						if ($target.hasClass('sectionBody')){
-							var $row = $('<tr><td valign="top"></td><td></td></tr>');
-							
-							$('#content_header')
-								.removeClass('sectionHeader')
-								.wrapInner('<span class="warning"></span>')
-								.appendTo($row.find('td:first'))
-							;
-							
-							$('#content_body')
-								.removeClass('sectionBody')
-								.appendTo($row.find('td:last'))
-							;
-							
-							$row
-								.appendTo($target.find('> table:first'))
-								.after(ruleHtml)
-							;
-						}else{
-							$('#content_body').appendTo($target);
-							$('#content_header').hide();
-						}
 					//We can't move these fields because they belong in a particular place
-					}else if (
+					if (
 						this == 'keywords' ||
 						this == 'metatags' ||
 						this == 'which_editor'
 					){
-						//Do nothing
 						return;
-					}else if (
-						this == 'pub_date' ||
-						this == 'unpub_date'
-					){
-						var
-							$helpline =
-								$('input[name="' + this + '"]')
-									.parents('tr')
-									.next('tr')
-									.appendTo($target.find('> table:first'))
+					}
+					
+					var fieldParentWithSpl = _this.getFieldParentWithSplElements({fieldName: this});					
+					
+					if (this == 'content'){
+						//Если перемещаем не в секцию
+						if (!$target.hasClass('sectionBody')){
+							$('#content_body').appendTo($target);
+						}
+					}else{
+						fieldParentWithSpl.$parent
+							.find('script')
+							.remove()
+						;
+					}
+					
+					if (fieldParentWithSpl.$parent.length > 0){
+						//Move the table row
+						$target
+							.find('> table:first')
+							.append(fieldParentWithSpl.$both)
 						;
 						
-						$helpline.before(
-							$('input[name="' + this + '"]').parents('tr')
-						);
-						
-						$helpline.after(ruleHtml);
-					}else{
-						if ($.isPlainObject(_this.fields[this])){
-							var
-								//Identify the table row to move
-								$toMove =
-									_this.fields[this]
-										.$elem
-										.parents('tr:not(.urltv)')
-							;
-							
-							$toMove
-								.find('script')
-								.remove()
-							;
-							//Get rid of line after, if there is one
-							$toMove
-								.next('tr')
-								.find('td[colspan="2"]')
-								.parents('tr')
-								.remove()
-							;
-							
-							//Move the table row
-							var $movedTV = $toMove.appendTo($target.find('> table:first'));
-							
-							//Insert a rule after
-							$movedTV.after(ruleHtml);
-							
-							//Remove widths from label column
-							//movedTV.find("td[width]").attr("width","");
-							//This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
-							_this.fields[this]
-								.$elem
-								.parents('td')
-								.removeAttr('style')
-							;
-						}
+						//Remove widths from label column
+						//movedTV.find("td[width]").attr("width","");
+						//This prevents an IE6/7 bug where the moved field would not be visible until you switched tabs
+						_this.fields[this]
+							.$elem
+							.parents('td')
+							.removeAttr('style')
+						;
 					}
 				}
 			);
@@ -271,7 +337,7 @@ $.ddMM = {
 	
 	/**
 	 * @method hideFields
-	 * @version 1.0.2 (2020-10-28)
+	 * @version 1.0.3 (2024-01-03)
 	 * 
 	 * @desc Hide fields.
 	 * 
@@ -288,59 +354,15 @@ $.ddMM = {
 		$.each(
 			fields,
 			function(){
-				var
-					//Field parent to hide
-					$parent = $(),
-					//Splitter after parent to hide
-					$splitter = $()
+				_this.getFieldParentWithSplElements({fieldName: this})
+					.$both
+					.hide()
 				;
 				
-				//If field exist
-				if ($.isPlainObject(_this.fields[this])){
-					$parent =
-						_this.fields[this]
-							.$elem
-							.parents('tr:first')
-					;
-					
-					$splitter =
-						$parent
-							.next('tr')
-							.find('td[colspan=2]')
-							.parent('tr')
-					;
-				}
-				
 				//Exceptions
-				if (
-					this == 'keywords' ||
-					this == 'metatags'
-				){
-					$parent = $('select[name*="' + this + '"]').parent('td');
-				}else if (this == 'which_editor'){
-					$parent = $('select#which_editor').prev('span.warning');
-					$parent = $parent.add($('select#which_editor').hide());
-				}else if (this == 'content'){
-					//Work by default with document-weblinks
-					if ($parent.length == 0){
-						//Hide section
-						$parent =
-							_this.fields[this]
-								.$elem
-								.parents('div.sectionBody:first')
-						;
-						
-						$parent = $parent.add($parent.prev('div.sectionHeader'));
-					}
-				}else if (
-					this == 'pub_date' ||
-					this == 'unpub_date'
-				){
-					$splitter = $parent.next('tr');
+				if (this == 'content'){
+					$('#content_body').hide();
 				}
-				
-				$parent.hide();
-				$splitter.hide();
 			}
 		);
 	}
