@@ -397,7 +397,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * injectedHTML_addJsCssInit
-	 * @version 2.0.1 (2020-10-31)
+	 * @version 2.1 (2024-01-04)
 	 * 
 	 * @desc jQuery.ddMM initialization.
 	 * 
@@ -474,6 +474,23 @@ window.$j = jQuery.noConflict();
 $j.ddMM.config.site_url = "' . \ddTools::$modx->getConfig('site_url') . '";
 $j.ddMM.config.datetime_format = "' . \ddTools::$modx->getConfig('datetime_format') . '";
 $j.ddMM.config.datepicker_offset = ' . \ddTools::$modx->getConfig('datepicker_offset') . ';
+
+$j.ddMM.dateNowFormatted = "' . date(
+	str_replace(
+		[
+			'YYYY',
+			'mm',
+			'dd',
+		],
+		[
+			'Y',
+			'm',
+			'd',
+		],
+		\ddTools::$modx->getConfig('datetime_format')
+	) .
+	' H:i:s'
+). '";
 
 $j.ddMM.lang.dp_dayNames = ' . $_lang['dp_dayNames'] . ';
 $j.ddMM.lang.dp_monthNames = ' . $_lang['dp_monthNames'] . ';

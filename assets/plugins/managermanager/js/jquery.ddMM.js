@@ -1,6 +1,6 @@
 /**
  * jQuery ddMM Plugin
- * @version 1.4 (2024-01-03)
+ * @version 1.5 (2024-01-04)
  * 
  * @uses jQuery 1.9.1
  * 
@@ -14,6 +14,8 @@ $.ddMM = {
 		datetime_format: '',
 		datepicker_offset: 0
 	},
+	
+	dateNowFormatted: '',
 	
 	urls: {
 		manager: 'manager/',

@@ -394,7 +394,7 @@ class Core {
 	
 	/**
 	 * getPluginJsUrls
-	 * @version 2.0.4 (2024-01-04)
+	 * @version 2.0.5 (2024-01-04)
 	 * 
 	 * @return {string}
 	 */
@@ -415,7 +415,7 @@ class Core {
 						'assets/plugins/managermanager/js/jquery.ddMM.js'
 					,
 					'name' => 'jQuery.ddMM',
-					'version' => '1.4.0'
+					'version' => '1.5.0'
 				],
 				'jQuery.ddTools' => (object) [
 					'source' =>
