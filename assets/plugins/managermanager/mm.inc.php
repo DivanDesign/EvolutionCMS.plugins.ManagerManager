@@ -84,7 +84,7 @@ $jsUrls = [
 			'assets/plugins/managermanager/js/jquery.ddMM.js'
 		,
 		'name' => 'ddMM',
-		'version' => '1.4'
+		'version' => '1.5.0'
 	],
 	'ddTools' => [
 		'url' =>
@@ -497,6 +497,22 @@ if (!function_exists('ManagerManger_initJQddMM')){
 $j.ddMM.config.site_url = "' . $modx->getConfig('site_url') . '";
 $j.ddMM.config.datetime_format = "' . $modx->getConfig('datetime_format') . '";
 $j.ddMM.config.datepicker_offset = ' . $modx->getConfig('datepicker_offset') . ';
+$j.ddMM.dateNowFormatted = "' . date(
+	str_replace(
+		[
+			'YYYY',
+			'mm',
+			'dd',
+		],
+		[
+			'Y',
+			'm',
+			'd',
+		],
+		$modx->config['datetime_format']
+	) .
+	' H:i:s'
+). '";
 
 $j.ddMM.lang.dp_dayNames = ' . $_lang['dp_dayNames'] . ';
 $j.ddMM.lang.dp_monthNames = ' . $_lang['dp_monthNames'] . ';
