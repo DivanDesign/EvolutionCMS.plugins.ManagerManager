@@ -394,7 +394,7 @@ class Core {
 	
 	/**
 	 * getPluginJsUrls
-	 * @version 2.0.3 (2024-01-04)
+	 * @version 2.0.4 (2024-01-04)
 	 * 
 	 * @return {string}
 	 */
@@ -420,10 +420,10 @@ class Core {
 				'jQuery.ddTools' => (object) [
 					'source' =>
 						\ddTools::$modx->getConfig('site_url') .
-						'assets/plugins/managermanager/js/jQuery.ddTools-2.3.1.min.js'
+						'assets/plugins/managermanager/js/jQuery.ddTools-2.7.1.min.js'
 					,
 					'name' => 'jQuery.ddTools',
-					'version' => '2.3.1'
+					'version' => '2.7.1'
 				],
 				'jQuery.ddUI' => (object) [
 					'source' =>
