@@ -36,17 +36,17 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * __construct
-	 * @version 1.0.1 (2020-05-20)
+	 * @version 1.0.2 (2024-08-04)
 	 */
 	public function __construct(){
-		//Init current event
+		// Init current event
 		$this->event = &\ddTools::$modx->Event;
 		
 		if (!isset($this->event->params['config_chunk'])){
 			$this->event->params['config_chunk'] = '';
 		}
 		
-		//Get role
+		// Get role
 		$this->role = $_SESSION['mgrRole'];
 		
 		$this->includedJs = (object) $this->includedJs;
@@ -73,7 +73,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includedJsCss_prepareNameVersionExtension
-	 * @version 1.0.3a (2021-03-30)
+	 * @version 1.0.4a (2024-08-04)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->source {string} — The URL of the external script or code (if $plaintext == true). @required
@@ -89,7 +89,7 @@ class Page extends \DDTools\BaseClass {
 	private function includedJsCss_prepareNameVersionExtension($params){
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'name' => '',
 					'version' => '',
@@ -127,7 +127,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includedJsCss_add
-	 * @version 1.0a (2019-02-01)
+	 * @version 1.0.1a (2024-08-04)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params. @required
 	 * @param $params->name {string} — Script name. @required
@@ -147,20 +147,20 @@ class Page extends \DDTools\BaseClass {
 			$thisIncludedField = &$this->includedCss;
 		}
 		
-		//If this script is already included
+		// If this script is already included
 		if (isset($thisIncludedField->{$params->name})){
-			//If old < new, use new, else — old
+			// If old < new, use new, else — old
 			$result = version_compare(
 				$thisIncludedField->{$params->name}->version,
 				$params->version,
 				'<'
 			);
 		}else{
-			//Init
+			// Init
 			$thisIncludedField->{$params->name} = (object) [];
 		}
 		
-		//If the new version must be used
+		// If the new version must be used
 		if ($result){
 			$thisIncludedField->{$params->name}->version = $params->version;
 		}
@@ -170,12 +170,12 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includedJsCss_get
-	 * @version 1.0 (2019-02-01)
+	 * @version 1.0.1 (2024-08-04)
 	 * 
 	 * @return {stdClass}
 	 */
 	public function includedJsCss_get(){
-		//Well…
+		// Well…
 		return (object) array_merge(
 			(array) $this->includedJs,
 			(array) $this->includedCss
@@ -184,7 +184,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * includeJsCss
-	 * @version 2.0.5a (2021-03-30)
+	 * @version 2.0.6a (2024-08-04)
 	 * 
 	 * @desc Generates the code needed to include an external script file.
 	 * 
@@ -201,10 +201,10 @@ class Page extends \DDTools\BaseClass {
 	 * @return {string} — Code.
 	 */
 	public function includeJsCss($params){
-		//Defaults
+		// Defaults
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'outputType' => 'js',
 					'name' => '',
@@ -227,13 +227,13 @@ class Page extends \DDTools\BaseClass {
 		];
 		
 		if (!$params->isPlaintext){
-			//Well…
+			// Well…
 			$nameVersionExtension->source = $params->source;
 			
 			$nameVersionExtension = $this->includedJsCss_prepareNameVersionExtension($nameVersionExtension);
 		}
 		
-		//If something wrong
+		// If something wrong
 		if (
 			empty($nameVersionExtension->name) ||
 			empty($nameVersionExtension->version) ||
@@ -242,10 +242,10 @@ class Page extends \DDTools\BaseClass {
 			return $result;
 		}
 		
-		//Save
+		// Save
 		$useThisVersion = $this->includedJsCss_add($nameVersionExtension);
 		
-		//If the new version is used
+		// If the new version is used
 		if ($useThisVersion){
 			$result = $params->source;
 			
@@ -258,7 +258,7 @@ class Page extends \DDTools\BaseClass {
 					'&' :
 					'?'
 				;
-				//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
+				// Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
 				$result .=
 					'version=' .
 					$nameVersionExtension->version
@@ -297,7 +297,7 @@ class Page extends \DDTools\BaseClass {
 			if ($params->outputType == 'js'){
 				$result =
 					'$j("head").append(\'' .
-					//'</script>' → '</scrip' + 't>'
+					// '</script>' → '</scrip' + 't>'
 					preg_replace(
 						'/(<\/.+)(.{1}>)/',
 						'$1\' + \'$2',
@@ -318,7 +318,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * isRuleMatched
-	 * @version 2.0.3 (2022-05-22)
+	 * @version 2.0.4 (2024-08-04)
 	 * 
 	 * @desc Pass list of allowed page fields (e. g. roles and templates), and the method will return TRUE or FALSE to indicate whether this rule should be run on this page.
 	 * 
@@ -329,10 +329,10 @@ class Page extends \DDTools\BaseClass {
 	 * @return {boolean}
 	 */
 	public function isRuleMatched($params = []){
-		//Defaults
+		// Defaults
 		$params = \DDTools\ObjectTools::extend([
 			'objects' => [
-				//Defaults
+				// Defaults
 				(object) [
 					'role' => ''
 				],
@@ -351,7 +351,7 @@ class Page extends \DDTools\BaseClass {
 		){
 			$excludeValues = false;
 			
-			//Are they negative values?
+			// Are they negative values?
 			if (
 				is_string($values) &&
 				substr(
@@ -368,12 +368,12 @@ class Page extends \DDTools\BaseClass {
 				$excludeValues = true;
 			}
 			
-			//Make the lists into arrays
+			// Make the lists into arrays
 			$values = makeArray($values);
 			
 			if (count($values) > 0){
 				$result =
-					//Does the current value match the conditions supplied?
+					// Does the current value match the conditions supplied?
 					$excludeValues ?
 					!in_array(
 						$this->{$fieldToCompareName},
@@ -385,7 +385,7 @@ class Page extends \DDTools\BaseClass {
 					)
 				;
 				
-				//False is false forever
+				// False is false forever
 				if (!$result){
 					break;
 				}
@@ -397,7 +397,7 @@ class Page extends \DDTools\BaseClass {
 	
 	/**
 	 * injectedHTML_addJsCssInit
-	 * @version 2.1 (2024-01-04)
+	 * @version 2.1.1 (2024-08-04)
 	 * 
 	 * @desc jQuery.ddMM initialization.
 	 * 
@@ -407,9 +407,9 @@ class Page extends \DDTools\BaseClass {
 	 */
 	private function injectedHTML_addJsCssInit($index = NULL){
 		if (
-			//If need to inject some HTML elements on this event
+			// If need to inject some HTML elements on this event
 			isset($this->injectedHTML->{$this->event->name}) &&
-			//And JS init is not injected before
+			// And JS init is not injected before
 			!$this->injectedHTML_hasJsInit
 		){
 			global
@@ -418,7 +418,7 @@ class Page extends \DDTools\BaseClass {
 			
 			$injectedJsCss = [];
 			
-			//All needed JS
+			// All needed JS
 			$pluginJsUrls = Core::getPluginJsUrls();
 			
 			foreach (
@@ -428,10 +428,10 @@ class Page extends \DDTools\BaseClass {
 			){
 				if (
 					$pluginJsUrls_itemName != 'jQuery' ||
-					//jQuery including depends on CMS config
+					// jQuery including depends on CMS config
 					empty(\ddTools::$modx->getConfig('mgr_jquery_path'))
 				){
-					//Inject script
+					// Inject script
 					$injectedJsCss[] = (object) [
 						'name' => 'script',
 						'data' => [
@@ -439,20 +439,20 @@ class Page extends \DDTools\BaseClass {
 						]
 					];
 					
-					//Remember including
+					// Remember including
 					$pluginJsUrls_itemData->extension = 'js';
 					$this->includedJsCss_add($pluginJsUrls_itemData);
 				}
 			}
 			
-			//All needed CSS
+			// All needed CSS
 			$pluginCssUrls = Core::getPluginCssUrls();
 			
 			foreach (
 				$pluginCssUrls as
 				$pluginCssUrls_itemData
 			){
-				//Inject CSS
+				// Inject CSS
 				$injectedJsCss[] = (object) [
 					'name' => 'link',
 					'data' => [
@@ -460,7 +460,7 @@ class Page extends \DDTools\BaseClass {
 					]
 				];
 				
-				//Remember including
+				// Remember including
 				$pluginCssUrls_itemData->extension = 'css';
 				$this->includedJsCss_add($pluginCssUrls_itemData);
 			}
@@ -504,12 +504,12 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				]
 			];
 			
-			//Insert at the end by default
+			// Insert at the end by default
 			if ($index === NULL){
 				$index = count($this->injectedHTML->{$this->event->name});
 			}
 			
-			//Save
+			// Save
 			array_splice(
 				$this->injectedHTML->{$this->event->name},
 				$index,
@@ -517,29 +517,29 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				$injectedJsCss
 			);
 			
-			//And remember to avoid duplication
+			// And remember to avoid duplication
 			$this->injectedHTML_hasJsInit = true;
 		}
 	}
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.4 (2021-03-30)
+	 * @version 1.0.5 (2024-08-04)
 	 * 
 	 * @return {void}
 	 */
 	public function fireCurrentEvent(){
-		//If need to inject some HTML elements on this event
+		// If need to inject some HTML elements on this event
 		if (
 			isset($this->injectedHTML->{$this->event->name}) &&
 			!empty($this->injectedHTML->{$this->event->name})
 		){
-			//If begining is not ejected before
+			// If begining is not ejected before
 			if (
 				$this->injectedHTML->{$this->event->name}[0]->name != 'comment' ||
 				$this->injectedHTML->{$this->event->name}[0]->data['content'] != 'ManagerManager : Begin'
 			){
-				//Add begining
+				// Add begining
 				array_unshift(
 					$this->injectedHTML->{$this->event->name},
 					(object) [
@@ -551,13 +551,13 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				);
 			}
 			
-			//If ending is not ejected before
+			// If ending is not ejected before
 			if (
 				$this->injectedHTML->{$this->event->name}[
 					count($this->injectedHTML->{$this->event->name}) - 1
 				]->name != 'comment'
 			){
-				//Add ending
+				// Add ending
 				$this->injectedHTML->{$this->event->name}[] = (object) [
 					'name' => 'comment',
 					'data' => [
@@ -566,7 +566,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				];
 			}
 			
-			//Inject JS init if some scripts is used on the page
+			// Inject JS init if some scripts is used on the page
 			foreach (
 				$this->injectedHTML->{$this->event->name} as
 				$elementIndex =>
@@ -575,19 +575,19 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				if (strtolower($elementInfo->name) == 'script'){
 					$this->injectedHTML_addJsCssInit($elementIndex);
 					
-					//Just one time
+					// Just one time
 					break;
 				}
 			}
 			
 			$htmlToOutput = [];
 			
-			//Foreach all elements
+			// Foreach all elements
 			foreach (
 				$this->injectedHTML->{$this->event->name} as
 				$element
 			){
-				//Get element code
+				// Get element code
 				$htmlToOutput[] = \ManagerManager\Element\Element::createChildInstance([
 					'name' => $element->name,
 					'parentDir' =>
@@ -600,7 +600,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 				])->render();
 			}
 			
-			//Inject elements
+			// Inject elements
 			$this->event->output(
 				implode(
 					PHP_EOL,
@@ -613,7 +613,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	
 	/**
 	 * applyRules
-	 * @version 1.0.7 (2021-03-30)
+	 * @version 1.0.8 (2024-08-04)
 	 * 
 	 * @desc Apply the rules.
 	 * 
@@ -625,7 +625,7 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 	 * @return {string} — Including status message.
 	 */
 	protected function applyRules($rulesChunkName){
-		//Global modx object & $content for rules :|
+		// Global modx object & $content for rules :|
 		global
 			$modx,
 			$content
@@ -642,18 +642,18 @@ $j.ddMM.fields = $j.parseJSON(\'' . json_encode(Core::getDocFields()) . '\');
 			'mm_rules.inc.php'
 		;
 		
-		//See if there is any chunk output (e.g. it exists, and is not empty)
+		// See if there is any chunk output (e.g. it exists, and is not empty)
 		$chunkContent = \ddTools::$modx->getChunk($rulesChunkName);
 		
 		if (!empty($chunkContent)){
-			//If there is, run it.
+			// If there is, run it.
 			eval($chunkContent);
 			
 			$result =
 				'//Getting rules from chunk: ' .
 				$rulesChunkName
 			;
-		//If there's no chunk output, read in the file.
+		// If there's no chunk output, read in the file.
 		}elseif (is_readable($rulesFilePath)){
 			include($rulesFilePath);
 			

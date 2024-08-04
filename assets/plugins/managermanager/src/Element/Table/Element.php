@@ -66,7 +66,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_header
-	 * @version 1.0.3 (2021-03-30)
+	 * @version 1.0.4 (2024-08-04)
 	 * 
 	 * @return {string}
 	 */
@@ -95,7 +95,7 @@ class Element extends \ManagerManager\Element\Element {
 		}
 		
 		if ($result != ''){
-			//Create row
+			// Create row
 			$result .= parent::createChildInstance([
 				'name' => 'tr',
 				'parentDir' =>
@@ -118,7 +118,7 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render_body
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @return {string}
 	 */
@@ -152,7 +152,7 @@ class Element extends \ManagerManager\Element\Element {
 				])->render();
 			}
 			
-			//Create row
+			// Create row
 			$result .= parent::createChildInstance([
 				'name' => 'tr',
 				'parentDir' =>

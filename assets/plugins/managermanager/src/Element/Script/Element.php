@@ -29,16 +29,16 @@ class Element extends \ManagerManager\Element\Element {
 	
 	/**
 	 * render
-	 * @version 1.0.1 (2019-02-20)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
 	 * @return {string}
 	 */
 	public function render(){
-		//Prepare attrs src string
+		// Prepare attrs src string
 		if (!empty($this->data['attrs.src'])){
 			$this->data['attrs.srcString'] = \ddTools::parseText([
 				'text' => $this->data['attrs.srcString'],
-				//We need only $this->data['attrs.src'], but we just can send all $this->data. Why not?
+				// We need only $this->data['attrs.src'], but we just can send all $this->data. Why not?
 				'data' => $this->data
 			]);
 		}else{

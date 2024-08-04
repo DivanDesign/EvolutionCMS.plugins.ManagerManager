@@ -23,7 +23,7 @@
 
 namespace ManagerManager;
 
-//Include needed files
+// Include needed files
 if(!class_exists('Core')){
 	require_once(
 		MODX_BASE_PATH .
@@ -31,10 +31,10 @@ if(!class_exists('Core')){
 	);
 }
 
-//Install required resources if needed and include ddTools
+// Install required resources if needed and include ddTools
 new Installer();
 
-//Include (MODX)EvolutionCMS.libraries.ddTools
+// Include (MODX)EvolutionCMS.libraries.ddTools
 require_once(
 	MODX_BASE_PATH .
 	'assets/libs/ddTools/modx.ddtools.class.php'
@@ -49,7 +49,7 @@ global
 ;
 
 if (is_object($ManagerManagerCore)){
-	//Fire event
+	// Fire event
 	$ManagerManagerCore->currentPage->fireCurrentEvent();
 }else{
 	$ManagerManagerCore = new Core([

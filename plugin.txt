@@ -17,23 +17,23 @@
  * @copyright 2014
  */
 
-//You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best
+// You can put your ManagerManager rules EITHER in a chunk OR in an external file - whichever suits your development style the best
 
-//To use an external file, put your rules in /assets/plugins/managermanager/mm_rules.inc.php 
-//The chunk SHOULD have php opening tags at the beginning and end
+// To use an external file, put your rules in /assets/plugins/managermanager/mm_rules.inc.php 
+// The chunk SHOULD have php opening tags at the beginning and end
 
-//If you want to put your rules in a chunk (so you can edit them through the Manager),
-//create the chunk, and enter its name in the configuration tab.
-//The chunk should NOT have php tags at the beginning or end.
+// If you want to put your rules in a chunk (so you can edit them through the Manager),
+// create the chunk, and enter its name in the configuration tab.
+// The chunk should NOT have php tags at the beginning or end.
 
-//See also user-friendly module for editing ManagerManager configuration file ddMMEditor (https://code.divandesign.biz/modx/ddmmeditor).
+// See also user-friendly module for editing ManagerManager configuration file ddMMEditor (https://code.divandesign.biz/modx/ddmmeditor).
 
-//ManagerManager requires jQuery 1.9.1, which is located in /assets/plugins/managermanager/js/ folder.
+// ManagerManager requires jQuery 1.9.1, which is located in /assets/plugins/managermanager/js/ folder.
 
-//You don't need to change anything else from here onwards
-//-------------------------------------------------------
+// You don't need to change anything else from here onwards
+// -------------------------------------------------------
 
-//If version of PHP < 5.4
+// If version of PHP < 5.4
 if (
 	version_compare(
 		PHP_VERSION,
@@ -48,7 +48,7 @@ if (
 		'ManagerManager'
 	);
 }else{
-	//Run the main code
+	// Run the main code
 	include(
 		$modx->getConfig('base_path') .
 		'assets/plugins/managermanager/mm.inc.php'

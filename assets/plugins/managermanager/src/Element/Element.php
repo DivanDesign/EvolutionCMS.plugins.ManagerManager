@@ -27,7 +27,7 @@ class Element extends \DDTools\BaseClass {
 	
 	/**
 	 * __construct
-	 * @version 1.0.4 (2021-03-30)
+	 * @version 1.0.5 (2024-08-04)
 	 * 
 	 * @param $params {arrayAssociative|stdClass} — The object of params.
 	 * @param $params->data {arrayAssociative} — Multidimensional data is supported too. Default: —.
@@ -37,13 +37,13 @@ class Element extends \DDTools\BaseClass {
 	public function __construct($params = []){
 		$params = (object) $params;
 		
-		//Prepare template name first
+		// Prepare template name first
 		$templatePath = explode(
 			'\\',
 			get_class($this)
 		);
 		
-		//Child class name
+		// Child class name
 		$templatePath = strtolower(
 			$templatePath[
 				count($templatePath) -
@@ -59,12 +59,12 @@ class Element extends \DDTools\BaseClass {
 			'.html'
 		;
 		
-		//Save template
+		// Save template
 		if (is_file($templatePath)){
 			$this->template = file_get_contents($templatePath);
 		}
 		
-		//Support multidimensional data
+		// Support multidimensional data
 		$this->data = \ddTools::unfoldArray($this->data);
 		
 		$this->data = array_merge(
@@ -72,9 +72,9 @@ class Element extends \DDTools\BaseClass {
 			$this->data
 		);
 		
-		//Save data
+		// Save data
 		if (is_array($params->data)){
-			//Support multidimensional data
+			// Support multidimensional data
 			$params->data = \ddTools::unfoldArray($params->data);
 			
 			$this->data = array_merge(
@@ -86,27 +86,27 @@ class Element extends \DDTools\BaseClass {
 	
 	/**
 	 * render
-	 * @version 1.0.1 (2019-02-21)
+	 * @version 1.0.2 (2024-08-04)
 	 * 
 	 * @return {string}
 	 */
 	public function render(){
-		//Prepare attrs class string
+		// Prepare attrs class string
 		if (!empty($this->data['attrs.class'])){
 			$this->data['attrs.classString'] = \ddTools::parseText([
 				'text' => $this->data['attrs.classString'],
-				//We need only $this->data['attrs.class'], but we just can send all $this->data. Why not?
+				// We need only $this->data['attrs.class'], but we just can send all $this->data. Why not?
 				'data' => $this->data
 			]);
 		}else{
 			$this->data['attrs.classString'] = '';
 		}
 		
-		//Prepare attrs id string
+		// Prepare attrs id string
 		if (!empty($this->data['attrs.id'])){
 			$this->data['attrs.idString'] = \ddTools::parseText([
 				'text' => $this->data['attrs.idString'],
-				//We need only $this->data['attrs.src'], but we just can send all $this->data. Why not?
+				// We need only $this->data['attrs.src'], but we just can send all $this->data. Why not?
 				'data' => $this->data
 			]);
 		}else{

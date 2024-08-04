@@ -27,15 +27,15 @@ $j("select[name="type"] option").each(function(){
 	
 	/**
 	 * fireCurrentEvent
-	 * @version 1.0.1 (2019-02-12)
+	 * @version 1.0.2 (2024-08-04)
 	 *
 	 * @return {void}
 	 */
 	public function fireCurrentEvent(){
 		if (
-			//If need to inject some HTML elements on this event
+			// If need to inject some HTML elements on this event
 			isset($this->injectedHTML->{$this->event->name}) &&
-			//Should we remove deprecated Template variable types from the TV creation list?
+			// Should we remove deprecated Template variable types from the TV creation list?
 			$this->event->params['remove_deprecated_tv_types_pref'] == 'yes'
 		){
 			parent::fireCurrentEvent();

@@ -2,7 +2,7 @@
 function mm_compatibility_init($params){
 	$params = (object) $params;
 	
-	//Backward compatibility
+	// Backward compatibility
 	global
 		$ManagerManagerCore_currentPage,
 		$mm_pluginDir,

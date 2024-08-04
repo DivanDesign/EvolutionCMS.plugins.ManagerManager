@@ -36,24 +36,24 @@ class Core {
 	
 	/**
 	 * __construct
-	 * @version 1.2.5 (2022-05-23)
+	 * @version 1.2.6 (2024-08-04)
 	 */
 	public function __construct($params = []){
 		$params = (object) $params;
 		
-		//Init plugin path
+		// Init plugin path
 		self::getPluginPaths();
 		
-		//Init document fields
+		// Init document fields
 		self::getDocFields();
 		
-		//Init plugin JS urls
+		// Init plugin JS urls
 		self::getPluginJsUrls();
 		
-		//Init plugin CSS urls
+		// Init plugin CSS urls
 		self::getPluginCssUrls();
 		
-		//Init current page object
+		// Init current page object
 		$pageType = 'virtual';
 		
 		switch (\ddTools::$modx->Event->name){
@@ -89,22 +89,22 @@ class Core {
 			);
 		}
 		
-		//TODO: Remove it
-		//Include widgets
+		// TODO: Remove it
+		// Include widgets
 		$this->includeWidgets();
 		
-		//Fire event
+		// Fire event
 		$this->currentPage->fireCurrentEvent();
 	}
 	
 	/**
 	 * getPluginPaths
-	 * @version 2.0 (2021-03-30)
+	 * @version 2.0.1 (2024-08-04)
 	 * 
 	 * @return {stdClass}
 	 */
 	public static function getPluginPaths(){
-		//If paths is not inited before
+		// If paths is not inited before
 		if (!is_object(self::$paths)){
 			self::$paths = (object) self::$paths;
 			
@@ -127,13 +127,13 @@ class Core {
 	
 	/**
 	 * getDocFields
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @return {string}
 	 */
 	public static function getDocFields(){
 		if (!isset(self::$docFields)){
-			//What are the fields we can change, and what types are they?
+			// What are the fields we can change, and what types are they?
 			self::$docFields = [
 				'pagetitle' => [
 					'fieldtype' => 'input',
@@ -195,7 +195,7 @@ class Core {
 					'dbname' => 'hidemenu',
 					'tv' => false
 				],
-				//synonym for show_in_menu
+				// synonym for show_in_menu
 				'hide_menu' => [
 					'fieldtype' => 'input',
 					'fieldname' => 'hidemenucheck',
@@ -318,15 +318,15 @@ class Core {
 				]
 			];
 			
-			//Add in TVs to the list of available fields
+			// Add in TVs to the list of available fields
 			$allTvs = \ddTools::$modx->db->makeArray(\ddTools::$modx->db->select(
-				//Fields
+				// Fields
 				'name,type,id',
-				//From
+				// From
 				\ddTools::$tables['site_tmplvars'],
-				//Where
+				// Where
 				'',
-				//Order by
+				// Order by
 				'name ASC'
 			));
 			
@@ -334,16 +334,16 @@ class Core {
 				$allTvs as
 				$allTvs_item
 			){
-				//What is the field name?
+				// What is the field name?
 				$fieldName = $allTvs_item['name'];
 				
-				//Input by default
+				// Input by default
 				$fieldType = 'input';
-				//Checkboxes place an underscore in the ID, so accommodate this...
+				// Checkboxes place an underscore in the ID, so accommodate this...
 				$fieldName_suffix = '';
 				
-				//What fieldtype is this TV type?
-				//fix for MODX EVO 1.1 by Dmi3yy
+				// What fieldtype is this TV type?
+				// fix for MODX EVO 1.1 by Dmi3yy
 				$allTvs_itemType = explode(
 					':',
 					$allTvs_item['type']
@@ -373,7 +373,7 @@ class Core {
 					break;
 				}
 				
-				//Check if there are any name clashes between TVs and default field names? If there is, preserve the default field
+				// Check if there are any name clashes between TVs and default field names? If there is, preserve the default field
 				if (!isset(self::$docFields[$fieldName])){
 					self::$docFields[$fieldName] = [
 						'fieldtype' => $fieldType,
@@ -477,23 +477,23 @@ class Core {
 	
 	/**
 	 * includeWidgets
-	 * @version 1.0.2 (2021-03-30)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @todo Remove it, don't use “widgets” concept.
 	 * 
 	 * @return {void}
 	 */
 	private function includeWidgets(){
-		//When loading widgets, ignore folders / files beginning with these chars
+		// When loading widgets, ignore folders / files beginning with these chars
 		$ignoreFirstChars = [
 			'.',
 			'_',
 			'!'
 		];
 		
-		//Include widgets
-		//We look for a PHP file with the same name as the directory - e.g.
-		///widgets/widgetname/widgetname.php
+		// Include widgets
+		// We look for a PHP file with the same name as the directory - e.g.
+		// /widgets/widgetname/widgetname.php
 		$widgetDir =
 			self::$pluginPath .
 			'widgets'
