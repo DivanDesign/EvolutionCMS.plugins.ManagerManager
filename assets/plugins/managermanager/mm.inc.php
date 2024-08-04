@@ -54,7 +54,7 @@ if (!is_array($mm_includedJsCss)){
 
 $mm_current_page = [];
 
-//Get page template
+// Get page template
 if (isset($e->params['template'])){
 	$mm_current_page['template'] = $e->params['template'];
 }elseif (isset($_POST['template'])){
@@ -112,16 +112,16 @@ $jsUrls = [
 	]
 ];
 
-//Include (MODX)EvolutionCMS.libraries.ddTools (needed for some widgets)
+// Include (MODX)EvolutionCMS.libraries.ddTools (needed for some widgets)
 require_once(
-	//path to `assets`
+	// Path to `assets`
 	dirname(
 		__DIR__,
 		2
-	) .
-	'/libs/ddTools/modx.ddtools.class.php'
+	)
+	. '/libs/ddTools/modx.ddtools.class.php'
 );
-//Include Utilites
+// Include Utilites
 include_once(
 	$mm_pluginDir .
 	'utilities.inc.php'
@@ -423,7 +423,7 @@ foreach (
 if (!function_exists('ManagerManager_includeRules')){
 	/**
 	 * ManagerManager_includeRules
-	 * @version 1.0.2 (2020-07-29)
+	 * @version 1.0.3 (2024-08-04)
 	 * 
 	 * @desc Include the rules.
 	 * 
@@ -432,7 +432,7 @@ if (!function_exists('ManagerManager_includeRules')){
 	 * @return {string} — Including status message.
 	 */
 	function ManagerManager_includeRules($chunkName){
-		//Global modx object & $content for rules
+		// Global modx object & $content for rules
 		global
 			$modx,
 			$content
@@ -445,7 +445,7 @@ if (!function_exists('ManagerManager_includeRules')){
 			'assets/plugins/managermanager/mm_rules.inc.php'
 		;
 		
-		//See if there is any chunk output (e.g. it exists, and is not empty)
+		// See if there is any chunk output (e.g. it exists, and is not empty)
 		$chunkContent = $modx->getChunk($chunkName);
 		
 		if (!empty($chunkContent)){
@@ -456,7 +456,7 @@ if (!function_exists('ManagerManager_includeRules')){
 				'// Getting rules from chunk: ' .
 				$chunkName
 			;
-		//If there's no chunk output, read in the file.
+		// If there's no chunk output, read in the file.
 		}elseif (is_readable($configFilePath)){
 			include($configFilePath);
 			
@@ -596,7 +596,7 @@ $j(function(){
 </script>
 ');
 		
-		//Just run widgets
+		// Just run widgets
 		ManagerManager_includeRules($e->params['config_chunk']);
 		
 		$e->output(
@@ -622,7 +622,7 @@ $j(function(){
 		// Lets handle errors nicely...
 		try {
 			// Change section index depending on Content History running or not
-			//ch-body is the CH id name (currently at least)
+			// ch-body is the CH id name (currently at least)
 			var sidx = ($j("div.sectionBody:eq(1)").attr("id") == "ch-body") ? 1 : 0;
 			
 			// Give IDs to the sections of the form
@@ -650,7 +650,7 @@ $j(function(){
 				$j("div.tmplvars").hide();
 				// Still contains an empty table and some dividers
 				$j("div.tmplvars").prev("div").hide();
-				//$j("#sectionTVsHeader").hide();
+				// $j("#sectionTVsHeader").hide();
 			}
 			
 			// If template category is empty, hide the optgroup
@@ -717,20 +717,20 @@ $j(function(){
 	break;
 	
 	case 'OnDocDuplicate':
-		//Get document template from db
+		// Get document template from db
 		$mm_current_page['template'] = $modx->db->getValue($modx->db->select(
 			'template',
 			\ddTools::$tables['site_content'],
 			'`id` = ' . $e->params['new_id']
 		));
 		
-		//Just run widgets
+		// Just run widgets
 		ManagerManager_includeRules($e->params['config_chunk']);
 	break;
 	
 	case 'OnDocFormSave':
 	case 'OnBeforeDocFormSave':
-		//Just run widgets
+		// Just run widgets
 		ManagerManager_includeRules($e->params['config_chunk']);
 	break;
 }

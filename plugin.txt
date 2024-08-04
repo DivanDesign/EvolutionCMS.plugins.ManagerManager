@@ -31,9 +31,9 @@
 // ManagerManager requires jQuery 1.9.1, which is located in /assets/plugins/managermanager/js/ folder.
 
 // You don't need to change anything else from here onwards
-//-------------------------------------------------------
+// -------------------------------------------------------
 
-//If version of PHP < 5.4
+// If version of PHP < 5.4
 if (version_compare(
 	PHP_VERSION,
 	'5.4',

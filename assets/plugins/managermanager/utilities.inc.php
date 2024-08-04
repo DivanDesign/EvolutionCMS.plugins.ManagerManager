@@ -1,7 +1,7 @@
 <?php
 /**
  * useThisRule
- * @version 1.1.3 (2022-05-22)
+ * @version 1.1.4 (2024-08-04)
  * 
  * @desc Pass useThisRule a comma separated list of allowed roles and templates, and it will return TRUE or FALSE to indicate whether this rule should be run on this page.
  * 
@@ -26,7 +26,7 @@ function useThisRule(
 	$excludeRoles = false;
 	$excludeTemplates = false;
 	
-	//Are they negative roles?
+	// Are they negative roles?
 	if (
 		is_string($roles) &&
 		substr(
@@ -42,7 +42,7 @@ function useThisRule(
 		$excludeRoles = true;
 	}
 	
-	//Are they negative templates?
+	// Are they negative templates?
 	if (
 		is_string($templates) &&
 		substr(
@@ -58,11 +58,11 @@ function useThisRule(
 		$excludeTemplates = true;
 	}
 	
-	//Make the lists into arrays
+	// Make the lists into arrays
 	$roles = makeArray($roles);
 	$templates = makeArray($templates);
 	
-	//Does the current role match the conditions supplied?
+	// Does the current role match the conditions supplied?
 	$matchRoleList =
 		$excludeRoles ?
 		!in_array(
@@ -75,7 +75,7 @@ function useThisRule(
 		)
 	;
 	
-	//Does the current template match the conditions supplied?
+	// Does the current template match the conditions supplied?
 	$matchTemplateList =
 		$excludeTemplates ?
 		!in_array(
@@ -88,7 +88,7 @@ function useThisRule(
 		)
 	;
 	
-	//If we've matched either list in any way, return true	
+	// If we've matched either list in any way, return true	
 	if (
 		(
 			$matchRoleList ||
@@ -107,7 +107,7 @@ function useThisRule(
 
 /**
  * makeArray
- * @version 1.1.2 (2020-11-01)
+ * @version 1.1.3 (2024-08-04)
  * 
  * @desc Makes a commas separated list into an array.
  * 
@@ -118,18 +118,18 @@ function useThisRule(
 function makeArray($csv){
 	$result = [];
 	
-	//If we've already been supplied an array, just return it
+	// If we've already been supplied an array, just return it
 	if (is_array($csv)){
 		$result = $csv;
 	}else{
-		//Else if we have an not empty string
+		// Else if we have an not empty string
 		if (trim($csv) != ''){
-			//Otherwise, turn it into an array
+			// Otherwise, turn it into an array
 			$result = explode(
 				',',
 				$csv
 			);
-			//Remove any whitespace
+			// Remove any whitespace
 			array_walk(
 				$result,
 				create_function(
@@ -166,7 +166,7 @@ function jsSafe($str){
 
 /**
  * tplUseTvs
- * @version 1.3.2 (2020-11-01)
+ * @version 1.3.3 (2024-08-04)
  * 
  * @desc Does the specified template use the specified TVs?
  * 
@@ -187,16 +187,16 @@ function tplUseTvs(
 ){
 	$result = false;
 	
-	//If it's a blank template, it can't have TVs
+	// If it's a blank template, it can't have TVs
 	if($templateId != 0){
 		global $modx;
 		
-		//Make the TVs, field types and DB fields into an array
+		// Make the TVs, field types and DB fields into an array
 		$fields = makeArray($tvs);
 		$types = makeArray($types);
 		$dbFields = makeArray($dbFields);
 		
-		//Add the result key in DB fields if return of an associative array is required & result key is absent there
+		// Add the result key in DB fields if return of an associative array is required & result key is absent there
 		if (
 			$resultKey !== false &&
 			!in_array(
@@ -208,7 +208,7 @@ function tplUseTvs(
 		}
 		
 		$where = [];
-		//Are we looking at specific TVs, or all?
+		// Are we looking at specific TVs, or all?
 		if (!empty($fields)){
 			$where[] =
 				'tvs.name IN ' .
@@ -216,7 +216,7 @@ function tplUseTvs(
 			;
 		}
 		
-		//Are we looking at specific TV types, or all?
+		// Are we looking at specific TV types, or all?
 		if (!empty($types)){
 			$where[] =
 				'type IN ' .
@@ -224,7 +224,7 @@ function tplUseTvs(
 			;
 		}
 		
-		//Make the SQL for this template
+		// Make the SQL for this template
 		if (!empty($templateId)){
 			$where[] =
 				'rel.templateid = ' .
@@ -232,7 +232,7 @@ function tplUseTvs(
 			;
 		}
 		
-		//Execute the SQL query
+		// Execute the SQL query
 		$dbResult = $modx->db->select(
 			implode(
 				',',
@@ -252,14 +252,14 @@ function tplUseTvs(
 		
 		$recordCount = $modx->db->getRecordCount($dbResult);
 		
-		//If we have results, return them, otherwise return false
+		// If we have results, return them, otherwise return false
 		if ($recordCount > 0){
-			//If return of an associative array is required
+			// If return of an associative array is required
 			if ($resultKey !== false){
 				$rsArray = [];
 				
 				while ($row = $modx->db->getRow($dbResult)){
-					//If result contains the result key
+					// If result contains the result key
 					if (
 						array_key_exists(
 							$resultKey,
@@ -284,7 +284,7 @@ function tplUseTvs(
 
 /**
  * getTplMatchedFields
- * @version 1.2 (2020-11-01)
+ * @version 1.2.1 (2024-08-04)
  * 
  * @desc Returns the array that contains only those of passed fields/TVs which are used in the template.
  * 
@@ -305,7 +305,7 @@ function getTplMatchedFields(
 	
 	global $mm_fields;
 	
-	//Template of current document by default
+	// Template of current document by default
 	if (empty($tempaleId)){
 		global $mm_current_page;
 		
@@ -314,7 +314,7 @@ function getTplMatchedFields(
 	
 	$docFields = [];
 	
-	//Only document fields
+	// Only document fields
 	foreach (
 		$fields as
 		$field
@@ -328,14 +328,14 @@ function getTplMatchedFields(
 	}
 	
 	if (
-		//If $fields set as an empty string, we need to get only TVs 
+		// If $fields set as an empty string, we need to get only TVs 
 		!empty($fields) &&
-		//If $fields contains no TVs
+		// If $fields contains no TVs
 		count($docFields) == count($fields)
 	){
 		$result = $docFields;
 	}else{
-		//Get specified TVs for this template
+		// Get specified TVs for this template
 		$fields = tplUseTvs(
 			$tempaleId,
 			$fields,
@@ -344,7 +344,7 @@ function getTplMatchedFields(
 			'name'
 		);
 		
-		//If there are no appropriate TVs
+		// If there are no appropriate TVs
 		if ($fields == false){
 			if (!empty($docFields)){
 				$result = $docFields;
@@ -362,7 +362,7 @@ function getTplMatchedFields(
 
 /**
  * makeSqlList
- * @version 1.0.5 (2020-11-01)
+ * @version 1.0.6 (2024-08-04)
  * 
  * @desc Create a MySQL-safe list from an array.
  * 
@@ -380,8 +380,8 @@ function makeSqlList($fieldsArray){
 		$name =>
 		$value
 	){
-		//if (substr($value, 0, 2) == 'tv'){$value = substr($value, 2);}
-		//Escape them for MySQL
+		// if (substr($value, 0, 2) == 'tv'){$value = substr($value, 2);}
+		// Escape them for MySQL
 		$fieldsArray[$name] =
 			"'" .
 			$modx->db->escape($value) .
@@ -401,7 +401,7 @@ function makeSqlList($fieldsArray){
 
 /**
  * includeJsCss
- * @version 1.3.7 (2020-11-01)
+ * @version 1.3.8 (2024-08-04)
  * 
  * @desc Generates the code needed to include an external script file.
  * 
@@ -468,22 +468,22 @@ function includeJsCss(
 		}
 	}
 	
-	//If this script is already included
+	// If this script is already included
 	if (isset($mm_includedJsCss[$nameVersion['name']])){
-		//If old < new, use new, else — old
+		// If old < new, use new, else — old
 		$useThisVer = version_compare(
 			$mm_includedJsCss[$nameVersion['name']]['version'],
 			$nameVersion['version'],
 			'<'
 		);
 	}else{
-		//Add
+		// Add
 		$mm_includedJsCss[$nameVersion['name']] = [];
 	}
 	
-	//If the new version is used
+	// If the new version is used
 	if ($useThisVer){
-		//Save the new version
+		// Save the new version
 		$mm_includedJsCss[$nameVersion['name']]['version'] = $nameVersion['version'];
 		
 		$result = $source;
@@ -497,7 +497,7 @@ function includeJsCss(
 				'&' :
 				'?'
 			;
-			//Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
+			// Version was added at the end of path (“path/to/file.js?version=1.0”) to avoid browser cache.
 			$result .=
 				'version=' .
 				$nameVersion['version']
@@ -577,7 +577,7 @@ function includeCss($url, $outputType = 'js'){
 
 /**
  * prepareTabId
- * @version 1.0.2 (2020-11-01)
+ * @version 1.0.3 (2024-08-04)
  * 
  * @desc Prepare id of a tab.
  * 
@@ -586,17 +586,17 @@ function includeCss($url, $outputType = 'js'){
  * @return {string} — Tab ID.
  */
 function prepareTabId($id){
-	//General tab by default
+	// General tab by default
 	if ($id == ''){
 		$id = 'general';
 	}
 	
-	//If it's one of the default tabs, we need to get the capitalisation right
+	// If it's one of the default tabs, we need to get the capitalisation right
 	switch ($id){
 		case 'general':
 		case 'settings':
 		case 'access':
-		//version 1.0.0 only, removed in 1.0.1
+		// version 1.0.0 only, removed in 1.0.1
 		case 'meta':
 			$id = ucfirst($id);
 		break;
