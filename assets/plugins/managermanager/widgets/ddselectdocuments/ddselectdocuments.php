@@ -1,24 +1,24 @@
 <?php
 /**
  * mm_ddSelectDocuments
- * @version 1.6 (2022-04-14)
+ * @version 1.6.1 (2025-03-05)
  * 
  * @see README.md
  * 
- * @link https://code.divandesign.biz/modx/mm_ddselectdocuments
+ * @link https://code.divandesign.ru/modx/mm_ddselectdocuments
  * 
- * @copyright 2013–2022 DD Group {@link https://DivanDesign.biz }
+ * @copyright 2013–2025 Ronef {@link https://Ronef.me }
  */
 
 function mm_ddSelectDocuments($params){
-	//For backward compatibility
+	// For backward compatibility
 	if (
-		//The only one required “fields” parameter
-		is_string($params) ||
-		//Or not
-		func_num_args() > 1
+		// The only one required “fields” parameter
+		is_string($params)
+		// Or not
+		|| func_num_args() > 1
 	){
-		//Convert ordered list of params to named
+		// Convert ordered list of params to named
 		$params = \ddTools::orderedParamsToNamed([
 			'paramsList' => func_get_args(),
 			'compliance' => [
@@ -30,14 +30,14 @@ function mm_ddSelectDocuments($params){
 				'filter',
 				'maxSelectedItems',
 				'listItemLabelMask',
-				'allowDuplicates'
-			]
+				'allowDuplicates',
+			],
 		]);
 	}
 	
 	$params = \DDTools\ObjectTools::extend([
 		'objects' => [
-			//Defaults
+			// Defaults
 			(object) [
 				'fields' => '',
 				'parentIds' => '0',
@@ -47,10 +47,10 @@ function mm_ddSelectDocuments($params){
 				'maxSelectedItems' => 0,
 				'allowDuplicates' => false,
 				'roles' => '',
-				'templates' => ''
+				'templates' => '',
 			],
-			$params
-		]
+			$params,
+		],
 	]);
 	
 	if (
@@ -108,17 +108,17 @@ function mm_ddSelectDocuments($params){
 		}
 		
 		$params->parentIds = makeArray($params->parentIds);
-		//Если используется current, то сделаем id текущего документа
+		// Если используется current, то сделаем id текущего документа
 		foreach (
-			$params->parentIds as
-			$key =>
-			$id
+			$params->parentIds
+			as $key
+			=> $id
 		){
 			if ($id == 'current'){
 				if (
-					is_array($e->params) &&
-					isset($e->params['id']) &&
-					is_numeric($e->params['id'])
+					is_array($e->params)
+					&& isset($e->params['id'])
+					&& is_numeric($e->params['id'])
 				){
 					$params->parentIds[$key] = $e->params['id'];
 				}else{
@@ -127,26 +127,26 @@ function mm_ddSelectDocuments($params){
 			}
 		}
 		
-		//Может быть пустым если указан current и создаем новый документ
+		// Может быть пустым если указан current и создаем новый документ
 		if (count($params->parentIds) == 0){
 			return;
 		}
 		
 		$params->filter =
-			!empty($params->filter) ?
-			explode(
-				"&",
+			!empty($params->filter)
+			? explode(
+				'&',
 				$params->filter
-			) :
-			[]
+			)
+			: []
 		;
 		
 		$filter_TVnames = [];
 		
 		foreach(
-			$params->filter as
-			$key =>
-			$val
+			$params->filter
+			as $key
+			=> $val
 		){
 			$preg = preg_split(
 				"/(!=)|(=)/",
@@ -157,7 +157,7 @@ function mm_ddSelectDocuments($params){
 				$params->filter[$key] = [
 					'key' => trim($preg[0]),
 					'value' => trim($preg[1]),
-					'equal' => true
+					'equal' => true,
 				];
 				
 				if(strrpos($val, '!=')){
@@ -171,7 +171,7 @@ function mm_ddSelectDocuments($params){
 			}
 		}
 		
-		//Необходимые поля
+		// Необходимые поля
 		preg_match_all(
 			'~\[\+([^\+\]]*?)\+\]~',
 			$params->listItemLabelMask,
@@ -182,12 +182,12 @@ function mm_ddSelectDocuments($params){
 			$filter_TVnames,
 			[
 				'pagetitle',
-				'id'
+				'id',
 			],
 			$matchField[1]
 		));
 		
-		//Если среди полей есть ключевое слово «title»
+		// Если среди полей есть ключевое слово «title»
 		if (
 			(
 				$listDocs_fields_titlePos = array_search(
@@ -197,7 +197,7 @@ function mm_ddSelectDocuments($params){
 			) !==
 			false
 		){
-			//Удалим его, добавим «menutitle»
+			// Удалим его, добавим «menutitle»
 			unset($listDocs_fields[$listDocs_fields_titlePos]);
 			
 			$listDocs_fields = array_unique(array_merge(
@@ -206,13 +206,13 @@ function mm_ddSelectDocuments($params){
 			));
 		}
 		
-		//Получаем все дочерние документы
+		// Получаем все дочерние документы
 		$listDocs = mm_ddSelectDocuments_getDocsList([
 			'parentIds' => $params->parentIds,
 			'filter' => $params->filter,
 			'depth' => $params->depth,
 			'listItemLabelMask' => $params->listItemLabelMask,
-			'docFields' => $listDocs_fields
+			'docFields' => $listDocs_fields,
 		]);
 		
 		if (count($listDocs) == 0){
@@ -221,26 +221,24 @@ function mm_ddSelectDocuments($params){
 		
 		$listDocs = \DDTools\ObjectTools::convertType([
 			'object' => $listDocs,
-			'type' => 'stringJsonAuto'
+			'type' => 'stringJsonAuto',
 		]);
 		
-		$output .= '//---------- mm_ddSelectDocuments :: Begin -----' . PHP_EOL;
+		$output .= '// ManagerManager.mm_ddSelectDocuments' . PHP_EOL;
 		
 		foreach (
-			$params->fields as
-			$field
+			$params->fields
+			as $field
 		){
 			$output .=
 '
 $j("#tv' . $field['id'] . '").ddMultipleInput({
 	source: ' . $listDocs . ',
 	max: ' . (int) $params->maxSelectedItems . ',
-	allowDoubling: ' . (int) $params->allowDuplicates . '
+	allowDoubling: ' . (int) $params->allowDuplicates . ',
 });
 ';
 		}
-		
-		$output .= '//---------- mm_ddSelectDocuments :: End -----' . PHP_EOL;
 		
 		$e->output($output);
 	}
@@ -248,7 +246,7 @@ $j("#tv' . $field['id'] . '").ddMultipleInput({
 
 /**
  * mm_ddSelectDocuments_getDocsList
- * @version 2.0.2 (2022-04-14)
+ * @version 2.0.5 (2025-03-05)
  * 
  * @desc Рекурсивно получает все необходимые документы.
  * 
@@ -267,36 +265,39 @@ $j("#tv' . $field['id'] . '").ddMultipleInput({
 function mm_ddSelectDocuments_getDocsList($params = []){
 	$params = \DDTools\ObjectTools::extend([
 		'objects' => [
-			//Defaults
+			// Defaults
 			(object) [
 				'parentIds' => [0],
 				'filter' => [],
 				'depth' => 1,
 				'listItemLabelMask' => '[+pagetitle+] ([+id+])',
-				'docFields' => ['pagetitle', 'id']
+				'docFields' => [
+					'pagetitle',
+					'id',
+				],
 			],
-			$params
-		]
+			$params,
+		],
 	]);
 	
-	//Получаем дочерние документы текущего уровня
+	// Получаем дочерние документы текущего уровня
 	$docs = [];
 	
-	//Перебираем всех родителей
+	// Перебираем всех родителей
 	foreach (
-		$params->parentIds as
-		$parent
+		$params->parentIds
+		as $parent
 	){
-		//Получаем документы текущего родителя
+		// Получаем документы текущего родителя
 		$tekDocs = \ddTools::getDocumentChildrenTVarOutput(
 			$parent,
 			$params->docFields,
-			'all'
+			'all',
 		);
 		
-		//Если что-то получили
+		// Если что-то получили
 		if (is_array($tekDocs)){
-			//Запомним
+			// Запомним
 			$docs = array_merge(
 				$docs,
 				$tekDocs
@@ -306,66 +307,71 @@ function mm_ddSelectDocuments_getDocsList($params = []){
 	
 	$result = [];
 	
-	//Если что-то есть
+	// Если что-то есть
 	if (count($docs) > 0){
-		//Перебираем полученные документы
+		// Перебираем полученные документы
 		foreach (
-			$docs as
-			$val
+			$docs
+			as $val
 		){
-			//Если фильтр не пустой
+			$isMatched = true;
+			
+			// Если фильтр не пустой
 			if (!empty($params->filter)){
 				$filterCount = 0;
 				
-				//Удовлетворяет ли документ всем условиям фильтра
+				// Удовлетворяет ли документ всем условиям фильтра
 				foreach(
-					$params->filter as
-					$filter
+					$params->filter
+					as $filter
 				){
 					if(
-						$filter['equal'] &&
-						$val[$filter['key']] == $filter['value']
+						$filter['equal']
+						&& $val[$filter['key']] == $filter['value']
 					){
 						$filterCount++;
 					}elseif(
-						!$filter['equal'] &&
-						$val[$filter['key']] != $filter['value']){
+						!$filter['equal']
+						&& $val[$filter['key']] != $filter['value']
+					){
 						$filterCount++;
 					}
 				}
 				
-				if($filterCount == count($params->filter)){
-					$val['title'] =
-						empty($val['menutitle']) ?
-						$val['pagetitle'] :
-						$val['menutitle']
-					;
-					
-					//Записываем результат
-					$tmp = \ddTools::parseText([
-						'text' => $params->listItemLabelMask,
-						'data' => $val,
-						'mergeAll' => false
-					]);
-					
-					if(strlen(trim($tmp)) == 0){
-						$tmp = \ddTools::parseText([
-							'text' => '[+pagetitle+] ([+id+])',
-							'data' => $val,
-							'mergeAll' => false
-						]);
-					}
-					
-					$result[] = [
-						'label' => $tmp,
-						'value' => $val['id']
-					];
-				}
+				$isMatched = $filterCount == count($params->filter);
 			}
 			
-			//Если ещё надо двигаться глубже
+			if ($isMatched){
+				$val['title'] =
+					empty($val['menutitle'])
+					? $val['pagetitle']
+					: $val['menutitle']
+				;
+				
+				// Записываем результат
+				$tmp = \ddTools::parseText([
+					'text' => $params->listItemLabelMask,
+					'data' => $val,
+					'isCompletelyParsingEnabled' => false,
+				]);
+				
+				if(strlen(trim($tmp)) == 0){
+					$tmp = \ddTools::parseText([
+						'text' => '[+pagetitle+] ([+id+])',
+						'data' => $val,
+						'isCompletelyParsingEnabled' => false,
+					]);
+				}
+				
+				$result[] = [
+					'label' => $tmp,
+					'value' => $val['id'],
+				];
+			}
+			
+			// Если ещё надо двигаться глубже
 			if ($params->depth > 1){
-				//Сливаем результат с дочерними документами
+				// Сливаем результат с дочерними документами
 				$result = array_merge(
 					$result,
 					mm_ddSelectDocuments_getDocsList([
@@ -373,7 +379,7 @@ function mm_ddSelectDocuments_getDocsList($params = []){
 						'filter' => $params->filter,
 						'depth' => $params->depth - 1,
 						'listItemLabelMask' => $params->listItemLabelMask,
-						'docFields' => $params->docFields
+						'docFields' => $params->docFields,
 					])
 				);
 			}

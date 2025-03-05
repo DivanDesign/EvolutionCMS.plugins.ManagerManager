@@ -115,16 +115,16 @@
 
 ```php
 mm_ddSelectDocuments([
-	//TV, для которой применить виджет
+	// TV, для которой применить виджет
 	'fields' => 'favoriteProducts',
-	//Пусть 314 — это ID документа-каталога, содержащего дочерние документы-товары
+	// Пусть 314 — это ID документа-каталога, содержащего дочерние документы-товары
 	'parentIds' => [314],
-	//Ищем на 3 уровня вложенности
+	// Ищем на 3 уровня вложенности
 	'depth' => 3,
-	//Отображаем только опубликованные документы с ID шаблона == 42
+	// Отображаем только опубликованные документы с ID шаблона == 42
 	'filter' => 'template=42&published=1',
-	//Только 3 или меньше товара может быть выбрано
-	'maxSelectedItems' => 3
+	// Только 3 или меньше товара может быть выбрано
+	'maxSelectedItems' => 3,
 ]);
 ```
 
@@ -134,6 +134,7 @@ mm_ddSelectDocuments([
 * [Home page](https://code.divandesign.ru/modx/mm_ddselectdocuments)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddselectdocuments)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_ddSelectDocuments)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
