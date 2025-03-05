@@ -6,7 +6,7 @@ A widget for ManagerManager that makes selection of documents IDs easier.
 ## Requires
 
 * PHP >= 5.4
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager) >= 0.7
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager) >= 0.7
 
 
 ## Installation
@@ -15,8 +15,8 @@ To install you must unzip the archive to `/assets/plungins/managermanager/widget
 
 
 You may also read this documentation:
-* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.biz/modx/managermanager).
-* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.biz/modx/ddmmeditor).
+* [(MODX)EvolutionCMS.plugins.ManagerManager](https://code.divandesign.ru/modx/managermanager).
+* [(MODX)EvolutionCMS.modules.ddMMEditor](https://code.divandesign.ru/modx/ddmmeditor).
 
 
 ## Parameters description
@@ -115,25 +115,26 @@ You may also read this documentation:
 
 ```php
 mm_ddSelectDocuments([
-	//TV for which the widget is applied to
+	// TV for which the widget is applied to
 	'fields' => 'favoriteProducts',
-	//Let 314 is ID of catalog document, that contains children-products
+	// Let 314 is ID of catalog document, that contains children-products
 	'parentIds' => [314],
-	//Search in 3 levels
+	// Search in 3 levels
 	'depth' => 3,
-	//Display only published documents with template ID == 42
+	// Display only published documents with template ID == 42
 	'filter' => 'template=42&published=1',
-	//Only 3 or less products can be selected
-	'maxSelectedItems' => 3
+	// Only 3 or less products can be selected
+	'maxSelectedItems' => 3,
 ]);
 ```
 
 
 ## Links
 
-* [Home page](https://code.divandesign.biz/modx/mm_ddselectdocuments)
+* [Home page](https://code.divandesign.ru/modx/mm_ddselectdocuments)
 * [Telegram chat](https://t.me/dd_code)
 * [Packagist](https://packagist.org/packages/dd/evolutioncms-plugins-managermanager-mm_ddselectdocuments)
+* [GitHub](https://github.com/DivanDesign/EvolutionCMS.plugins.ManagerManager.mm_ddSelectDocuments)
 
 
-<link rel="stylesheet" type="text/css" href="https://DivanDesign.ru/assets/files/ddMarkdown.css" />
+<link rel="stylesheet" type="text/css" href="https://raw.githack.com/DivanDesign/CSS.ddMarkdown/master/style.min.css" />
