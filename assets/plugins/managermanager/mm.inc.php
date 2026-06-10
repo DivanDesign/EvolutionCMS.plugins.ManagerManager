@@ -89,26 +89,26 @@ $jsUrls = [
 	'ddTools' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddTools-2.7.1.min.js'
+			'assets/plugins/managermanager/js/jQuery.ddTools-4.1.min.js'
 		,
 		'name' => 'jquery.ddTools',
-		'version' => '2.7.1'
+		'version' => '4.1.0'
 	],
 	'ddUI' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.js'
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.40.min.js'
 		,
 		'name' => 'jquery.ddUI',
-		'version' => '0.16.0'
+		'version' => '0.40.0'
 	],
 	'ddUICSS' => [
 		'url' =>
 			$modx->getConfig('site_url') .
-			'assets/plugins/managermanager/js/jQuery.ddUI-0.16.min.css'
+			'assets/plugins/managermanager/js/jQuery.ddUI-0.40.min.css'
 		,
 		'name' => 'jquery.ddUI',
-		'version' => '0.16.0'
+		'version' => '0.40.0'
 	]
 ];
 
